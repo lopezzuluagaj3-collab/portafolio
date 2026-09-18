@@ -1,0 +1,10 @@
+{
+  "label": "Idempotencia",
+  "position": 1,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "proyectos/idempotencia/resumen-general"
+  }
+}

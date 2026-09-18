@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juan Diego López Zuluaga — Portafolio Profesional DevOps & Cloud Infrastructure</title>
+  <meta name="description" content="Portafolio profesional de Juan Diego López Zuluaga, Lead DevOps. Arquitectura cloud, hardening perimetral con Tailscale y CrowdSec, orquestación de bases de datos y CI/CD.">
+  <meta name="author" content="Juan Diego López Zuluaga">
+
+  <!-- Favicon e Identidad -->
+  <link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
+
+  <!-- Google Fonts: Inter & JetBrains Mono (mismas fuentes de Idempotencia) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Hoja de estilos con la identidad visual UI/UX extraída -->
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+  <!-- ==================== NAVBAR GLOBAL ==================== -->
+  <header class="navbar">
+    <div class="container navbar__inner">
+      <a href="#inicio" class="navbar__brand" aria-label="Inicio">
+        <img src="./assets/logo.svg" alt="Logo" class="navbar__logo">
+        <span>Juan Diego <span style="color:var(--primary); font-weight:600;">/ DevOps</span></span>
+      </a>
+
+      <nav class="navbar__nav" id="navbar-nav">
+        <a href="#inicio" class="nav__link active">Inicio</a>
+        <a href="#especialidades" class="nav__link">Especialidades</a>
+        
+        <!-- Menú Desplegable de Proyectos -->
+        <div class="nav__dropdown">
+          <span class="nav__dropdown-toggle" id="projects-dropdown-btn">
+            📁 Proyectos ▾
+          </span>
+          <div class="nav__dropdown-menu">
+            <a href="#proyecto-idempotencia" class="nav__dropdown-item">
+              <span style="font-size:1.2rem;">⚡</span>
+              <div>
+                <strong>Idempotencia</strong>
+                <small>DBaaS Multi-Motor (Fuera de Producción)</small>
+              </div>
+            </a>
+            <a href="#proyecto-polaris" class="nav__dropdown-item">
+              <span style="font-size:1.2rem;">🌟</span>
+              <div>
+                <strong>Polaris</strong>
+                <small>K8s Self-Managed + Cilium + ETL en AWS</small>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <a href="#proyectos-catalogo" class="nav__link">Mis Proyectos</a>
+        <a href="#terminal-general" class="nav__link">Terminal</a>
+        <a href="#contacto" class="nav__link">Contacto</a>
+      </nav>
+
+      <div class="navbar__actions">
+        <!-- Conmutador de tema -->
+        <button class="theme-toggle" id="theme-toggle-btn" aria-label="Cambiar tema">
+          <svg id="theme-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- Botón a GitHub -->
+        <a href="https://github.com/lopezzuluagaj3-collab" target="_blank" rel="noopener noreferrer" class="button button--primary" style="padding: 0.55rem 1rem; font-size: 0.88rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          GitHub
+        </a>
+
+        <!-- Botón Menú Móvil -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menú">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       VISTA 1: DASHBOARD PRINCIPAL (Limpio, General y Multi-Proyecto)
+       ========================================================================== -->
+  <div id="view-dashboard" class="view-section active">
+
+    <!-- HERO PRINCIPAL -->
+    <section id="inicio" class="hero">
+      <span class="blob2"></span>
+      <div class="container hero__grid">
+        <div class="hero__content">
+          <div class="hero__tag-role">
+            <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ff9280;"></span>
+            Lead DevOps & Cloud Infrastructure
+          </div>
+          <h1 class="hero__title">
+            Infraestructura Resiliente, <span>Segura</span> y Automatizada
+          </h1>
+          <p class="hero__subtitle">
+            Ingeniero DevOps enfocado en diseño de arquitecturas cloud, contención estricta con Docker y Kubernetes, mallas privadas VPN (Tailscale), defensa activa contra intrusiones (CrowdSec), pipelines CI/CD y orquestación de bases de datos con máxima eficiencia de recursos.
+          </p>
+
+          <div class="hero__actions">
+            <a href="#proyectos-catalogo" class="button button--accent">
+              🚀 Ver Mis Proyectos
+            </a>
+            <a href="#terminal-general" class="button button--outline-invert">
+              💻 Terminal de Diagnóstico
+            </a>
+            <a href="#contacto" class="button button--outline-invert">
+              ✉️ Contactar
+            </a>
+          </div>
+
+          <div class="hero__stats">
+            <div class="stat-item">
+              <div class="stat-item__number">100%</div>
+              <div class="stat-item__label">Seguridad Perimetral</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-item__number">Multi</div>
+              <div class="stat-item__label">Cloud & Contenedores</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-item__number">CI/CD</div>
+              <div class="stat-item__label">Pipelines Automatizados</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-item__number">0</div>
+              <div class="stat-item__label">Pérdida de Datos en Incidentes</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mockup Visual de Consola DevOps -->
+        <div class="mockup-wrap">
+          <div class="mockup-frame">
+            <div class="mockup-bar">
+              <span class="dot-red"></span>
+              <span class="dot-yellow"></span>
+              <span class="dot-green"></span>
+              <div class="mockup-url">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                devops.infrastructure.mesh (Active Telemetry)
+              </div>
+            </div>
+            <div class="mockup-body">
+              <div class="topology-card">
+                <div class="topology-node">
+                  <div class="topology-node__left">
+                    <div class="topology-node__icon" style="background:#7c3aed; color:#fff;">IaC</div>
+                    <div>
+                      <div style="font-weight:700; color:#fff;">Infraestructura como Código</div>
+                      <div style="font-size:0.75rem; color:#a89fc0;">Docker, Compose, K8s, GitOps</div>
+                    </div>
+                  </div>
+                  <div class="topology-node__status">
+                    <span class="topology-node__status-dot"></span>
+                    Declarative
+                  </div>
+                </div>
+
+                <div class="topology-node" style="border-color: rgba(124, 58, 237, 0.4); background: rgba(124, 58, 237, 0.08);">
+                  <div class="topology-node__left">
+                    <div class="topology-node__icon" style="background:#4c1d95; color:#ded6fe;">VPN</div>
+                    <div>
+                      <div style="font-weight:700; color:#ded6fe;">Zero-Trust Private Mesh</div>
+                      <div style="font-size:0.75rem; color:#a78bfa;">Tailscale Encrypted Overlay</div>
+                    </div>
+                  </div>
+                  <div class="topology-node__status" style="color:#c4b5fd;">
+                    <span class="topology-node__status-dot" style="background:#c4b5fd; box-shadow:0 0 8px #c4b5fd;"></span>
+                    Encrypted
+                  </div>
+                </div>
+
+                <div class="topology-node">
+                  <div class="topology-node__left">
+                    <div class="topology-node__icon" style="background:#ff6f57; color:#fff;">IPS</div>
+                    <div>
+                      <div style="font-weight:700; color:#fff;">Defensa Activa & Hardening</div>
+                      <div style="font-size:0.75rem; color:#a89fc0;">CrowdSec + iptables + Port Knocking</div>
+                    </div>
+                  </div>
+                  <div class="topology-node__status">
+                    <span class="topology-node__status-dot"></span>
+                    Guarded
+                  </div>
+                </div>
+
+                <div class="topology-node">
+                  <div class="topology-node__left">
+                    <div class="topology-node__icon" style="background:#2563eb; color:#fff;">CI</div>
+                    <div>
+                      <div style="font-weight:700; color:#fff;">Pipelines de Automatización</div>
+                      <div style="font-size:0.75rem; color:#a89fc0;">GitHub Actions + Branch Protection</div>
+                    </div>
+                  </div>
+                  <div class="topology-node__status">
+                    <span class="topology-node__status-dot"></span>
+                    Automated
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESPECIALIDADES Y PILARES DEVOPS -->
+    <section id="especialidades">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header__tag">
+            <span class="badge badge--primary">Competencias Nucleares</span>
+          </div>
+          <h2 class="section-header__title">Pilares de Ingeniería DevOps</h2>
+          <p class="section-header__desc">
+            Enfoque holístico para la entrega continua, estabilidad operativa y blindaje de servicios en entornos productivos.
+          </p>
+        </div>
+
+        <div class="pillars-grid">
+          <!-- Pilar 1 -->
+          <div class="pillar-card">
+            <div class="pillar-icon">🐳</div>
+            <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:0.5rem;">Contenedores & Orquestación</h3>
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6;">
+              Empaquetamiento multi-stage, reducción drástica de tamaño de imágenes, ejecución con usuarios no-root y control estricto de cuotas de RAM y CPU (<code>mem_limit</code>).
+            </p>
+          </div>
+
+          <!-- Pilar 2 -->
+          <div class="pillar-card">
+            <div class="pillar-icon" style="color:var(--accent);">🛡️</div>
+            <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:0.5rem;">Hardening & Zero-Trust</h3>
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6;">
+              Mallas VPN privadas con Tailscale para ocultar puertos de bases de datos de internet, IPS CrowdSec colaborativo y secuencias dinámicas de Port Knocking para SSH.
+            </p>
+          </div>
+
+          <!-- Pilar 3 -->
+          <div class="pillar-card">
+            <div class="pillar-icon" style="color:#3b82f6;">⚡</div>
+            <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:0.5rem;">Pipelines CI/CD & Git</h3>
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6;">
+              Automatización de compilaciones, pruebas y despliegues con GitHub Actions. Gobierno de ramas (<code>feature → develop → QA → main</code>) con branch protection rules.
+            </p>
+          </div>
+
+          <!-- Pilar 4 -->
+          <div class="pillar-card">
+            <div class="pillar-icon" style="color:#10b981;">🗄️</div>
+            <h3 style="font-size:1.15rem; font-weight:700; margin-bottom:0.5rem;">Resiliencia & Bases de Datos</h3>
+            <p style="font-size:0.88rem; color:var(--text-muted); line-height:1.6;">
+              Aprovisionamiento y administración de SQL Server, PostgreSQL, MySQL y MongoDB. Gestión de volúmenes persistentes externos y protocolos de backup sin pérdida de datos.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATÁLOGO DE PROYECTOS (Limpio y Modular) -->
+    <section id="proyectos-catalogo" style="background: var(--bg-tint); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header__tag">
+            <span class="badge badge--accent">Portafolio Modular</span>
+          </div>
+          <h2 class="section-header__title">Proyectos & Casos de Estudio</h2>
+          <p class="section-header__desc">
+            Haz clic en cualquier proyecto para abrir su caso de estudio técnico completo, arquitectura detallada y bitácora de incidentes.
+          </p>
+        </div>
+
+        <div class="projects-grid">
+          <!-- Proyecto 1: Idempotencia -->
+          <div class="card project-card project-card--flagship">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <span class="badge badge--accent">Caso Insignia / Flagship</span>
+              <span class="badge badge--warning">🟡 Fuera de Producción</span>
+            </div>
+
+            <h3 class="project-card__title">Idempotencia — Plataforma DBaaS & IA Gateway</h3>
+            
+            <div class="project-card__tags">
+              <span class="project-tag">Docker Compose</span>
+              <span class="project-tag">Tailscale Mesh</span>
+              <span class="project-tag">CrowdSec IPS</span>
+              <span class="project-tag">4 Motores DB</span>
+              <span class="project-tag">Nginx Proxy Manager</span>
+              <span class="project-tag">VPS 4GB RAM</span>
+            </div>
+
+            <p class="project-card__desc">
+              Stack completo de autoservicio para aprovisionamiento inmediato de bases de datos (SQL Server, Postgres, MySQL, MongoDB) con módulo de IA bajo Ollama. Aislamiento de red, resolución del bypass UFW y cero pérdida de datos.
+            </p>
+
+            <div class="project-card__footer">
+              <a href="#proyecto-idempotencia" class="button button--accent" style="padding:0.55rem 1.1rem; font-size:0.88rem;">
+                Ver Caso de Estudio Completo ➔
+              </a>
+            </div>
+          </div>
+
+          <!-- Proyecto 2: Polaris (Kubernetes Self-Managed en AWS) -->
+          <div class="card project-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <span class="badge badge--primary">K8s & Data Platform</span>
+              <span class="badge badge--success">En Producción / AWS</span>
+            </div>
+
+            <h3 class="project-card__title">Polaris — Plataforma ETL sobre K8s Self-Managed en AWS</h3>
+            
+            <div class="project-card__tags">
+              <span class="project-tag">Kubernetes (K3s)</span>
+              <span class="project-tag">AWS EC2/VPC</span>
+              <span class="project-tag">Cilium (eBPF)</span>
+              <span class="project-tag">Helm 3</span>
+              <span class="project-tag">Apache Airflow</span>
+              <span class="project-tag">Terraform & Ansible</span>
+              <span class="project-tag">DevSecOps (Trivy/Checkov)</span>
+              <span class="project-tag">Infracost</span>
+            </div>
+
+            <p class="project-card__desc">
+              Plataforma completa de orquestación de datos e infraestructura como código sobre AWS. 3 repositorios desacoplados, Cilium CNI con eBPF, pipelines CI/CD con escaneos de seguridad automatizados, Git-Sync y modelo analítico estrella en PostgreSQL para Olist E-Commerce.
+            </p>
+
+            <div class="project-card__footer">
+              <a href="#proyecto-polaris" class="button button--accent" style="padding:0.55rem 1.1rem; font-size:0.88rem;">
+                Ver Documentación Técnica ➔
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TERMINAL GENERAL DE DIAGNÓSTICO -->
+    <section id="terminal-general">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header__tag">
+            <span class="badge badge--primary">CLI Interactivo</span>
+          </div>
+          <h2 class="section-header__title">Terminal de Operaciones DevOps</h2>
+          <p class="section-header__desc">
+            Ejecuta comandos interactivos para consultar mi perfil, matriz de competencias técnicas y estado de telemetría.
+          </p>
+        </div>
+
+        <div class="terminal-wrapper">
+          <div class="terminal-header">
+            <div class="terminal-header__dots">
+              <span style="background:#ff5f57;"></span>
+              <span style="background:#febc2e;"></span>
+              <span style="background:#28c840;"></span>
+            </div>
+            <div class="terminal-header__title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+              devop@juan-diego-profile:~
+            </div>
+            <div class="terminal-header__actions">
+              <button class="terminal-btn gen-term-btn active" data-cmd="whoami">whoami</button>
+              <button class="terminal-btn gen-term-btn" data-cmd="skills">skills</button>
+              <button class="terminal-btn gen-term-btn" data-cmd="projects">projects</button>
+              <button class="terminal-btn gen-term-btn" data-cmd="health">system-health</button>
+            </div>
+          </div>
+
+          <div class="terminal-body">
+            <div class="terminal-prompt">
+              <span class="user">devop@juan-diego</span>:<span class="path">~</span>$ <span id="gen-terminal-cmd" style="color:#fff;"></span>
+            </div>
+            <div class="terminal-output" id="gen-terminal-output">
+              Cargando perfil...
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN CONTACTO -->
+    <section id="contacto" style="background: var(--bg-tint); border-top: 1px solid var(--border);">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-header__tag">
+            <span class="badge badge--accent">Hablemos</span>
+          </div>
+          <h2 class="section-header__title">Contacto y Colaboración</h2>
+          <p class="section-header__desc">
+            ¿Buscas construir infraestructura cloud resiliente, automatizar despliegues o blindar la seguridad de tus entornos?
+          </p>
+        </div>
+
+        <div style="max-width:600px; margin:0 auto; display:flex; flex-direction:column; gap:1.25rem;">
+          <div class="card" style="display:flex; align-items:center; gap:1.25rem;">
+            <div style="width:48px; height:48px; border-radius:12px; background:var(--bg-tint); display:flex; align-items:center; justify-content:center; font-size:1.4rem;">
+              ✉️
+            </div>
+            <div>
+              <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Correo Electrónico</div>
+              <a href="mailto:lopezzuluagaj3@gmail.com" style="font-weight:700; color:var(--primary); font-size:1.05rem;">
+                lopezzuluagaj3@gmail.com
+              </a>
+            </div>
+          </div>
+
+          <div class="card" style="display:flex; align-items:center; gap:1.25rem;">
+            <div style="width:48px; height:48px; border-radius:12px; background:var(--bg-tint); display:flex; align-items:center; justify-content:center; font-size:1.4rem;">
+              🐙
+            </div>
+            <div>
+              <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">GitHub</div>
+              <a href="https://github.com/lopezzuluagaj3-collab" target="_blank" rel="noopener noreferrer" style="font-weight:700; color:var(--primary); font-size:1.05rem;">
+                @lopezzuluagaj3-collab
+              </a>
+            </div>
+          </div>
+
+          <div class="card" style="display:flex; align-items:center; gap:1.25rem;">
+            <div style="width:48px; height:48px; border-radius:12px; background:rgba(10,102,194,0.12); display:flex; align-items:center; justify-content:center; color:#0a66c2;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.6 1.6 0 0 0-1.6 1.6 1.6 1.6 0 0 0 1.6 1.6 1.6 1.6 0 0 0 1.6-1.6 1.6 1.6 0 0 0-1.6-1.6z"/>
+              </svg>
+            </div>
+            <div>
+              <div style="font-size:0.8rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">LinkedIn</div>
+              <a href="https://www.linkedin.com/in/juan-diego-lopez-zuluaga/" target="_blank" rel="noopener noreferrer" style="font-weight:700; color:var(--primary); font-size:1.05rem;">
+                juan-diego-lopez-zuluaga
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ==========================================================================
+       VISTA 2: VISOR DE DOCUMENTACIÓN TÉCNICA OFICIAL (ESTILO DOCUSAURUS)
+       Idéntico a la documentación de Idempotencia (Sidebar, Acordeones, Breadcrumbs)
+       ========================================================================== -->
+  <div id="view-proyecto-idempotencia" class="view-section project-view">
+    <div class="doc-viewer">
+
+      <!-- NAVBAR SUPERIOR ESTILO DOCUSAURUS -->
+      <nav class="doc-navbar">
+        <div style="display:flex; align-items:center; gap:1.25rem;">
+          <a href="#inicio" class="doc-back-link" title="Regresar al Dashboard Principal">
+            ← Volver al Portafolio
+          </a>
+          <div class="doc-navbar__brand">
+            <img src="./assets/logo.svg" alt="Logo">
+            <span>idempotencia</span>
+          </div>
+        </div>
+
+        <div class="doc-navbar__nav">
+          <span class="doc-navbar__item" style="opacity:0.6; cursor:default;">Manual de Usuario</span>
+          <span class="doc-navbar__item" style="opacity:0.6; cursor:default;">Frontend</span>
+          <span class="doc-navbar__item" style="opacity:0.6; cursor:default;">Backend</span>
+          <span class="doc-navbar__item active">DevOps</span>
+          <span class="doc-navbar__item" style="opacity:0.6; cursor:default;">IA</span>
+        </div>
+
+        <div class="doc-navbar__actions">
+          <a href="https://github.com/devsanbox-celula-idempotencia/idempotencia-documentacion" target="_blank" rel="noopener noreferrer" class="doc-navbar__item" style="display:flex; align-items:center; gap:0.35rem;">
+            GitHub ↗
+          </a>
+          <button class="theme-toggle" aria-label="Cambiar tema">
+            <span class="theme-icon-slot">
+              <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- CONTENEDOR PRINCIPAL DE 2 COLUMNAS -->
+      <div class="doc-container">
+
+        <!-- BARRA LATERAL IZQUIERDA (SIDEBAR CON ACORDEÓN) -->
+        <aside class="doc-sidebar">
+          <div class="doc-sidebar__title">
+            <span>Idempotencia Docs</span>
+            <span class="badge badge--warning" style="font-size:0.65rem; padding:0.15rem 0.45rem;">Fuera de Producción</span>
+          </div>
+
+          <div class="doc-sidebar__category" id="doc-category-box">
+            <button class="doc-sidebar__category-btn" id="doc-category-toggle" type="button">
+              <span>☁️ Documentación Técnica</span>
+              <svg class="doc-sidebar__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+
+            <ul class="doc-sidebar__list">
+              <li><a class="doc-sidebar__link active" data-doc-target="resumen-general">Resumen general</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="firewall">Firewall</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="acceso-remoto">Acceso remoto</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="github">GitHub / control de versiones</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="servicios">Servicios desplegados</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="bases-datos">Bases de datos</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="monitoreo">Monitoreo y seguridad activa</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="incidentes">Incidentes resueltos</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="backups">Backups y persistencia</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="pendientes">Pendientes abiertos</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="kubernetes">Kubernetes</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="lecciones">Lecciones operativas</a></li>
+            </ul>
+          </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL DE LA DOCUMENTACIÓN -->
+        <main class="doc-main">
+
+          <!-- MIGAS DE PAN (BREADCRUMBS) -->
+          <nav class="doc-breadcrumbs" aria-label="breadcrumbs">
+            <span style="cursor:pointer;" onclick="switchDocSection('resumen-general')">🏠</span>
+            <span>›</span>
+            <span>☁️ Documentación Técnica</span>
+            <span>›</span>
+            <span class="doc-breadcrumbs__pill" id="doc-breadcrumb-current">Resumen general</span>
+          </nav>
+
+          <!-- 1. RESUMEN GENERAL (Idéntico a la imagen) -->
+          <article id="doc-art-resumen-general" class="doc-article active">
+            <h1 class="doc-article__title">1. Resumen general</h1>
+
+            <div class="doc-alert doc-alert--warning" style="margin-bottom: 1.5rem;">
+              <span class="doc-alert__icon">⚠️</span>
+              <div class="doc-alert__body">
+                <strong>Estado del Proyecto: Fuera de Producción / Archivado.</strong> La infraestructura activa fue desmantelada al concluir el ciclo de evaluación y entrega; esta documentación preserva la arquitectura, decisiones de hardening y bitácora técnica de lecciones aprendidas.
+              </div>
+            </div>
+            
+            <p>
+              VPS única (4 GB de RAM) alojando el stack completo del proyecto <strong>Idempotencia</strong>: un producto <strong>gestor de bases de datos</strong> para usuarios finales (por eso corren 4 motores de DB). Incluye frontend, backend (producción y QA), y cuatro bases de datos, todo detrás de Nginx Proxy Manager (NPM) con SSL de Let's Encrypt. El acceso administrativo (SSH, bases de datos, paneles internos) está cerrado al público y se gestiona mediante <strong>Tailscale</strong> (VPN privada) y <strong>port knocking</strong>.
+            </p>
+
+            <p>
+              <strong>IP pública de la VPS:</strong> <code>46.224.101.88</code> &nbsp;&nbsp; <strong>IP privada (Tailscale) de la VPS:</strong> <code>100.99.206.50</code>
+            </p>
+
+            <p>
+              <strong>Modelo de producto:</strong> los usuarios finales de Idempotencia necesitarán conectar sus propias herramientas externas (Airflow, DBeaver, etc.) directamente a bases de datos gestionadas, con credenciales propias — no solo a través de la app web. Esto implica que, a futuro, algunos puertos de base de datos deberán exponerse de forma controlada (ver <a href="javascript:void(0)" onclick="switchDocSection('pendientes')" style="color:var(--primary); font-weight:600;">Pendientes abiertos</a>).
+            </p>
+          </article>
+
+          <!-- 2. FIREWALL -->
+          <article id="doc-art-firewall" class="doc-article">
+            <h1 class="doc-article__title">2. Firewall — estado actual y hallazgo crítico</h1>
+
+            <h2>2.1 Hallazgo de seguridad: Docker bypassea ufw</h2>
+            <p>
+              Se descubrió que <strong>Docker inyecta sus propias reglas en <code>iptables</code></strong> (cadenas <code>DOCKER</code> / <code>FORWARD</code>) al publicar un puerto con <code>ports: "0.0.0.0:PUERTO:PUERTO"</code> en un <code>docker-compose.yml</code>. Estas reglas son independientes de <code>ufw</code> y se evalúan aparte — por lo que <strong>un puerto podía estar públicamente accesible desde internet aunque <code>ufw status</code> no mostrara ninguna regla <code>ALLOW</code> para él</strong>. Es un conflicto conocido entre Docker y ufw.
+            </p>
+            <p>
+              Esto se confirmó como la causa de un ataque de fuerza bruta real detectado contra el usuario <code>sa</code> de SQL Server, pese a que el diseño original asumía que ese puerto ya estaba restringido solo a Tailscale.
+            </p>
+
+            <h3>Método de verificación en 3 capas (auditoría obligatoria ante dudas de exposición):</h3>
+            <pre><code>docker ps                                          # qué publica Docker
+sudo ss -tulnp                                      # qué escucha realmente el host
+timeout 2 bash -c "echo > /dev/tcp/46.224.101.88/&lt;puerto&gt;" &amp;&amp; echo "ABIERTO" || echo "cerrado"</code></pre>
+
+            <h2>2.2 Patrón de corrección aplicado</h2>
+            <p>En cada <code>docker-compose.yml</code> afectado, cambiar:</p>
+            <pre><code># Inseguro:
+ports:
+  - "0.0.0.0:PUERTO:PUERTO"
+
+# Corregido y aislado:
+ports:
+  - "100.99.206.50:PUERTO:PUERTO"   # solo accesible vía Tailscale</code></pre>
+            <p>
+              Y recrear con: <code>docker compose up -d --force-recreate &lt;servicio&gt;</code>. Esto <strong>no</strong> afecta la comunicación interna entre contenedores (que usa el nombre de contenedor sobre la red Docker <code>red-proxy</code>, no el binding público), ni requiere tocar volúmenes.
+            </p>
+
+            <h2>2.3 Estado de cada puerto (snapshot actual)</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Puerto</th>
+                  <th>Servicio</th>
+                  <th>Binding</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>22</code></td>
+                  <td>SSH</td>
+                  <td>público, restringido con Port Knocking</td>
+                  <td>✅ Controlado</td>
+                </tr>
+                <tr>
+                  <td><code>80</code></td>
+                  <td>NPM (HTTP)</td>
+                  <td>público (0.0.0.0)</td>
+                  <td>✅ Correcto (tráfico real)</td>
+                </tr>
+                <tr>
+                  <td><code>443</code></td>
+                  <td>NPM (HTTPS)</td>
+                  <td>público (0.0.0.0)</td>
+                  <td>✅ Correcto (tráfico real)</td>
+                </tr>
+                <tr>
+                  <td><code>81</code></td>
+                  <td>NPM panel admin</td>
+                  <td><code>100.99.206.50</code> (Tailscale only)</td>
+                  <td>✅ Cerrado a internet</td>
+                </tr>
+                <tr>
+                  <td><code>1433</code></td>
+                  <td>SQL Server</td>
+                  <td><code>100.99.206.50</code> (Tailscale only)</td>
+                  <td>✅ Cerrado a internet</td>
+                </tr>
+                <tr>
+                  <td><code>5432</code></td>
+                  <td>PostgreSQL</td>
+                  <td><code>100.99.206.50</code> (Tailscale only)</td>
+                  <td>✅ Cerrado a internet</td>
+                </tr>
+                <tr>
+                  <td><code>3306</code></td>
+                  <td>MySQL</td>
+                  <td><code>100.99.206.50</code> (Tailscale only)</td>
+                  <td>✅ Cerrado a internet</td>
+                </tr>
+                <tr>
+                  <td><code>27017</code></td>
+                  <td>MongoDB</td>
+                  <td><code>100.99.206.50</code> (Tailscale only)</td>
+                  <td>✅ Cerrado a internet</td>
+                </tr>
+                <tr>
+                  <td><code>9000</code></td>
+                  <td>Portainer</td>
+                  <td><code>100.99.206.50</code> (Tailscale only)</td>
+                  <td>✅ Correcto desde instalación</td>
+                </tr>
+                <tr>
+                  <td><code>8090, 6060</code></td>
+                  <td>CrowdSec (LAPI/métricas)</td>
+                  <td><code>127.0.0.1</code></td>
+                  <td>✅ No expuesto</td>
+                </tr>
+                <tr>
+                  <td><code>5555</code></td>
+                  <td>idempotencia-backend (prod)</td>
+                  <td>interno en red Docker (sin publicar)</td>
+                  <td>✅ No expuesto</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2>2.4 Hardening base del sistema</h2>
+            <ul>
+              <li><code>PermitRootLogin no</code>, <code>PasswordAuthentication no</code> (solo login por llave SSH Ed25519/RSA).</li>
+              <li>Usuario dedicado <code>devop</code> con permisos sudo controlados.</li>
+              <li><code>fail2ban</code> activo (jail <code>sshd</code>).</li>
+              <li><strong>CrowdSec</strong> instalado como capa de detección y bloqueo activo en kernel.</li>
+              <li><code>unattended-upgrades</code> instalado para parches automáticos de seguridad.</li>
+            </ul>
+          </article>
+
+          <!-- 3. ACCESO REMOTO -->
+          <article id="doc-art-acceso-remoto" class="doc-article">
+            <h1 class="doc-article__title">3. Acceso remoto</h1>
+
+            <h2>3.1 SSH — Port knocking</h2>
+            <p>El puerto 22 permanece cerrado por defecto en el firewall. Para conectarse:</p>
+            <ol>
+              <li>
+                Se ejecuta el script PowerShell (<code>conectar.ps1</code>) que:
+                <ul>
+                  <li>Envía una secuencia de paquetes TCP a los puertos <code>7000, 8000, 9000</code> para abrir el 22.</li>
+                  <li>Lanza automáticamente la sesión SSH con llave privada autorizada.</li>
+                  <li>En segundo plano, tras un tiempo de espera configurable (15s), envía otra secuencia (<code>6000, 5000, 4000</code>) para volver a cerrar el puerto en iptables — sin interrumpir la sesión establecida.</li>
+                </ul>
+              </li>
+              <li>Cada miembro del equipo con acceso requiere su propia llave autorizada en <code>~/.ssh/authorized_keys</code> de la VPS.</li>
+            </ol>
+
+            <h2>3.2 Tailscale — red privada del equipo</h2>
+            <ul>
+              <li>Tailnet bajo la cuenta de administración de Juan (<code>lopezzuluagaj3@gmail.com</code>).</li>
+              <li>Dispositivos conectados: VPS (<code>idempotencia</code>, IP privada <code>100.99.206.50</code>), PC de Juan (<code>pcjuandiego</code>) y PC de Santiago Botero (<code>santi</code>).</li>
+              <li>Utilizado para acceder de forma privada a: las 4 bases de datos, el panel de NPM (<code>:81</code>) y Portainer (<code>:9000</code>).</li>
+            </ul>
+          </article>
+
+          <!-- 4. GITHUB / CONTROL DE VERSIONES -->
+          <article id="doc-art-github" class="doc-article">
+            <h1 class="doc-article__title">4. GitHub / control de versiones</h1>
+
+            <h2>4.1 Organización</h2>
+            <p>Organización dedicada donde solo el rol DevOps (Juan) cuenta con privilegios administrativos.</p>
+
+            <h2>4.2 Estrategia de ramas</h2>
+            <pre><code>feature/* ──► develop ──► QA ──► main</code></pre>
+            <ul>
+              <li><strong>main:</strong> producción, desplegada automáticamente en la VPS vía GitHub Actions.</li>
+              <li><strong>QA:</strong> ambiente de pruebas también desplegado en la VPS en puertos dedicados.</li>
+              <li>Solo los roles <strong>QA</strong> y <strong>DevOps</strong> tienen permiso de push/merge a <code>main</code> y <code>QA</code>.</li>
+            </ul>
+
+            <h2>4.3 Branch protection rules</h2>
+            <ul>
+              <li>Pull request obligatorio antes de mergear.</li>
+              <li>Restricción de push y merge limitada al team <code>qa-devop</code>.</li>
+              <li>Bloqueo estricto de force-push y eliminación de ramas críticas.</li>
+            </ul>
+          </article>
+
+          <!-- 5. SERVICIOS DESPLEGADOS -->
+          <article id="doc-art-servicios" class="doc-article">
+            <h1 class="doc-article__title">5. Servicios desplegados</h1>
+            <p>Todos corren bajo Docker Compose, conectados a la red externa compartida <code>red-proxy</code>.</p>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Servicio</th>
+                  <th>Contenedor</th>
+                  <th>Dominio / Puerto</th>
+                  <th>Puerto interno</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Frontend (prod)</td>
+                  <td><code>idempotencia-frontend</code></td>
+                  <td>idempotencia.andrescortes.dev</td>
+                  <td>80</td>
+                </tr>
+                <tr>
+                  <td>Backend (prod)</td>
+                  <td><code>idempotencia-backend</code></td>
+                  <td>api.idempotencia.andrescortes.dev</td>
+                  <td>5555</td>
+                </tr>
+                <tr>
+                  <td>Nginx Proxy Manager</td>
+                  <td><code>nginx-proxy-manager</code></td>
+                  <td>panel en <code>100.99.206.50:81</code></td>
+                  <td>81</td>
+                </tr>
+                <tr>
+                  <td>Portainer CE</td>
+                  <td><code>portainer</code></td>
+                  <td><code>100.99.206.50:9000</code></td>
+                  <td>9000</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2>5.1 Frontend</h2>
+            <p>Build multi-stage: Node 20-alpine (build) + Nginx 1.27-alpine (serve estático). <code>mem_limit: 256m</code>, <code>cpus: 0.5</code>. CI/CD automatizado en GitHub Actions.</p>
+
+            <h2>5.2 Backend (.NET 10)</h2>
+            <p>Dockerfile multi-stage (SDK 10.0 → ASP.NET runtime 10.0), usuario no-root <code>app</code>. <code>appsettings.json</code> montado en modo solo lectura (<code>:ro</code>). Connection strings estrictamente por nombre de contenedor (<code>Server=idempotencia-sqlserver</code>).</p>
+          </article>
+
+          <!-- 6. BASES DE DATOS -->
+          <article id="doc-art-bases-datos" class="doc-article">
+            <h1 class="doc-article__title">6. Bases de datos</h1>
+            <p>Las cuatro bases de datos comparten el mismo patrón de seguridad: publicadas únicamente sobre la IP de Tailscale (<code>100.99.206.50:PUERTO</code>), nunca sobre <code>0.0.0.0</code>.</p>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Motor</th>
+                  <th>Contenedor</th>
+                  <th>Puerto</th>
+                  <th>Notas</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>SQL Server 2022</td>
+                  <td><code>idempotencia-sqlserver</code></td>
+                  <td>1433</td>
+                  <td>Base principal (<code>master</code>) — Procedimientos de negocio</td>
+                </tr>
+                <tr>
+                  <td>PostgreSQL 16</td>
+                  <td><code>idempotencia-postgres</code></td>
+                  <td>5432</td>
+                  <td>Base <code>main</code> — Provisioning clientes</td>
+                </tr>
+                <tr>
+                  <td>MySQL 8.4</td>
+                  <td><code>idempotencia-mysql</code></td>
+                  <td>3306</td>
+                  <td>Base <code>main</code> — Caching SHA2 Password</td>
+                </tr>
+                <tr>
+                  <td>MongoDB 7</td>
+                  <td><code>idempotencia-mongodb</code></td>
+                  <td>27017</td>
+                  <td>Auth database: <code>admin</code></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p>Todos los motores cuentan con <code>mem_limit: 512m</code>, <code>cpus: 0.5</code> y rotación estricta de logs (<code>max-size: 10m</code>).</p>
+          </article>
+
+          <!-- 7. MONITOREO Y SEGURIDAD -->
+          <article id="doc-art-monitoreo" class="doc-article">
+            <h1 class="doc-article__title">7. Monitoreo y seguridad activa</h1>
+
+            <h2>7.1 CrowdSec</h2>
+            <p>Instalado nativo en el host con el bouncer <code>crowdsec-firewall-bouncer-iptables</code>. Colecciones activas: <code>linux</code>, <code>sshd</code> y <code>nginx</code>.</p>
+            <p>API local reubicada en <code>127.0.0.1:8090</code> para evitar conflictos de puerto con el frontend. Ingesta de logs de Nginx Proxy Manager declarada en <code>/etc/crowdsec/acquis.d/nginx.yaml</code>.</p>
+
+            <h2>7.2 Portainer</h2>
+            <p>Dashboard visual para telemetría de CPU y RAM en tiempo real, reinicio de contenedores y lectura de logs sin depender de SSH.</p>
+          </article>
+
+          <!-- 8. INCIDENTES RESUELTOS -->
+          <article id="doc-art-incidentes" class="doc-article">
+            <h1 class="doc-article__title">8. Incidentes resueltos (bitácora)</h1>
+
+            <h2>8.1 Error 500 en /auth/register — connection string con IP pública</h2>
+            <p><strong>Síntoma:</strong> Timeout de conexión SQL (<code>SqlException</code>) al registrar un usuario.</p>
+            <p><strong>Causa:</strong> La connection string apuntaba a <code>Server=46.224.101.88</code> en vez de <code>Server=idempotencia-sqlserver</code>, cayendo en un bloqueo por hairpin NAT.</p>
+            <p><strong>Solución:</strong> Corregir el servidor al nombre del contenedor en la red Docker. Conexión restablecida de inmediato con latencia &lt;1ms.</p>
+
+            <h2>8.2 Volumen duplicado de SQL Server al recrear el contenedor</h2>
+            <p><strong>Síntoma:</strong> Al aplicar <code>--force-recreate</code>, Docker creó un nuevo volumen vacío ocultando los datos reales por discrepancia en el nombre de la carpeta.</p>
+            <p><strong>Solución:</strong> Backup preventivo inmediato vía T-SQL (<code>.bak</code>), extracción de los 8 procedimientos almacenados, purga del volumen vacío y declaración explícita de volumen externo:</p>
+            <pre><code>volumes:
+  sqlserver-data:
+    external: true
+    name: idempotencia-db_sqlserver-data</code></pre>
+            <p>Resultado: <strong>Cero pérdida de datos</strong>.</p>
+
+            <h2>8.3 appsettings.json montado como directorio</h2>
+            <p>Docker crea un directorio si el archivo no existe en el momento del primer bind mount. Corregido eliminando la imagen y reconstruyendo con <code>docker compose build --no-cache</code>.</p>
+
+            <h2>8.4 Permisos del appsettings.json (chmod 600 vs 644)</h2>
+            <p>El proceso dentro del contenedor corre como usuario no-root <code>app</code>. Un permiso 600 bloqueaba su lectura. Se ajustó a <code>644</code> montado como solo lectura.</p>
+          </article>
+
+          <!-- 9. BACKUPS Y PERSISTENCIA -->
+          <article id="doc-art-backups" class="doc-article">
+            <h1 class="doc-article__title">9. Backups y persistencia</h1>
+            <p><strong>Respaldos realizados (ad-hoc):</strong></p>
+            <ul>
+              <li>Backup completo de SQL Server (<code>.bak</code>) en <code>/home/devop/idempotencia-db-sqlserver/</code>.</li>
+              <li>Exportación de stored procedures de negocio en texto plano (<code>sps_backup.sql</code>).</li>
+            </ul>
+            <p>Se encuentra planificada la automatización de respaldos periódicos vía cron para los 4 motores hacia almacenamiento externo.</p>
+          </article>
+
+          <!-- 10. PENDIENTES ABIERTOS -->
+          <article id="doc-art-pendientes" class="doc-article">
+            <h1 class="doc-article__title">10. Pendientes abiertos</h1>
+            <ul>
+              <li><strong>Alta prioridad:</strong> Parametrizar la IP de Tailscale vía secrets y cerrar puertos de QA al exterior.</li>
+              <li><strong>Media prioridad:</strong> Backups automatizados recurrentes y persistencia de DataProtection Keys.</li>
+              <li><strong>Mediano plazo:</strong> Migrar la lógica de negocio de la base <code>master</code> a una base de datos dedicada (<code>idempotencia_app</code>).</li>
+            </ul>
+          </article>
+
+          <!-- 11. KUBERNETES -->
+          <article id="doc-art-kubernetes" class="doc-article">
+            <h1 class="doc-article__title">11. Kubernetes — evaluado y descartado por ahora</h1>
+            <p>
+              Se evaluó migrar los contenedores a Kubernetes (k3s). Conclusión técnica: <strong>no es viable en el servidor actual</strong>. La VPS es un solo nodo físico de 4 GB de RAM, y K8s consume entre 1.0 y 1.4 GB únicamente para su plano de control (API server, etcd, kubelet) sin aportar tolerancia a fallos entre máquinas.
+            </p>
+            <p>
+              Se continuará con Docker Compose optimizado y se reevaluará Kubernetes gestionado solo si el proyecto escala a múltiples servidores físicos.
+            </p>
+          </article>
+
+          <!-- 12. LECCIONES OPERATIVAS -->
+          <article id="doc-art-lecciones" class="doc-article">
+            <h1 class="doc-article__title">12. Lecciones operativas (referencia rápida)</h1>
+            <ul>
+              <li><strong>Docker bypassea ufw</strong> al publicar puertos: verificar siempre con <code>ss -tulnp</code> y pruebas TCP reales.</li>
+              <li>Las cadenas de conexión dentro de contenedores deben usar siempre el <strong>nombre del contenedor</strong>, nunca IPs públicas.</li>
+              <li>Antes de un <code>--force-recreate</code> con datos persistentes, verificar con <code>docker inspect</code> cuál es el volumen en uso y declararlo <code>external: true</code>.</li>
+              <li>Un contenedor en estado "Up" no garantiza servicio: validar con logs y pruebas de conexión internas.</li>
+            </ul>
+          </article>
+
+          <!-- PAGINACIÓN ANTERIOR / SIGUIENTE ESTILO DOCUSAURUS -->
+          <div class="doc-pagination">
+            <div class="doc-pagination__card prev" id="doc-pag-prev" style="visibility:hidden;">
+              <span class="doc-pagination__label">Anterior</span>
+              <span class="doc-pagination__title">« </span>
+            </div>
+            <div class="doc-pagination__card next" id="doc-pag-next">
+              <span class="doc-pagination__label">Siguiente</span>
+              <span class="doc-pagination__title">Firewall »</span>
+            </div>
+          </div>
+
+        </main>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       VISTA 3: VISOR DE DOCUMENTACIÓN TÉCNICA OFICIAL (POLARIS - K8S & AWS)
+       Documentación técnica completa: Infraestructura AWS, Plataforma K8s y Datos ETL
+       ========================================================================== -->
+  <div id="view-proyecto-polaris" class="view-section project-view">
+    <div class="doc-viewer">
+
+      <!-- NAVBAR SUPERIOR ESTILO DOCUSAURUS -->
+      <nav class="doc-navbar">
+        <div style="display:flex; align-items:center; gap:1.25rem;">
+          <a href="#inicio" class="doc-back-link" title="Regresar al Dashboard Principal">
+            ← Volver al Portafolio
+          </a>
+          <div class="doc-navbar__brand">
+            <span style="font-size:1.4rem;">🌟</span>
+            <span>polaris</span>
+          </div>
+        </div>
+
+        <div class="doc-navbar__nav">
+          <span class="doc-navbar__item" style="opacity:0.6; cursor:default;">Manual de Usuario</span>
+          <span class="doc-navbar__item active" id="polaris-nav-tab-infra">Infraestructura (AWS)</span>
+          <span class="doc-navbar__item" id="polaris-nav-tab-plat">Plataforma (K8s)</span>
+          <span class="doc-navbar__item" id="polaris-nav-tab-datos">Datos (Airflow)</span>
+        </div>
+
+        <div class="navbar__actions">
+          <button class="theme-toggle" aria-label="Cambiar tema">
+            <svg class="theme-icon-slot" viewBox="0 0 24 24" fill="none" width="18" height="18">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      <!-- LAYOUT DOCS: BARRA LATERAL + CONTENIDO -->
+      <div class="doc-container">
+
+        <!-- BARRA LATERAL IZQUIERDA CON ACORDEONES -->
+        <aside class="doc-sidebar">
+          <div class="doc-sidebar__title">
+            <span>🌟 Polaris Docs</span>
+            <span class="badge badge--success" style="font-size:0.65rem; padding:0.15rem 0.45rem;">AWS K8s</span>
+          </div>
+
+          <!-- ENLACE INDEPENDIENTE: RESUMEN GENERAL -->
+          <ul class="doc-sidebar__list" style="margin-bottom:0.75rem;">
+            <li class="doc-sidebar__item">
+              <a href="#doc-polaris/resumen-general" class="doc-sidebar__link active" data-polaris-target="resumen-general">
+                📌 Resumen General
+              </a>
+            </li>
+          </ul>
+
+          <!-- CATEGORÍA 1: INFRAESTRUCTURA (AWS / IAC) -->
+          <div class="doc-sidebar__category" id="polaris-cat-box-infra">
+            <button class="doc-sidebar__category-btn" id="polaris-cat-btn-infra" type="button">
+              <span class="doc-sidebar__category-icon">☁️</span>
+              <span class="doc-sidebar__category-label">Infraestructura (AWS)</span>
+              <span class="doc-sidebar__category-arrow">▾</span>
+            </button>
+            <ul class="doc-sidebar__list">
+              <li class="doc-sidebar__item">
+                <a href="#doc-polaris/infra-arquitectura" class="doc-sidebar__link" data-polaris-target="infra-arquitectura">
+                  1. Arquitectura y Topología
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-polaris/infra-metodologia" class="doc-sidebar__link" data-polaris-target="infra-metodologia">
+                  2. Metodología de Trabajo
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-polaris/infra-cicd" class="doc-sidebar__link" data-polaris-target="infra-cicd">
+                  3. CI/CD e Infraestructura (IaC)
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-polaris/infra-troubleshooting" class="doc-sidebar__link" data-polaris-target="infra-troubleshooting">
+                  4. Troubleshooting y Lecciones
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- CATEGORÍA 2: PLATAFORMA (KUBERNETES / HELM) -->
+          <div class="doc-sidebar__category" id="polaris-cat-box-plat">
+            <button class="doc-sidebar__category-btn" id="polaris-cat-btn-plat" type="button">
+              <span class="doc-sidebar__category-icon">☸️</span>
+              <span class="doc-sidebar__category-label">Plataforma (K8s / Helm)</span>
+              <span class="doc-sidebar__category-arrow">▾</span>
+            </button>
+            <ul class="doc-sidebar__list">
+              <li class="doc-sidebar__item">
+                <a href="#doc-polaris/plat-componentes" class="doc-sidebar__link" data-polaris-target="plat-componentes">
+                  1. Arquitectura y Componentes
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-polaris/plat-decisiones" class="doc-sidebar__link" data-polaris-target="plat-decisiones">
+                  2. Decisiones Técnicas
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-polaris/plat-seguridad" class="doc-sidebar__link" data-polaris-target="plat-seguridad">
+                  3. Seguridad y DevSecOps
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-polaris/plat-cicd" class="doc-sidebar__link" data-polaris-target="plat-cicd">
+                  4. CI/CD y Despliegue
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- CATEGORÍA 3: APLICACIÓN DE DATOS (AIRFLOW / ETL) -->
+          <div class="doc-sidebar__category" id="polaris-cat-box-datos">
+            <button class="doc-sidebar__category-btn" id="polaris-cat-btn-datos" type="button">
+              <span class="doc-sidebar__category-icon">🔄</span>
+              <span class="doc-sidebar__category-label">Aplicación de Datos (Airflow)</span>
+              <span class="doc-sidebar__category-arrow">▾</span>
+            </button>
+            <ul class="doc-sidebar__list">
+              <li class="doc-sidebar__item">
+                <a href="#doc-polaris/datos-flujo" class="doc-sidebar__link" data-polaris-target="datos-flujo">
+                  1. Arquitectura y Flujo de Entrega
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-polaris/datos-pipeline" class="doc-sidebar__link" data-polaris-target="datos-pipeline">
+                  2. Pipeline ETL (Olist)
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-polaris/datos-modelo" class="doc-sidebar__link" data-polaris-target="datos-modelo">
+                  3. Modelo Analítico Estrella
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-polaris/datos-operacion" class="doc-sidebar__link" data-polaris-target="datos-operacion">
+                  4. CI/CD y Operación en K8s
+                </a>
+              </li>
+            </ul>
+          </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL DEL DOCUMENTO -->
+        <main class="doc-main">
+
+          <!-- MIGAS DE PAN ESTILO DOCUSAURUS -->
+          <nav class="doc-breadcrumbs">
+            <a href="#inicio" class="doc-breadcrumbs__item">🏠 Inicio</a>
+            <span class="doc-breadcrumbs__separator">›</span>
+            <span class="doc-breadcrumbs__item" id="polaris-breadcrumb-cat">Visión General</span>
+            <span class="doc-breadcrumbs__separator">›</span>
+            <span class="doc-breadcrumbs__current" id="polaris-breadcrumb-current">Resumen General</span>
+          </nav>
+
+          <!-- ==================== ARTÍCULOS TÉCNICOS ==================== -->
+
+          <!-- 0. RESUMEN GENERAL -->
+          <article id="polaris-art-resumen-general" class="doc-article active">
+            <h1 class="doc-article__title">Polaris — Plataforma ETL sobre Kubernetes Self-Managed en AWS</h1>
+            <p class="doc-article__lead">
+              Plataforma integral de orquestación de datos e infraestructura como código construida sobre Kubernetes autoadministrado en AWS (K3s), con red Cilium (eBPF), empaquetado en Helm y pipeline ETL de Airflow desacoplado con Git-Sync.
+            </p>
+
+            <h2>¿Qué es Polaris?</h2>
+            <p>
+              Polaris es un proyecto de portafolio construido con el objetivo de demostrar dominio práctico de <strong>Kubernetes, Helm y Cilium</strong> en un entorno de datos real. A diferencia de un tutorial aislado, Polaris resuelve un problema de datos real de principio a fin, sobre una infraestructura completa desplegada en AWS y administrada por mí mismo (self-managed), no sobre un servicio gestionado como EKS.
+            </p>
+            <p>
+              <strong>Proyecto individual</strong>, desarrollado en aproximadamente <strong>dos semanas</strong>, sin equipo — desde el diseño de la infraestructura hasta el pipeline ETL funcional de punta a punta.
+            </p>
+
+            <h2>El Problema de Negocio</h2>
+            <p>
+              El punto de partida es un dataset público de Kaggle (<strong>Brazilian E-Commerce de Olist</strong>) con condiciones típicas de un entorno de datos real y no controlado:
+            </p>
+            <ul>
+              <li><strong>Formatos erróneos:</strong> columnas con tipos de datos inconsistentes entre archivos CSV.</li>
+              <li><strong>Datos incompletos:</strong> valores nulos y registros parciales en pagos y clientes.</li>
+              <li><strong>Datos desestructurados:</strong> información que requiere normalización antes de ser analizable.</li>
+            </ul>
+
+            <h2>Mi Rol</h2>
+            <ul>
+              <li><strong>DevOps / DevSecOps:</strong> diseño y automatización de la infraestructura (Terraform + Ansible), plataforma de Kubernetes y controles de seguridad automatizados en CI/CD.</li>
+              <li><strong>Ingeniero de Datos:</strong> diseño del modelo analítico estrella en PostgreSQL, desarrollo de scripts ETL y definición de DAGs en Apache Airflow.</li>
+            </ul>
+
+            <h2>Por qué K3s self-managed y no EKS</h2>
+            <ol>
+              <li><strong>Costo:</strong> administrar el control plane directamente sobre EC2 evita el cargo fijo mensual por clúster que cobra AWS EKS.</li>
+              <li><strong>Aprendizaje real:</strong> operar K3s desde cero — bootstrap del control plane, unión de workers, instalación de CNI Cilium, gestión de storage EBS CSI — obliga a entender los fundamentos que un servicio gestionado abstrae.</li>
+            </ol>
+
+            <h2>Decisión de Arquitectura: 3 Repositorios Desacoplados</h2>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Capa</th>
+                    <th>Responsabilidad</th>
+                    <th>Repositorio</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Infraestructura</strong></td>
+                    <td>VPC, subnets, EC2, IAM, EBS y bootstrap de K3s con Ansible</td>
+                    <td><code>polaris-infrastructure</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Plataforma</strong></td>
+                    <td>Kubernetes, Helm charts, Cilium, ingress-nginx, cert-manager y observabilidad</td>
+                    <td><code>polaris-kubernetes</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Aplicación de Datos</strong></td>
+                    <td>Imagen Airflow, DAGs de orquestación, extracción, transformación y carga</td>
+                    <td><code>polaris-airflow</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="doc-alert doc-alert--info">
+              <span class="doc-alert__icon">💡</span>
+              <div class="doc-alert__body">
+                <strong>Desacoplamiento clave vía Git-Sync:</strong> Los DAGs no forman parte de la imagen de Airflow. Kubernetes los sincroniza en tiempo de ejecución desde Git cada 30 segundos, permitiendo actualizar la lógica de negocio sin reconstruir ni redesplegar la imagen del orquestador.
+              </div>
+            </div>
+
+            <h2>DevSecOps: Seguridad y Calidad desde el Diseño</h2>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Herramienta</th>
+                    <th>Propósito en el Pipeline</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Trivy</strong></td>
+                    <td>Escaneo de vulnerabilidades críticas/altas en manifiestos, imágenes y dependencias</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Checkov</strong></td>
+                    <td>Análisis estático de seguridad sobre código Terraform y manifiestos renderizados</td>
+                  </tr>
+                  <tr>
+                    <td><strong>SonarCloud</strong></td>
+                    <td>Análisis de calidad de código y Quality Gate en cada Pull Request</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Infracost</strong></td>
+                    <td>Estimación automática de costos en cada PR de infraestructura</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2>Resultado y Métricas</h2>
+            <ul>
+              <li><strong>Costo estimado:</strong> ~$414 USD/mes (reportado automáticamente por Infracost en CI/CD).</li>
+              <li><strong>Tiempo de reconstrucción:</strong> ciclo completo de <code>destroy</code> + <code>rebuild</code> automatizado en <strong>20 a 30 minutos</strong>.</li>
+            </ul>
+          </article>
+
+          <!-- 1. INFRAESTRUCTURA - ARQUITECTURA Y TOPOLOGÍA -->
+          <article id="polaris-art-infra-arquitectura" class="doc-article">
+            <h1 class="doc-article__title">Infraestructura — Arquitectura y Topología de Red</h1>
+            <p>
+              Repositorio: <code>polaris-infrastructure</code>. Este componente aprovisiona todos los recursos cloud en AWS mediante <strong>Terraform</strong> y orquesta el arranque del clúster <strong>K3s</strong> mediante <strong>Ansible</strong>, incluyendo el registro automatizado de un GitHub Actions self-hosted runner y de un Deploy Key SSH.
+            </p>
+
+            <h2>Stack Tecnológico</h2>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Área</th>
+                    <th>Tecnología / Enfoque</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Cloud</td><td>AWS (us-east-1)</td></tr>
+                  <tr><td>IaC</td><td>Terraform (módulos networking, compute, iam, security_groups)</td></tr>
+                  <tr><td>CaC</td><td>Ansible (roles k8s_master, k8s_worker, helm, ebs_csi, runner)</td></tr>
+                  <tr><td>Orquestación</td><td>K3s (Kubernetes ligero)</td></tr>
+                  <tr><td>CNI</td><td>Cilium (eBPF)</td></tr>
+                  <tr><td>Ingress</td><td>NGINX Ingress Controller</td></tr>
+                  <tr><td>CI/CD Runner</td><td>GitHub Actions Self-Hosted Runner en nodo privado</td></tr>
+                  <tr><td>Calidad & Costos</td><td>TFLint, Checkov, Infracost, SonarCloud</td></tr>
+                  <tr><td>Autenticación CI</td><td>GitHub Actions + AWS OIDC (sin credenciales estáticas)</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2>Topología de Red AWS</h2>
+            <div class="doc-code-block">
+              <div class="doc-code-block__header">Topología VPC y Subredes</div>
+              <pre><code>Internet (0.0.0.0/0)
+    │
+[Internet Gateway]
+    │
+[VPC 12.0.0.0/16]
+    ├── [Subnet Pública — 12.0.1.0/24]
+    │       EC2-1: svr-proxy (Bastión + NGINX Ingress + Elastic IP) [c7i-flex.large]
+    │       NAT Gateway (Egress de subred privada)
+    │
+    └── [Subnet Privada — 12.0.2.0/24] (Aislada de Internet directo)
+            EC2-2: svr-airflow   (K3s Control Plane + GitHub Runner + Deploy Key)
+            EC2-3: svr-rabbitmq  (Worker K8s: Broker RabbitMQ)
+            EC2-4a: svr-celery-1 (Worker K8s: Celery Worker 1)
+            EC2-4b: svr-celery-2 (Worker K8s: Celery Worker 2)
+            EC2-5: svr-db        (Worker K8s: Base de Datos PostgreSQL)</code></pre>
+            </div>
+
+            <h2>Inventario de Instancias EC2</h2>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Instancia</th>
+                    <th>Hostname</th>
+                    <th>Función</th>
+                    <th>Subred</th>
+                    <th>Rol K8s</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>EC2-1</td><td>svr-proxy</td><td>Bastión + controlador NGINX Ingress</td><td>Pública</td><td>Edge / Proxy</td></tr>
+                  <tr><td>EC2-2</td><td>svr-airflow</td><td>Plano de control K3s + Airflow + Runner</td><td>Privada</td><td>Control Plane</td></tr>
+                  <tr><td>EC2-3</td><td>svr-rabbitmq</td><td>Broker de mensajería RabbitMQ</td><td>Privada</td><td>Worker</td></tr>
+                  <tr><td>EC2-4 (×2)</td><td>svr-celery-1/2</td><td>Workers Celery paralelos</td><td>Privada</td><td>Worker</td></tr>
+                  <tr><td>EC2-5</td><td>svr-db</td><td>Warehouse y metadatos PostgreSQL</td><td>Privada</td><td>Worker</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>
+              Todas las instancias comparten configuración de seguridad estricta: tipo <code>c7i-flex.large</code>, <strong>IMDSv2 forzado</strong> y volúmenes EBS <strong>gp3 encriptados</strong> con llaves administradas por KMS.
+            </p>
+          </article>
+
+          <!-- 2. INFRAESTRUCTURA - METODOLOGÍA -->
+          <article id="polaris-art-infra-metodologia" class="doc-article">
+            <h1 class="doc-article__title">Infraestructura — Metodología de Trabajo</h1>
+            <p class="doc-article__lead">
+              Estrategia de desarrollo sistemática: paso de configuración manual validada a automatización reproducible con Ansible y Terraform.
+            </p>
+
+            <h2>Secuencia: Manual → Documentado → Automatizado</h2>
+            <ol>
+              <li><strong>Configurar manualmente primero:</strong> instalación y prueba directa en instancias EC2 (K3s, Cilium, runner, deploy key) hasta llegar a un estado saludable.</li>
+              <li><strong>Documentar cada paso validado:</strong> registro exacto de paquetes, variables de entorno y comandos necesarios.</li>
+              <li><strong>Traducir a roles de Ansible (CaC):</strong> estructuración de 6 roles ordenados en <code>site.yml</code> (<code>k8s_master</code>, <code>k8s_worker</code>, <code>helm</code>, <code>ebs_csi_driver</code>, <code>github_runner</code>, <code>deploy_key</code>).</li>
+            </ol>
+
+            <h2>Inyección de Secretos sin Ansible Vault</h2>
+            <p>
+              Los secretos que requiere Ansible (PAT de GitHub, IP de control plane, llaves del CSI Driver) se inyectan como variables de entorno mediante <code>lookup('env', ...)</code> cargadas desde un archivo <code>.env</code> local excluido de Git.
+            </p>
+            <div class="doc-alert doc-alert--warning">
+              <span class="doc-alert__icon">⚠️</span>
+              <div class="doc-alert__body">
+                <strong>Trade-off consciente:</strong> Se priorizó la reproducibilidad desatendida (sin tener que desbloquear un vault interactivo en cada reconstrucción), sabiendo que en producción corporativa se optaría por HashiCorp Vault o AWS Secrets Manager.
+              </div>
+            </div>
+          </article>
+
+          <!-- 3. INFRAESTRUCTURA - CICD IAC -->
+          <article id="polaris-art-infra-cicd" class="doc-article">
+            <h1 class="doc-article__title">Infraestructura — CI/CD e Infraestructura como Código</h1>
+
+            <h2>Patrón Plan-and-Apply con Aprobación Manual</h2>
+            <p>
+              Cada push o PR a <code>main</code> valida la sintaxis y genera un plan de Terraform; la aplicación real (<code>apply</code>) exige aprobación manual mediante GitHub Environments, reutilizando el plan previamente compilado como artefacto inmutable.
+            </p>
+
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Etapa</th>
+                    <th>Herramienta</th>
+                    <th>Propósito</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Auth</td><td><code>aws-actions/configure-aws-credentials</code></td><td>Federación OIDC sin credenciales estáticas de larga duración</td></tr>
+                  <tr><td>Lint</td><td>TFLint</td><td>Reglas de buenas prácticas de Terraform</td></tr>
+                  <tr><td>Validate</td><td><code>terraform validate</code></td><td>Chequeo formal de sintaxis</td></tr>
+                  <tr><td>Security</td><td>Checkov</td><td>Análisis estático de seguridad sobre IaC</td></tr>
+                  <tr><td>Costos</td><td>Infracost</td><td>Estimación de impacto financiero en cada PR</td></tr>
+                  <tr><td>Calidad</td><td>SonarCloud</td><td>Quality Gate de código</td></tr>
+                  <tr><td>Plan</td><td><code>terraform plan</code></td><td>Generación de plan de ejecución reproducible</td></tr>
+                  <tr><td>Apply</td><td><code>terraform apply</code></td><td>Despliegue protegido con aprobación en Environment</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2>Infracost: Visibilidad Financiera Continua</h2>
+            <p>
+              El costo de Polaris se estima en <strong>~$414 USD/mes</strong>, distribuido en 6 instancias EC2 <code>c7i-flex.large</code>, un NAT Gateway y volúmenes EBS gp3.
+            </p>
+          </article>
+
+          <!-- 4. INFRAESTRUCTURA - TROUBLESHOOTING -->
+          <article id="polaris-art-infra-troubleshooting" class="doc-article">
+            <h1 class="doc-article__title">Infraestructura — Troubleshooting y Lecciones Aprendidas</h1>
+            <p>
+              Bitácora de problemas reales encontrados durante los múltiples ciclos de <code>destroy</code> y <code>rebuild</code> de Polaris, con su análisis causa-raíz y solución.
+            </p>
+
+            <h2>1. Kubernetes y Cilium</h2>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr><th>Síntoma</th><th>Causa</th><th>Solución Técnica</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>kubectl get node</code> falla con permission denied</td>
+                    <td><code>kubectl</code> es symlink a <code>k3s</code>, que ignora <code>~/.kube/config</code> si <code>KUBECONFIG</code> no está exportado</td>
+                    <td>Exportar <code>KUBECONFIG=$HOME/.kube/config</code> y en tareas de Ansible con <code>become_user</code> declarar <code>environment: {KUBECONFIG: ...}</code></td>
+                  </tr>
+                  <tr>
+                    <td><code>cilium has no deployed releases</code> al hacer upgrade</td>
+                    <td>Clúster nuevo sin instalación previa de Cilium</td>
+                    <td>Condicionar tareas con <code>helm status cilium -n kube-system</code> (existencia), no por <code>cilium status</code> (salud)</td>
+                  </tr>
+                  <tr>
+                    <td>Workers en <code>NotReady</code> indefinidamente</td>
+                    <td><code>K3S_URL</code> en el join del worker sin puerto explícito</td>
+                    <td>Agregar <code>:6443</code> explícito en la URL de join del cluster</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2>2. Ansible</h2>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr><th>Síntoma</th><th>Causa</th><th>Solución Técnica</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>hostvars[...]['ansible_host'] undefined</code></td>
+                    <td>El inventario usa alias SSH con ProxyJump</td>
+                    <td>Usar variables de entorno o variables custom en lugar de sobrescribir <code>ansible_host</code></td>
+                  </tr>
+                  <tr>
+                    <td>Role existe pero nunca se ejecuta</td>
+                    <td>El role no estaba referenciado en <code>site.yml</code></td>
+                    <td>Confirmar siempre que <code>site.yml</code> invoque el role en algún play</td>
+                  </tr>
+                  <tr>
+                    <td><code>sudo: interactive authentication required</code> en <code>delegate_to: localhost</code></td>
+                    <td>Hereda <code>become: true</code> del play en la máquina de control</td>
+                    <td>Añadir <code>become: false</code> explícito en tareas delegadas a localhost</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2>3. GitHub Actions Runner y Deploy Key</h2>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr><th>Síntoma</th><th>Causa</th><th>Solución Técnica</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>Invalid header value b'Bearer ...\r'</code></td>
+                    <td>Archivo <code>.env</code> con terminadores CRLF de Windows</td>
+                    <td>Ejecutar <code>sed -i 's/\r$//' .env</code> y añadir filtro <code>| trim</code> en Ansible</td>
+                  </tr>
+                  <tr>
+                    <td><code>kubectl apply</code> falla con permission denied desde el runner</td>
+                    <td>El runner corre como servicio systemd sin variables de shell</td>
+                    <td>Declarar <code>KUBECONFIG=/home/ubuntu/.kube/config</code> en <code>actions-runner/.env</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- 5. PLATAFORMA - COMPONENTES -->
+          <article id="polaris-art-plat-componentes" class="doc-article">
+            <h1 class="doc-article__title">Plataforma — Arquitectura y Componentes</h1>
+            <p>
+              Repositorio: <code>polaris-kubernetes</code>. Capa de plataforma que empaqueta y orquesta todos los servicios sobre el clúster K3s.
+            </p>
+
+            <h2>Componentes Desplegados</h2>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Componente</th>
+                    <th>Implementación</th>
+                    <th>Propósito</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Orquestación ETL</td><td>Apache Airflow (CeleryExecutor)</td><td>Programar y coordinar DAGs</td></tr>
+                  <tr><td>Ejecución Distribuida</td><td>Celery Workers</td><td>Ejecución paralela de tareas de transformación</td></tr>
+                  <tr><td>Mensajería</td><td>RabbitMQ</td><td>Message broker para cola de Celery</td></tr>
+                  <tr><td>Persistencia</td><td>PostgreSQL</td><td>Metadatos de Airflow y Data Warehouse analítico</td></tr>
+                  <tr><td>Networking</td><td>Cilium</td><td>CNI de alto rendimiento con eBPF y NetworkPolicies</td></tr>
+                  <tr><td>Entrada</td><td>ingress-nginx</td><td>Exposición de servicios HTTP/HTTPS con TLS</td></tr>
+                  <tr><td>Certificados</td><td>cert-manager + Let's Encrypt</td><td>Emisión y renovación automática de certificados SSL</td></tr>
+                  <tr><td>Observabilidad</td><td>kube-prometheus-stack</td><td>Prometheus, Grafana, Alertmanager y exporters</td></tr>
+                  <tr><td>Empaquetado</td><td>Helm 3</td><td>Configuración y versionado de releases declarativos</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2>Namespaces por Dominio</h2>
+            <p>
+              Aislamiento estricto en tres namespaces: <code>airflow</code>, <code>data</code> y <code>monitoring</code>.
+            </p>
+          </article>
+
+          <!-- 6. PLATAFORMA - DECISIONES TÉCNICAS -->
+          <article id="polaris-art-plat-decisiones" class="doc-article">
+            <h1 class="doc-article__title">Plataforma — Decisiones Técnicas</h1>
+
+            <h2>Helm con Valores Separados del Chart</h2>
+            <p>
+              Los charts upstream (Bitnami, Apache Airflow, Prometheus Community) se consumen directamente y las personalizaciones residen en <code>charts/*/values.yaml</code>. El pipeline descarga los charts, ejecuta <code>helm lint</code> y genera manifiestos en <code>rendered/</code> para ser auditados por Checkov y Trivy.
+            </p>
+
+            <h2>Airflow Desplegado sin <code>--wait</code></h2>
+            <p>
+              Airflow se despliega sin la bandera <code>--wait</code> de Helm para evitar un bloqueo circular con su hook de migración de base de datos. La verificación de salud se ejecuta posteriormente una vez completada la migración.
+            </p>
+
+            <h2>Almacenamiento Persistente EBS CSI</h2>
+            <p>
+              PostgreSQL, RabbitMQ y la observabilidad utilizan la StorageClass <code>ebs-sc</code>, permitiendo reprogramar pods de estado en cualquier nodo sin riesgo de pérdida de datos.
+            </p>
+          </article>
+
+          <!-- 7. PLATAFORMA - SEGURIDAD DEVSECOPS -->
+          <article id="polaris-art-plat-seguridad" class="doc-article">
+            <h1 class="doc-article__title">Plataforma — Seguridad y DevSecOps</h1>
+            <p class="doc-article__lead">
+              La seguridad como condición inherente de entrega: escaneo estático, hardening de contenedores y TLS automático.
+            </p>
+
+            <h2>Controles en el Pipeline</h2>
+            <ul>
+              <li><strong>YAMLLint & Helm Lint:</strong> sintaxis de manifiestos y charts.</li>
+              <li><strong>Checkov:</strong> auditoría de seguridad sobre manifiestos renderizados.</li>
+              <li><strong>Trivy:</strong> escaneo de vulnerabilidades; detiene el pipeline ante hallazgos <code>CRITICAL</code> o <code>HIGH</code>.</li>
+              <li><strong>SonarCloud:</strong> cumplimiento del Quality Gate de código.</li>
+            </ul>
+
+            <h2>Hardening de Pods</h2>
+            <ul>
+              <li>Ejecución con <strong>usuario no root</strong>.</li>
+              <li>Perfil de seguridad <code>seccompProfile: RuntimeDefault</code>.</li>
+              <li>Capabilities de Linux eliminadas (<code>drop: ALL</code>) y restricción de escalado de privilegios.</li>
+            </ul>
+          </article>
+
+          <!-- 8. PLATAFORMA - CICD Y DESPLIEGUE -->
+          <article id="polaris-art-plat-cicd" class="doc-article">
+            <h1 class="doc-article__title">Plataforma — CI/CD y Despliegue</h1>
+
+            <h2>Secuencia del Pipeline</h2>
+            <div class="doc-code-block">
+              <pre><code>YAMLLint ➔ Helm lint + render + Checkov ➔ Trivy + SonarCloud ➔ Deploy en Runner Self-Hosted ➔ Verificación de rollouts</code></pre>
+            </div>
+
+            <h2>Lección: Versionado Inmutable de Charts</h2>
+            <p>
+              El pipeline fija versiones explícitas para Airflow, PostgreSQL y RabbitMQ. Un upgrade de Helm sin versión fijada modificó en una ocasión <code>volumeClaimTemplates</code> (campo inmutable de StatefulSet), forzando la recreación del PVC. Fijar las versiones eliminó de raíz este riesgo.
+            </p>
+          </article>
+
+          <!-- 9. DATOS - ARQUITECTURA Y FLUJO -->
+          <article id="polaris-art-datos-flujo" class="doc-article">
+            <h1 class="doc-article__title">Aplicación de Datos — Arquitectura y Flujo de Entrega</h1>
+            <p>
+              Repositorio: <code>polaris-airflow</code>. Responsable de construir la imagen de runtime, orquestar el pipeline de datos y publicar artefactos trazables en GitHub Container Registry (GHCR).
+            </p>
+
+            <h2>Flujo de Integración y Despliegue</h2>
+            <div class="doc-code-block">
+              <div class="doc-code-block__header">Flujo CI/CD de Datos</div>
+              <pre><code>Checkout
+  ├── Hadolint (Análisis de Dockerfile)
+  ├── Pytest + Cobertura de pruebas unitarias
+  ├── Build de imagen basada en apache/airflow:3.2.2
+  ├── Smoke test de imports y dependencias
+  ├── Trivy scan de la imagen construida
+  ├── SonarCloud Quality Gate
+  ├── Publicación en GHCR con tags &lt;commit-sha&gt; y latest
+  └── repository_dispatch (evento deploy-airflow hacia polaris-kubernetes)</code></pre>
+            </div>
+          </article>
+
+          <!-- 10. DATOS - PIPELINE ETL -->
+          <article id="polaris-art-datos-pipeline" class="doc-article">
+            <h1 class="doc-article__title">Aplicación de Datos — Pipeline ETL (Olist)</h1>
+            <p>
+              El DAG <code>olist_etl_pipeline</code> procesa el dataset brasileño de comercio electrónico con ejecución lineal para garantizar integridad entre etapas.
+            </p>
+
+            <h2>Fases del Pipeline</h2>
+            <ol>
+              <li><strong>Extracción (<code>kaggle_downloader.py</code>):</strong> descarga mediante Kaggle CLI, omitiendo archivos ya presentes para evitar tráfico y redundancia.</li>
+              <li><strong>Transformación (<code>clean_orders.py</code>):</strong> casteo de tipos temporales, derivación de macro-regiones, agregación previa de pagos y reseñas por pedido para evitar duplicidad de filas, y validación estricta de cantidad de registros.</li>
+              <li><strong>Carga (<code>postgres_loader.py</code>):</strong> carga por lotes de 2.000 filas con cláusula <code>ON CONFLICT DO NOTHING</code> dentro de una transacción ACID con rollback ante fallos.</li>
+            </ol>
+          </article>
+
+          <!-- 11. DATOS - MODELO ANALÍTICO -->
+          <article id="polaris-art-datos-modelo" class="doc-article">
+            <h1 class="doc-article__title">Aplicación de Datos — Modelo Analítico Estrella</h1>
+            <p>
+              Esquema estrella en PostgreSQL optimizado para consultas analíticas y consumo directo en herramientas de BI.
+            </p>
+
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Objeto</th>
+                    <th>Tipo</th>
+                    <th>Descripción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>analytics.dim_customer</code></td><td>Dimensión</td><td>Clientes, ciudades y macro-regiones</td></tr>
+                  <tr><td><code>analytics.dim_product</code></td><td>Dimensión</td><td>Productos, categorías y dimensiones físicas</td></tr>
+                  <tr><td><code>analytics.dim_seller</code></td><td>Dimensión</td><td>Vendedores y localización regional</td></tr>
+                  <tr><td><code>analytics.dim_date</code></td><td>Dimensión</td><td>Calendario derivado de fechas de pedidos</td></tr>
+                  <tr><td><code>analytics.fact_sales</code></td><td>Tabla de Hechos</td><td>Líneas de venta, precios, fletes y métricas de satisfacción</td></tr>
+                  <tr><td><code>analytics.v_order_metrics</code></td><td>Vista SQL</td><td>Métricas agregadas a nivel de orden</td></tr>
+                  <tr><td><code>analytics.v_sales_by_date_category</code></td><td>Vista SQL</td><td>Ventas agregadas por fecha y categoría de producto</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- 12. DATOS - CI/CD Y OPERACIÓN -->
+          <article id="polaris-art-datos-operacion" class="doc-article">
+            <h1 class="doc-article__title">Aplicación de Datos — CI/CD y Operación en K8s</h1>
+
+            <h2>Controles de Calidad y Seguridad</h2>
+            <ul>
+              <li><strong>UID 50000:</strong> la imagen no ejecuta procesos como root.</li>
+              <li><strong>GitHub Actions fijadas por SHA:</strong> reducción de ataques de cadena de suministro.</li>
+              <li><strong>SQL Parametrizado:</strong> uso estricto de <code>psycopg2.sql</code> y <code>execute_values</code> para prevenir inyección SQL.</li>
+            </ul>
+
+            <h2>Limitaciones Conocidas (Documentadas)</h2>
+            <ul>
+              <li>El DAG tiene <code>schedule=None</code> para dispararse de manera controlada.</li>
+              <li>El dataset incluye 9 archivos pero se modelan 8 (la geolocalización se conserva como insumo para fases analíticas futuras).</li>
+            </ul>
+          </article>
+
+          <!-- PAGINACIÓN ANTERIOR / SIGUIENTE -->
+          <div class="doc-pagination">
+            <div class="doc-pagination__card prev" id="polaris-pag-prev" style="visibility:hidden;">
+              <span class="doc-pagination__label">Anterior</span>
+              <span class="doc-pagination__title">« </span>
+            </div>
+            <div class="doc-pagination__card next" id="polaris-pag-next">
+              <span class="doc-pagination__label">Siguiente</span>
+              <span class="doc-pagination__title">Arquitectura y Topología »</span>
+            </div>
+          </div>
+
+        </main>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== FOOTER GLOBAL ==================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:1rem;">
+            <img src="./assets/logo.svg" alt="Logo" style="width:34px; height:34px; border-radius:8px;">
+            <h3 style="margin-bottom:0;">Juan Diego López Zuluaga</h3>
+          </div>
+          <p>
+            Ingeniero DevOps enfocado en automatización, seguridad perimetral, contenedores y optimización de infraestructura cloud.
+          </p>
+        </div>
+
+        <div class="footer__col">
+          <h4>Navegación</h4>
+          <ul class="footer__links">
+            <li><a href="#inicio" class="footer__link">Dashboard Principal</a></li>
+            <li><a href="#especialidades" class="footer__link">Especialidades DevOps</a></li>
+            <li><a href="#proyectos-catalogo" class="footer__link">Mis Proyectos</a></li>
+            <li><a href="#proyecto-idempotencia" class="footer__link">⚡ Caso Idempotencia</a></li>
+            <li><a href="#proyecto-polaris" class="footer__link">🌟 Caso Polaris (K8s AWS)</a></li>
+            <li><a href="#terminal-general" class="footer__link">Terminal</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h4>Contacto & Repositorios</h4>
+          <ul class="footer__links">
+            <li>
+              <a href="mailto:lopezzuluagaj3@gmail.com" class="footer__link">
+                ✉️ lopezzuluagaj3@gmail.com
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/lopezzuluagaj3-collab" target="_blank" rel="noopener noreferrer" class="footer__link">
+                🐙 GitHub: @lopezzuluagaj3-collab
+              </a>
+            </li>
+            <li>
+              <a href="https://www.linkedin.com/in/juan-diego-lopez-zuluaga/" target="_blank" rel="noopener noreferrer" class="footer__link">
+                🏗️ linkedin: juan-diego-lopez-zuluaga
+              </a>
+            </li>
+            <li>
+              <p>
+                📞 +57 300 876 1913
+              </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <div>
+          © 2026 Juan Diego López Zuluaga — Portafolio Profesional DevOps
+        </div>
+        <div style="display:flex; gap:1.25rem;">
+          <span style="display:inline-flex; align-items:center; gap:0.4rem;">
+            <span style="width:8px; height:8px; border-radius:50%; background:#4ade80;"></span>
+            Status: Available for Cloud & DevOps Projects
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Botón Flotante para Subir Suavemente (Scroll to Top) -->
+  <button id="scroll-to-top-btn" class="scroll-to-top" aria-label="Volver arriba" title="Subir suavemente al inicio">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <!-- Lógica JavaScript -->
+  <script src="./app.js"></script>
+</body>
+</html>

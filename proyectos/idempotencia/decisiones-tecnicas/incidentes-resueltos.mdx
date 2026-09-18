@@ -1,0 +1,41 @@
+---
+sidebar_position: 8
+title: Incidentes resueltos
+---
+
+# 8. Incidentes resueltos (bitácora)
+
+## 8.1 Error 500 en `/auth/register` — connection string con IP pública
+**Síntoma:** timeout de conexión SQL (`SqlException`) al registrar un usuario.
+**Causa:** la connection string de `ColmenaDbContext` apuntaba a `Server=46.224.101.88` en vez de `Server=idempotencia-sqlserver`.
+**Solución:** corregir el `Server=` al nombre del contenedor y reiniciar. Confirmado con registro exitoso y JWT devuelto.
+
+## 8.2 Volumen duplicado de SQL Server al recrear el contenedor
+**Síntoma:** al aplicar el nuevo binding de puerto con `--force-recreate`, Docker creó un volumen nuevo vacío (`idempotencia-db-sqlserver_sqlserver-data`) en vez de reutilizar el existente con datos reales (`idempotencia-db_sqlserver-data`) — mismatch entre el nombre de proyecto/carpeta y el volumen ya existente.
+
+**Solución aplicada:**
+1. Backup preventivo completo (`BACKUP DATABASE [master] TO DISK = ...`)
+2. Export de los procedimientos almacenados en texto plano (`sys.procedures` + `OBJECT_DEFINITION`)
+3. Ambos copiados al host con `docker cp` (sin wildcards — nombre exacto del archivo)
+4. Volumen vacío eliminado (`docker volume rm`)
+5. Compose corregido declarando el volumen explícitamente como `external: true`:
+```yaml
+services:
+  idempotencia-sqlserver:
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+volumes:
+  sqlserver-data:
+    external: true
+    name: idempotencia-db_sqlserver-data
+```
+6. Verificado con `docker inspect ... --format '{{ range .Mounts }}{{ .Name }}{{ println }}{{ end }}'`
+7. Confirmados intactos los 8 procedimientos almacenados de negocio
+
+**Lección:** antes de cualquier `--force-recreate` en un servicio con datos persistentes, verificar primero con `docker inspect` cuál es el volumen actualmente en uso, y declararlo explícitamente `external: true` si existe riesgo de que el nombre del proyecto genere un nombre de volumen distinto.
+
+## 8.3 `appsettings.json` montado como directorio en vez de archivo
+Si Docker no encuentra el archivo del host en el momento de crear el contenedor (por ejemplo si aún no existía o era una ruta mal escrita), crea automáticamente una **carpeta** en su lugar dentro del bind mount — y el tipo (archivo vs. carpeta) queda fijo hasta que el contenedor se recree desde cero. Causaba `UnauthorizedAccessException` / `mount ... not a directory` según el caso. Solución: corregir el archivo en el host, eliminar la imagen (`docker rmi`) y reconstruir sin caché (`docker compose build --no-cache`) para que la carpeta mal horneada no persista dentro de la imagen.
+
+## 8.4 Permisos del `appsettings.json` (chmod 600 vs 644)
+El proceso dentro del contenedor corre como usuario no-root (`app`), distinto al dueño del archivo en el host (`devop`). `chmod 600` bloqueaba la lectura desde el contenedor. Corregido a `644`.

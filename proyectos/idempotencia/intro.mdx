@@ -1,0 +1,48 @@
+---
+sidebar_position: 1
+---
+
+# DevOps
+
+Idempotencia corre sobre una **VPS única** (4 GB de RAM) que aloja todo el stack del proyecto: frontend, backend (producción y QA) y cuatro motores de base de datos, todo detrás de **Nginx Proxy Manager** con SSL de Let's Encrypt. El acceso administrativo (SSH, bases de datos, paneles internos) está cerrado al público y se gestiona mediante **Tailscale** (VPN privada) y **port knocking**.
+
+## Cómo está desplegado el stack
+
+Todos los servicios corren como contenedores de **Docker Compose**,
+conectados entre sí sobre una red externa compartida (`red-proxy`), lo que
+les permite comunicarse por nombre de contenedor sin exponerse entre ellos
+públicamente.
+
+- **Frontend** (`idempotencia-frontend` en producción,
+  `idempotencia-frontend-qa` en QA) — build multi-stage: **Node 20-alpine**
+  compila el sitio y **Nginx 1.27-alpine** lo sirve como estático. El
+  despliegue es automático vía GitHub Actions en cada push.
+- **Backend .NET** (`idempotencia-backend` en `:5555` para producción,
+  `idempotencia-qa-back` en `:5556` para QA) — Dockerfile multi-stage
+  (SDK 10 → runtime aspnet 10), corre con un usuario no-root (`app`).
+  `appsettings.json` se monta como volumen de solo lectura con las
+  credenciales reales (connection strings, JWT Key, secretos OAuth). El
+  pipeline de CI/CD hace *port knocking*, `git pull` y
+  `docker compose up --build` en cada push.
+- **Cuatro motores de base de datos** — SQL Server 2022, PostgreSQL 16,
+  MongoDB 7 y MySQL 8.4, cada uno en su propio contenedor con
+  `mem_limit`/`cpus` acotados, publicados **únicamente** sobre la IP
+  privada de Tailscale (`100.99.206.50:PUERTO`) — nunca sobre `0.0.0.0`.
+  Las connection strings del backend siempre usan el **nombre del
+  contenedor** (ej. `idempotencia-sqlserver`), nunca la IP pública ni la de
+  Tailscale, para evitar timeouts intermitentes.
+- **Nginx Proxy Manager (NPM)** — punto de entrada único para el tráfico
+  público; termina TLS con certificados de **Let's Encrypt** (renovación
+  automática) y enruta cada dominio hacia el contenedor de frontend o
+  backend de producción correspondiente. QA no pasa por NPM: se accede
+  directo por IP:puerto vía Tailscale.
+- **Portainer** — dashboard para gestión visual de los contenedores (CPU/RAM,
+  reinicios, logs), accesible solo dentro de la red de Tailscale.
+
+Como Idempotencia es un producto gestor de bases de datos para usuarios finales, a futuro algunos puertos de base de datos deberán exponerse de forma controlada para que herramientas externas (Airflow, DBeaver, etc.) se conecten directamente con credenciales propias.
+
+## Para profundizar
+
+El detalle completo de la infraestructura, la seguridad, los servicios
+desplegados y los incidentes resueltos está en la sección
+**[Documentación Técnica](./decisiones-tecnicas/resumen-general)**.

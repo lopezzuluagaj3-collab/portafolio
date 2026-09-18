@@ -1,0 +1,8 @@
+{
+  "label": "☁️ Documentación Técnica",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Infraestructura VPS de Idempotencia: firewall, acceso remoto, servicios desplegados, bases de datos, monitoreo, incidentes resueltos y pendientes abiertos."
+  }
+}

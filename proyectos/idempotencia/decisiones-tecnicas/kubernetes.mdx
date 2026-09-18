@@ -1,0 +1,8 @@
+---
+sidebar_position: 11
+title: Kubernetes
+---
+
+# 11. Kubernetes — evaluado y descartado por ahora
+
+Se evaluó migrar los ~9 contenedores actuales a Kubernetes. Conclusión: **no es viable en este momento** — la VPS es un solo nodo con 4 GB de RAM, y K8s (incluso `k3s`) consume recursos de control plane significativos sin aportar su beneficio principal (distribución entre múltiples nodos). Se recomienda continuar con Docker Compose (reforzado con `restart: unless-stopped` en todos los servicios) y reevaluar K8s administrado (EKS/GKE/DigitalOcean) solo si el proyecto escala a múltiples servidores.

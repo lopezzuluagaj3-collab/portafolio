@@ -1,0 +1,69 @@
+---
+sidebar_position: 2
+title: Firewall
+---
+
+# 2. Firewall — estado actual y hallazgo crítico
+
+## 2.1 Hallazgo de seguridad: Docker bypassea ufw
+
+Se descubrió que **Docker inyecta sus propias reglas en `iptables`** (cadenas `DOCKER` / `FORWARD`) al publicar un puerto con `ports: "0.0.0.0:PUERTO:PUERTO"` en un `docker-compose.yml`. Estas reglas son independientes de `ufw` y se evalúan aparte — por lo que **un puerto podía estar públicamente accesible desde internet aunque `ufw status` no mostrara ninguna regla `ALLOW` para él**. Es un conflicto conocido entre Docker y ufw.
+
+Esto se confirmó como la causa de un ataque de fuerza bruta real detectado contra el usuario `sa` de SQL Server, pese a que el diseño original asumía que ese puerto ya estaba restringido solo a Tailscale.
+
+**Método de verificación en 3 capas (usar ante cualquier duda sobre exposición de un puerto):**
+```bash
+docker ps                                          # qué publica Docker
+sudo ss -tulnp                                      # qué escucha realmente el host
+timeout 2 bash -c "echo > /dev/tcp/46.224.101.88/<puerto>" && echo "ABIERTO" || echo "cerrado"
+```
+
+## 2.2 Patrón de corrección aplicado
+
+En cada `docker-compose.yml` afectado, cambiar:
+```yaml
+ports:
+  - "0.0.0.0:PUERTO:PUERTO"
+```
+por:
+```yaml
+ports:
+  - "100.99.206.50:PUERTO:PUERTO"   # solo accesible vía Tailscale
+```
+y recrear: `docker compose up -d --force-recreate <servicio>`. Esto **no** afecta la comunicación interna entre contenedores (que usa el nombre de contenedor sobre la red Docker, no el binding público), ni requiere tocar volúmenes.
+
+## 2.3 Estado de cada puerto (snapshot actual)
+
+{/*
+Detalle de puertos omitido intencionalmente de la versión pública de esta
+documentación (algunos siguen pendientes de cerrar). Referencia interna:
+
+| Puerto | Servicio | Binding | Estado |
+|---|---|---|---|
+| 22 | SSH | público, restringido — ver Acceso remoto | ✅ Controlado |
+| 80 | NPM (HTTP) | público | ✅ Correcto (tráfico real) |
+| 443 | NPM (HTTPS) | público | ✅ Correcto (tráfico real) |
+| 81 | NPM panel admin | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
+| 1433 | SQL Server | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
+| 5432 | Postgres | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
+| 3306 | MySQL | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
+| 27017 | MongoDB | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
+| 9000 | Portainer | `100.99.206.50` (Tailscale only) | ✅ Correcto desde instalación |
+| 8090, 6060 | CrowdSec (API/métricas) | `127.0.0.1` | ✅ No expuesto |
+| 5555 | idempotencia-backend (prod) | interno (sin publicar) | ✅ No expuesto |
+| 8080 | idempotencia-frontend (prod) | público | ⏳ Pendiente de cerrar |
+| 8081 | idempotencia-frontend-qa | público | ⏳ Pendiente de cerrar |
+| 5556 | idempotencia-qa-back | público | ⏳ Pendiente de cerrar |
+| 7777 | idempotencia-documentacion | público | ⏳ Pendiente (evaluar si el contenedor sigue siendo necesario — la documentación ya vive en Vercel) |
+
+**Nota sobre los pendientes:** el cierre de estos 4 puertos está en pausa intencionalmente — la decisión fue parametrizar la IP de Tailscale vía `.env`/secrets antes de tocar los composes, para no dejar la IP hardcodeada en el repositorio de git.
+*/}
+
+La mayoría de los servicios están correctamente restringidos a la red privada de Tailscale o sin publicar; un puñado de puertos internos sigue pendiente de cerrarse al público (ver [Pendientes abiertos](./pendientes-abiertos)).
+
+## 2.4 Hardening base del sistema
+- `PermitRootLogin no`, `PasswordAuthentication no` (solo login por llave SSH) — **pendiente reconfirmar** que siga así en `/etc/ssh/sshd_config`
+- Usuario `devop` con sudo
+- fail2ban activo (jail `sshd`)
+- **CrowdSec** instalado como capa adicional de detección y bloqueo (ver [Monitoreo y seguridad activa](./monitoreo-seguridad))
+- `unattended-upgrades` instalado

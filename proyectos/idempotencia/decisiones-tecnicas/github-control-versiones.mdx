@@ -1,0 +1,26 @@
+---
+sidebar_position: 4
+title: GitHub / control de versiones
+---
+
+# 4. GitHub / control de versiones
+
+## 4.1 Organización
+Organización dedicada donde solo Juan es admin.
+
+## 4.2 Estrategia de ramas
+```
+feature/* → develop → QA → main
+```
+- **main:** producción, desplegada en la VPS
+- **QA:** también desplegada en la VPS (decisión revisada respecto al plan original de probarla solo local), apuntando a las **mismas bases de datos** que producción — no hay ambientes de datos separados por falta de recursos
+- **La rama QA está actualmente mucho más avanzada que main**, y se está usando activamente para probar la integración con las 4 bases de datos
+- Solo los roles **QA** y **DevOps** tienen permiso de push/merge a `main` y `QA`
+
+## 4.3 Branch protection rules (main y QA)
+- Pull request obligatorio antes de mergear
+- Restricción de push a un team dedicado (`qa-devop`)
+- Bloqueo de force-push y de borrado de rama
+- **Aprobaciones requeridas: 0** (decisión consciente — el equipo confía en el control manual del rol de QA)
+- **Status checks:** desactivados por ahora, no hay pruebas unitarias/CI de tests configurado
+- La validación de que un PR hacia `main` provenga específicamente de `QA` se hace de forma **manual**

@@ -1,0 +1,24 @@
+---
+sidebar_position: 10
+title: Pendientes abiertos
+---
+
+# 10. Pendientes abiertos
+
+**Alta prioridad:**
+1. Cerrar al público los puertos internos que aún quedan expuestos{/* : 8080, 8081, 5556, 7777 */} (en pausa — parametrizar la IP de Tailscale vía `.env`/secrets antes de tocar los composes)
+2. Rotar contraseñas de Postgres, MySQL y MongoDB (la de `sa` en SQL Server ya se rotó)
+3. Confirmar que `appsettings.json` no esté en el historial de git: `git log --all --full-history -- "**/appsettings.json"`
+4. Confirmar `PasswordAuthentication no` en `/etc/ssh/sshd_config`
+5. Confirmar que la API remota de Docker no quede expuesta en ningún compose futuro{/* (puertos 2375/2376) */}
+6. Diagnosticar y resolver el error 500 pendiente en `/auth/register` (QA) — ya descartada causa de red, pendiente revisar log completo (posible conflicto de unicidad u otro punto del flujo)
+
+**Media prioridad:**
+7. Backups automatizados recurrentes (cron) de las 4 bases de datos
+8. 2FA en GitHub (organización) y en Tailscale
+9. Revisar consumo real de RAM con todo el stack corriendo (identificado ~2.3 GB de 3.7 GB en reposo — margen ajustado)
+10. Persistir las DataProtection Keys del backend (`/home/app/.aspnet/DataProtection-Keys`) en un volumen
+
+**Baja prioridad / mediano plazo:**
+11. Migrar la lógica de negocio (procedimientos almacenados) de la base `master` a una base dedicada (`idempotencia_app` o similar)
+12. Diseñar la arquitectura de exposición segura de las 4 DBs para **usuarios finales externos** del producto — aislamiento por cliente (usuario/base dedicada por cliente), proxy tipo HAProxy/PgBouncer/ProxySQL como punto único expuesto, rate limiting y fail2ban por motor. Sigue en fase de discusión conceptual, sin implementación.

@@ -1,0 +1,42 @@
+---
+sidebar_position: 6
+title: Bases de datos
+---
+
+# 6. Bases de datos
+
+Las cuatro bases de datos comparten el mismo patrón de seguridad: publicadas únicamente sobre la IP de Tailscale, nunca sobre `0.0.0.0`.
+
+{/*
+| Motor | Contenedor | Puerto | Usuario admin | Notas |
+|---|---|---|---|---|
+| SQL Server 2022 | `idempotencia-sqlserver` | 1433 | `sa` (contraseña ya rotada) | Base principal (`master`) — compartida entre prod y QA |
+| PostgreSQL 16 | `idempotencia-postgres` | 5432 | `postgres` | Base `main` |
+| MongoDB 7 | `idempotencia-mongodb` | 27017 | `admin` | Auth database: `admin` |
+| MySQL 8.4 | `idempotencia-mysql` | 3306 | `root` / `idempotencia` | Base `main`; usuario de aplicación con acceso limitado al schema |
+*/}
+
+| Motor | Contenedor | Usuario admin | Notas |
+|---|---|---|---|
+| SQL Server 2022 | `idempotencia-sqlserver` | `sa` (contraseña ya rotada) | Base principal (`master`) — compartida entre prod y QA |
+| PostgreSQL 16 | `idempotencia-postgres` | `postgres` | Base `main` |
+| MongoDB 7 | `idempotencia-mongodb` | `admin` | Auth database: `admin` |
+| MySQL 8.4 | `idempotencia-mysql` | `root` / `idempotencia` | Base `main`; usuario de aplicación con acceso limitado al schema |
+
+Todos con `mem_limit: 512m`, `cpus: 0.5` y logging con rotación.
+
+## 6.1 Deuda técnica importante — lógica de negocio en `master`
+Toda la lógica de negocio (procedimientos almacenados) vive actualmente dentro de la base **`master`** de SQL Server, en vez de una base dedicada (ej. `idempotencia_app`). Esto es riesgoso para backups selectivos y migraciones futuras — pendiente de migrar (ver [Pendientes abiertos](./pendientes-abiertos)).
+
+**Procedimientos almacenados confirmados existentes:** `sp_GetLoginByEmail`, `sp_UpsertExternalLogin`, `sp_RegisterUser`, `sp_GetPlatformStatistics`, `sp_ReserveDatabase`, `sp_ConfirmDatabase`, `sp_FailDatabase`, `sp_GetUserDatabases`.
+
+## 6.2 Notas técnicas relevantes
+- **La contraseña (`POSTGRES_PASSWORD`, `MYSQL_ROOT_PASSWORD`, etc.) solo se aplica en la primera inicialización del volumen de datos.** Cambiarla en el compose después no la actualiza — hay que borrar el volumen (si no hay datos que conservar) o cambiarla manualmente dentro del contenedor.
+- **Símbolos `$` en contraseñas dentro de `docker-compose.yml` deben escribirse como `$$`**, o Docker Compose los interpreta como variable y los descarta silenciosamente. Recomendado generar contraseñas sin ese símbolo (`openssl rand -base64 24 | tr -d '$'`).
+- **MySQL con `caching_sha2_password`** puede dar error *"Public Key Retrieval is not allowed"* en DBeaver — se soluciona con `allowPublicKeyRetrieval=true` en Driver properties.
+- **Comunicación interna entre contenedores:** el backend debe usar siempre el **nombre del contenedor** en las connection strings (ej. `idempotencia-sqlserver`), no la IP pública ni la de Tailscale — usar IP pública desde dentro de la propia VPS puede causar timeouts intermitentes por hairpin NAT combinado con el firewall.
+
+## 6.3 Conexión desde DBeaver / herramientas externas (equipo interno)
+- **Host:** `100.99.206.50` (IP privada de Tailscale de la VPS)
+- **Puerto:** el que corresponda a cada motor{/* (1433 / 5432 / 27017 / 3306) */}
+- **SSL/TrustServerCertificate:** activado donde aplique

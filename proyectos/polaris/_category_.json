@@ -1,0 +1,10 @@
+{
+  "label": "Polaris",
+  "position": 2,
+  "collapsible": true,
+  "collapsed": true,
+  "link": {
+    "type": "doc",
+    "id": "proyectos/polaris/resumen-general"
+  }
+}

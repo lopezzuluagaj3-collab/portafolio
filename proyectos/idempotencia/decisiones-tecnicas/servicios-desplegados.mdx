@@ -1,0 +1,51 @@
+---
+sidebar_position: 5
+title: Servicios desplegados
+---
+
+# 5. Servicios desplegados
+
+Todos corren en Docker Compose, conectados a la red externa compartida **`red-proxy`**.
+
+{/*
+| Servicio | Contenedor | Dominio / Puerto | Puerto interno |
+|---|---|---|---|
+| Frontend (prod) | `idempotencia-frontend` | `idempotencia.andrescortes.dev` | 80 |
+| Frontend (QA) | `idempotencia-frontend-qa` | público en `:8081` (pendiente cerrar) | — |
+| Backend (prod) | `idempotencia-backend` | `api.idempotencia.andrescortes.dev` | 5555 |
+| Backend (QA) | `idempotencia-qa-back` | público en `:5556` (pendiente cerrar) | 5556 |
+| Nginx Proxy Manager | — | panel en `100.99.206.50:81` | — |
+| Portainer | `portainer` | `100.99.206.50:9000` | 9000 |
+*/}
+
+| Servicio | Contenedor | Dominio |
+|---|---|---|
+| Frontend (prod) | `idempotencia-frontend` | `idempotencia.andrescortes.dev` |
+| Frontend (QA) | `idempotencia-frontend-qa` | acceso interno (pendiente cerrar al público) |
+| Backend (prod) | `idempotencia-backend` | `api.idempotencia.andrescortes.dev` |
+| Backend (QA) | `idempotencia-qa-back` | acceso interno (pendiente cerrar al público) |
+| Nginx Proxy Manager | — | panel accesible solo vía Tailscale |
+| Portainer | `portainer` | accesible solo vía Tailscale |
+
+> **Documentación (Docusaurus):** ya no corre en la VPS de forma permanente. Se migró a **Vercel** (con CI/CD integrado). El contenedor `idempotencia-documentacion` sigue existiendo en la VPS, expuesto públicamente{/* (puerto 7777) */} — pendiente evaluar si debe eliminarse por completo.
+
+## 5.1 Frontend
+- Build multi-stage: Node 20-alpine (build) + Nginx 1.27-alpine (serve)
+- `mem_limit: 256m`, `cpus: 0.5`
+- CI/CD: GitHub Actions con despliegue automático (tanto prod como QA)
+
+## 5.2 Backend (.NET / idempotencia-back)
+- Dockerfile multi-stage (SDK 10.0 → aspnet 10.0), usuario no-root (`app`)
+- Producción y QA escuchan en puertos internos distintos{/* : ASPNETCORE_URLS=http://+:5555 (prod) / :5556 (QA) — el 5555 ya estaba en uso */}
+- **`appsettings.json` se monta como volumen de solo lectura** en ambos ambientes — contiene credenciales reales (connection strings, JWT Key, `ClientSecret` OAuth Google/GitHub)
+- **Todas las connection strings dentro de `appsettings.json` deben usar el nombre del contenedor** (ej. `Server=idempotencia-sqlserver`), nunca la IP pública ni la de Tailscale — ver incidente en [Incidentes resueltos](./incidentes-resueltos)
+- Contiene una sección `Provisioning` (para aprovisionar bases de datos de usuarios finales del producto)
+- Autenticación: JWT + OAuth externo (Google y GitHub)
+- CI/CD: GitHub Actions dispara en push, hace port knocking, `git pull`, `docker compose down/up --build`
+- `mem_limit: 512m` (prod) / `384m` (QA), logging con rotación (`max-size: 10m`, `max-file: 3`)
+
+## 5.3 Proxy Hosts en NPM
+Frontend y backend de producción usan Let's Encrypt con renovación automática. QA no pasa por NPM actualmente (acceso directo por IP:puerto vía Tailscale).
+
+## 5.4 Incidente resuelto — rate limiting en NPM
+Un `limit_req_zone` mal ubicado directamente en un Proxy Host causaba caídas del sitio. Se resolvió moviendo la zona a `data/nginx/custom/http_top.conf`, dejando solo el `limit_req` en la configuración del Proxy Host correspondiente.

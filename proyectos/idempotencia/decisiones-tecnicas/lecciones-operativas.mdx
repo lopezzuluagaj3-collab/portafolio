@@ -1,0 +1,14 @@
+---
+sidebar_position: 12
+title: Lecciones operativas
+---
+
+# 12. Lecciones operativas (referencia rápida)
+
+- `docker-compose.yml` separados por servicio no comparten `depends_on` entre archivos — el orden de arranque se gestiona manualmente si ya están en la misma red externa.
+- Un contenedor "Up" no garantiza que esté sirviendo tráfico correctamente: validar con `docker logs` y un `curl`/`echo > /dev/tcp` interno.
+- Un `502 Bad Gateway` de `openresty` (NPM) indica que el proxy no alcanza al contenedor destino (puerto/red incorrectos); un `404` de la propia app confirma que la red funciona y el problema es de rutas dentro de la aplicación.
+- Contenedores "huérfanos" (`docker compose down` sin `--remove-orphans` tras renombrar un servicio) pueden retener un volumen y bloquear su eliminación.
+- **Docker bypassea `ufw`** al publicar puertos — `ufw status` limpio no garantiza que un puerto esté cerrado; verificar siempre con `ss -tulnp` y una prueba de conexión externa real.
+- Antes de `--force-recreate` en un servicio con volumen de datos, confirmar con `docker inspect` cuál es el volumen realmente en uso.
+- Las connection strings dentro de contenedores deben usar siempre el **nombre del contenedor**, nunca IP pública ni de Tailscale.

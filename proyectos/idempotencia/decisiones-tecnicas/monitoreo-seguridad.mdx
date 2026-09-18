@@ -1,0 +1,50 @@
+---
+sidebar_position: 7
+title: Monitoreo y seguridad activa
+---
+
+# 7. Monitoreo y seguridad activa
+
+## 7.1 CrowdSec
+Instalado nativo en el host (no como contenedor) para detectar y bloquear activamente ataques (ej. el de fuerza bruta contra `sa` en SQL Server).
+
+**Componentes:**
+- Agente `crowdsec` (systemd)
+- `crowdsec-firewall-bouncer-iptables` (aplica los bloqueos vía iptables)
+- Colecciones: `crowdsecurity/linux`, `crowdsecurity/sshd`, `crowdsecurity/nginx` (cubre RCE de PHPUnit, escaneo de `.env`/`.git`, SQLi/XSS probing, CVEs conocidos)
+
+**Configuración no estándar aplicada:**
+- API local reubicada a una dirección y puerto internos distintos por conflicto con el frontend{/* : de 8080 a 127.0.0.1:8090 */}, actualizado en `/etc/crowdsec/config.yaml`, `local_api_credentials.yaml` y `bouncers/crowdsec-firewall-bouncer.yaml`
+- Fuente de logs de NPM declarada en `/etc/crowdsec/acquis.d/nginx.yaml` (no en `acquis.yaml`, que queda vacío en versiones recientes):
+```yaml
+filenames:
+  - /home/devop/nginx-proxy-manager/data/logs/*_access.log
+labels:
+  type: nginx
+source: file
+```
+
+**Comandos de referencia:**
+```bash
+sudo cscli metrics          # actividad general de todas las fuentes
+sudo cscli decisions list   # IPs bloqueadas activamente ahora mismo
+sudo cscli alerts list      # alertas/incidentes detectados
+sudo cscli bouncers list    # confirma que el bouncer está conectado
+```
+
+## 7.2 Portainer
+Dashboard visual para gestión de contenedores (CPU/RAM por contenedor, reinicio con un clic, logs sin depender de SSH).
+
+{/*
+```bash
+docker volume create portainer_data
+docker run -d -p 100.99.206.50:9000:9000 --name portainer --restart=unless-stopped \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v portainer_data:/data \
+  portainer/portainer-ce:latest
+```
+*/}
+
+Instalado como contenedor Docker, con el socket del host montado para poder gestionar el resto de contenedores y un volumen dedicado para persistir su configuración.
+
+**Acceso:** panel de Portainer vía Tailscale{/* (`http://100.99.206.50:9000`) */} (requiere Tailscale activo). Nota: el setup inicial de usuario admin tiene una ventana de ~5 minutos; si expira, se necesita el `setup_token` (`docker logs portainer | grep setup_token`) junto con usuario/contraseña.
