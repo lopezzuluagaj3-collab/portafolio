@@ -53,6 +53,13 @@
                 <small>K8s Self-Managed + Cilium + ETL en AWS</small>
               </div>
             </a>
+            <a href="#proyecto-sirius" class="nav__dropdown-item">
+              <span style="font-size:1.2rem;">🚕</span>
+              <div>
+                <strong>Sirius</strong>
+                <small>Modern Data Lakehouse en AWS (Spark & Athena)</small>
+              </div>
+            </a>
           </div>
         </div>
 
@@ -340,6 +347,37 @@
 
             <div class="project-card__footer">
               <a href="#proyecto-polaris" class="button button--accent" style="padding:0.55rem 1.1rem; font-size:0.88rem;">
+                Ver Documentación Técnica ➔
+              </a>
+            </div>
+          </div>
+
+          <!-- Proyecto 3: Sirius (Modern Data Lakehouse Serverless en AWS) -->
+          <div class="card project-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <span class="badge badge--primary">Data Lakehouse & Spark</span>
+              <span class="badge badge--success">En Producción / AWS</span>
+            </div>
+
+            <h3 class="project-card__title">Sirius — Modern Data Lakehouse Serverless en AWS (NYC TLC)</h3>
+            
+            <div class="project-card__tags">
+              <span class="project-tag">AWS Glue (PySpark 4.0)</span>
+              <span class="project-tag">Amazon Athena v3</span>
+              <span class="project-tag">Amazon S3 Lakehouse</span>
+              <span class="project-tag">Terraform 1.11</span>
+              <span class="project-tag">Power BI (ODBC)</span>
+              <span class="project-tag">Lambda & SQS</span>
+              <span class="project-tag">GitOps OIDC</span>
+              <span class="project-tag">FinOps Cloud</span>
+            </div>
+
+            <p class="project-card__desc">
+              Arquitectura Medallion Serverless (Row, Staging, Mart) procesando 18 años de datos (~4,424M de viajes, 75.1 GB crudos). Optimización multihilo en Glue Driver (~875k filas/seg), casting seguro contra schema drift, Partition Projection y 4 Data Marts con reducción del 99.7% para consumo sub-segundo en Power BI.
+            </p>
+
+            <div class="project-card__footer">
+              <a href="#proyecto-sirius" class="button button--accent" style="padding:0.55rem 1.1rem; font-size:0.88rem;">
                 Ver Documentación Técnica ➔
               </a>
             </div>
@@ -1612,6 +1650,639 @@ ports:
     </div>
   </div>
 
+  <!-- ==========================================================================
+       VISTA 4: VISOR DE DOCUMENTACIÓN TÉCNICA OFICIAL (SIRIUS - DATA LAKEHOUSE & SPARK)
+       Documentación técnica completa: Ingesta Serverless, PySpark Glue 4.0, Athena & Power BI
+       ========================================================================== -->
+  <div id="view-proyecto-sirius" class="view-section project-view">
+    <div class="doc-viewer">
+
+      <!-- NAVBAR SUPERIOR ESTILO DOCUSAURUS -->
+      <nav class="doc-navbar">
+        <div style="display:flex; align-items:center; gap:1.25rem;">
+          <a href="#inicio" class="doc-back-link" title="Regresar al Dashboard Principal">
+            ← Volver al Portafolio
+          </a>
+          <div class="doc-navbar__brand">
+            <span style="font-size:1.4rem;">🚕</span>
+            <span>sirius</span>
+          </div>
+        </div>
+
+        <div class="doc-navbar__nav">
+          <span class="doc-navbar__item active" id="sirius-nav-tab-resumen">Resumen General</span>
+          <span class="doc-navbar__item" id="sirius-nav-tab-ingesta">Ingesta & IaC</span>
+          <span class="doc-navbar__item" id="sirius-nav-tab-spark">Glue PySpark 4.0</span>
+          <span class="doc-navbar__item" id="sirius-nav-tab-gold">Data Marts & BI</span>
+          <span class="doc-navbar__item" id="sirius-nav-tab-finops">FinOps</span>
+        </div>
+
+        <div class="navbar__actions">
+          <button class="theme-toggle" aria-label="Cambiar tema">
+            <svg class="theme-icon-slot" viewBox="0 0 24 24" fill="none" width="18" height="18">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </button>
+        </div>
+      </nav>
+
+      <!-- LAYOUT DOCS: BARRA LATERAL + CONTENIDO -->
+      <div class="doc-container">
+
+        <!-- BARRA LATERAL IZQUIERDA CON ACORDEONES -->
+        <aside class="doc-sidebar">
+          <div class="doc-sidebar__title">
+            <span>🚕 Sirius Docs</span>
+            <span class="badge badge--success" style="font-size:0.65rem; padding:0.15rem 0.45rem;">AWS Lakehouse</span>
+          </div>
+
+          <!-- ENLACE INDEPENDIENTE: RESUMEN GENERAL -->
+          <ul class="doc-sidebar__list" style="margin-bottom:0.75rem;">
+            <li class="doc-sidebar__item">
+              <a href="#doc-sirius/resumen-general" class="doc-sidebar__link active" data-sirius-target="resumen-general">
+                📌 Resumen General
+              </a>
+            </li>
+          </ul>
+
+          <!-- CATEGORÍA 1: ARQUITECTURA & INGESTA -->
+          <div class="doc-sidebar__category" id="sirius-cat-box-arquitectura">
+            <button class="doc-sidebar__category-btn" id="sirius-cat-btn-arquitectura" type="button">
+              <span class="doc-sidebar__category-icon">☁️</span>
+              <span class="doc-sidebar__category-label">Arquitectura & Ingesta</span>
+              <span class="doc-sidebar__category-arrow">▾</span>
+            </button>
+            <ul class="doc-sidebar__list">
+              <li class="doc-sidebar__item">
+                <a href="#doc-sirius/ingesta-serverless" class="doc-sidebar__link" data-sirius-target="ingesta-serverless">
+                  1. Ingesta Serverless & S3 Row
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-sirius/cicd-gitops" class="doc-sidebar__link" data-sirius-target="cicd-gitops">
+                  2. CI/CD, GitOps & OIDC
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- CATEGORÍA 2: PROCESAMIENTO PYSPARK -->
+          <div class="doc-sidebar__category" id="sirius-cat-box-spark">
+            <button class="doc-sidebar__category-btn" id="sirius-cat-btn-spark" type="button">
+              <span class="doc-sidebar__category-icon">⚡</span>
+              <span class="doc-sidebar__category-label">Procesamiento PySpark</span>
+              <span class="doc-sidebar__category-arrow">▾</span>
+            </button>
+            <ul class="doc-sidebar__list">
+              <li class="doc-sidebar__item">
+                <a href="#doc-sirius/glue-pyspark" class="doc-sidebar__link" data-sirius-target="glue-pyspark">
+                  1. Glue 4.0 & Multithreading
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-sirius/calidad-y-esquema" class="doc-sidebar__link" data-sirius-target="calidad-y-esquema">
+                  2. Calidad & Schema Drift
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- CATEGORÍA 3: CAPA GOLD, FINOPS & BI -->
+          <div class="doc-sidebar__category" id="sirius-cat-box-gold">
+            <button class="doc-sidebar__category-btn" id="sirius-cat-btn-gold" type="button">
+              <span class="doc-sidebar__category-icon">📊</span>
+              <span class="doc-sidebar__category-label">Capa Gold, FinOps & BI</span>
+              <span class="doc-sidebar__category-arrow">▾</span>
+            </button>
+            <ul class="doc-sidebar__list">
+              <li class="doc-sidebar__item">
+                <a href="#doc-sirius/athena-marts" class="doc-sidebar__link" data-sirius-target="athena-marts">
+                  1. Athena Marts & Projection
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-sirius/finops-costos" class="doc-sidebar__link" data-sirius-target="finops-costos">
+                  2. FinOps: Auditoría Real
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-sirius/powerbi" class="doc-sidebar__link" data-sirius-target="powerbi">
+                  3. Power BI & Seguridad IAM
+                </a>
+              </li>
+            </ul>
+          </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL DEL DOCUMENTO -->
+        <main class="doc-main">
+
+          <!-- MIGAS DE PAN ESTILO DOCUSAURUS -->
+          <nav class="doc-breadcrumbs">
+            <a href="#inicio" class="doc-breadcrumbs__item">🏠 Inicio</a>
+            <span class="doc-breadcrumbs__separator">›</span>
+            <span class="doc-breadcrumbs__item" id="sirius-breadcrumb-cat">Visión General</span>
+            <span class="doc-breadcrumbs__separator">›</span>
+            <span class="doc-breadcrumbs__current" id="sirius-breadcrumb-current">Resumen General</span>
+          </nav>
+
+          <!-- ==================== ARTÍCULOS TÉCNICOS ==================== -->
+
+          <!-- 0. RESUMEN GENERAL -->
+          <article id="sirius-art-resumen-general" class="doc-article active">
+            <h1 class="doc-article__title">Sirius — Modern Data Lakehouse Serverless en AWS (NYC TLC)</h1>
+            <p class="doc-article__lead">
+              Modern Data Lakehouse Serverless aprovisionado al 100% como Código con Terraform, procesando el histórico completo de 18 años de la Comisión de Taxis y Limusinas de Nueva York (~4,424M de viajes) mediante Apache Spark en AWS Glue 4.0, Amazon Athena y Power BI.
+            </p>
+
+            <h2>¿Qué es el Proyecto Sirius?</h2>
+            <p>
+              Sirius nace para resolver la ingesta, limpieza, modelado y análisis a escala masiva de más de <strong>18 años de datos (2009 – 2026)</strong> del dataset público más grande del mundo en movilidad urbana: el registro de viajes de <strong>NYC TLC</strong> (590 archivos Parquet mensuales, 75.1 GB en crudo).
+            </p>
+            <p>
+              <strong>Proyecto individual</strong>, implementado de extremo a extremo: desde la infraestructura con Terraform, el diseño del pipeline GitOps con autenticación OIDC, hasta la optimización distribuida en PySpark y la capa de materialización de Data Marts analíticos.
+            </p>
+
+            <h2>Arquitectura Medallion Serverless</h2>
+            <div class="terminal-box" style="margin:1.5rem 0; font-size:0.85rem;">
+              <pre style="margin:0; color:#4ade80;">[CDN NYC TLC] ──► [EventBridge + Lambda + SQS] ──► [S3 Row (75.1 GB)]
+                                                          │
+   [Power BI Desktop] ◄── [Athena CTAS] ◄── [S3 Staging (123.2 GB)] ◄── [Glue 4.0 PySpark]
+         ▲
+         │ (ODBC DSN Least Privilege)
+   [sirius-powerbi-reader]</pre>
+            </div>
+
+            <h2>Métricas Clave de Rendimiento y Escala</h2>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin:1.5rem 0;">
+              <div class="card" style="padding:1rem; border-left:4px solid var(--primary);">
+                <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">VIAJES PROCESADOS</div>
+                <div style="font-size:1.6rem; font-weight:800; color:var(--primary);">~4,424 M</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">590 archivos Parquet (18 años)</div>
+              </div>
+              <div class="card" style="padding:1rem; border-left:4px solid #10b981;">
+                <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">THROUGHPUT PICO</div>
+                <div style="font-size:1.6rem; font-weight:800; color:#10b981;">~875,000 /s</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">Multithreading en Glue Driver</div>
+              </div>
+              <div class="card" style="padding:1rem; border-left:4px solid var(--accent);">
+                <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">REDUCCIÓN ANALÍTICA</div>
+                <div style="font-size:1.6rem; font-weight:800; color:var(--accent);">99.7%</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">De 123.2 GB a 388.8 MB (Marts)</div>
+              </div>
+              <div class="card" style="padding:1rem; border-left:4px solid #3b82f6;">
+                <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">COSTO MANTENIMIENTO</div>
+                <div style="font-size:1.6rem; font-weight:800; color:#3b82f6;">~$4.65 /mes</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">2 Workers G.1X + S3 Storage</div>
+              </div>
+            </div>
+
+            <h2>Resumen por Capas del Lakehouse</h2>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Capa</th>
+                    <th>Volumen</th>
+                    <th>Tecnología</th>
+                    <th>Formato y Propósito</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Row (Bronze)</strong></td>
+                    <td>75.1 GB (590 archivos)</td>
+                    <td>AWS Lambda + Amazon SQS</td>
+                    <td>Parquet original inmutable particionado por Hive</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Staging (Silver)</strong></td>
+                    <td>123.2 GB</td>
+                    <td>AWS Glue 4.0 PySpark</td>
+                    <td>Parquet Snappy, deduplicado, safe cast y enriquecido</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Mart (Gold)</strong></td>
+                    <td>388.8 MB (4 Marts)</td>
+                    <td>Amazon Athena v3 CTAS</td>
+                    <td>Agregaciones estratégicas para consumo analítico en BI</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- 1. INGESTA SERVERLESS -->
+          <article id="sirius-art-ingesta-serverless" class="doc-article">
+            <h1 class="doc-article__title">1. Ingesta Serverless & S3 Row</h1>
+            <p class="doc-article__lead">
+              Patrón de ingesta desacoplado y asíncrono diseñado para escanear y descargar periódicamente archivos Parquet desde el CDN de NYC TLC hacia la capa Row de S3.
+            </p>
+
+            <h2>Desafíos de la Descarga Directa</h2>
+            <p>
+              Descargar 590 archivos Parquet mensuales (algunos superando los 250 MB por mes) mediante una función Lambda monolítica es inviable debido a restricciones de tiempo (timeout de 15 minutos) y riesgo de saturación de memoria RAM.
+            </p>
+
+            <h2>Arquitectura Asíncrona con SQS y DLQ</h2>
+            <ol>
+              <li><strong>Amazon EventBridge (Disparador Mensual):</strong> Dispara la sincronización periódica mediante una regla cron.</li>
+              <li><strong>Lambda Detectora:</strong> Ejecuta peticiones HTTP <code>HEAD</code> de bajo impacto contra CloudFront de NYC TLC para verificar qué meses han sido publicados y los contrasta con las particiones existentes en <code>s3://sirius-row-.../row/</code>.</li>
+              <li><strong>Amazon SQS + Dead Letter Queue:</strong> Si detecta meses faltantes, encola mensajes con metadatos estructurados. Si la descarga falla tras 3 intentos, la DLQ aísla el mensaje para auditoría sin frenar el flujo.</li>
+              <li><strong>Lambda Descarga:</strong> Con <code>batch_size = 1</code>, consume el mensaje de SQS y transmite el archivo mediante streaming de buffers directamente a S3 sin persistir en disco temporal efímero.</li>
+            </ol>
+
+            <div class="terminal-box" style="margin:1.5rem 0;">
+              <pre style="margin:0;"># Estructura del prefijo particionado en Capa Row (S3)
+s3://sirius-row-603437461408/row/
+├── yellow/anio=2026/mes=01/yellow_tripdata_2026-01.parquet
+├── green/anio=2026/mes=01/green_tripdata_2026-01.parquet
+├── fhvhv/anio=2026/mes=01/fhvhv_tripdata_2026-01.parquet
+└── fhv/anio=2026/mes=01/fhv_tripdata_2026-01.parquet</pre>
+            </div>
+          </article>
+
+          <!-- 2. CI/CD & GITOPS -->
+          <article id="sirius-art-cicd-gitops" class="doc-article">
+            <h1 class="doc-article__title">2. CI/CD, GitOps con OIDC y DevSecOps</h1>
+            <p class="doc-article__lead">
+              Pipeline de entrega continua con GitHub Actions autenticado mediante OpenID Connect (OIDC), incorporando escaneos de seguridad estática, calidad y auditoría continua de costos.
+            </p>
+
+            <h2>Autenticación Passwordless mediante OIDC</h2>
+            <p>
+              Para eliminar el riesgo de credenciales estáticas de larga duración en GitHub Secrets, GitHub Actions asume de forma temporal el rol IAM <code>terraform-sirius</code> validando el token criptográfico emitido por <code>token.actions.githubusercontent.com</code>.
+            </p>
+
+            <h2>Etapas del Pipeline en Pull Requests</h2>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Herramienta</th>
+                    <th>Capa Evaluada</th>
+                    <th>Acción / Quality Gate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>terraform fmt</strong></td>
+                    <td>Formato HCL</td>
+                    <td>Verifica indentación y estilo canónico del código.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>TFLint</strong></td>
+                    <td>Sintaxis IaC</td>
+                    <td>Inspecciona errores en variables y recursos del provider AWS.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Checkov</strong></td>
+                    <td>Seguridad Cloud</td>
+                    <td>Escanea políticas CIS Benchmark en políticas IAM, S3 y Glue.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>SonarCloud</strong></td>
+                    <td>Calidad de Código</td>
+                    <td>Evalúa mantenibilidad, bugs y code smells en scripts Python.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Infracost</strong></td>
+                    <td>FinOps Shift-Left</td>
+                    <td>Estima la variación del costo mensual en el PR antes de hacer merge.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2>Aislamiento del Backend Remoto</h2>
+            <p>
+              El archivo <code>terraform.tfstate</code> se resguarda en un bucket S3 dedicado con SSE-S3 forzado, versionado activo y política que bloquea cualquier acceso que no provenga estrictamente del rol OIDC <code>terraform-sirius</code>.
+            </p>
+          </article>
+
+          <!-- 3. GLUE PYSPARK -->
+          <article id="sirius-art-glue-pyspark" class="doc-article">
+            <h1 class="doc-article__title">1. AWS Glue 4.0 & Optimización Multihilo</h1>
+            <p class="doc-article__lead">
+              Procesamiento distribuido con PySpark 4.0 en AWS Glue, superando la subutilización del clúster con multithreading en el driver y acelerando el throughput a ~875k filas/seg.
+            </p>
+
+            <h2>El Cuello de Botella del Driver Monohilo</h2>
+            <p>
+              Al procesar 590 archivos Parquet en un clúster de 60 Workers G.1X, leer mes a mes secuencialmente provocaba que el 95% de los núcleos estuvieran desocupados esperando la planificación del driver. Cada mes tardaba 2.8 minutos, proyectando 27 horas de clúster.
+            </p>
+
+            <h2>Implementación de ThreadPoolExecutor en PySpark</h2>
+            <p>
+              Se incorporó paralelismo a nivel del driver mediante <code>concurrent.futures.ThreadPoolExecutor(max_workers=4)</code>, permitiendo encolar y procesar hasta 4 meses concurrentemente en el clúster distribuido:
+            </p>
+
+            <div class="terminal-box" style="margin:1rem 0;">
+              <pre style="margin:0; color:#38bdf8;"># Snippet de optimización en el Driver de AWS Glue
+with ThreadPoolExecutor(max_workers=4) as executor:
+    futures = {executor.submit(procesar_mes_spark, ruta): ruta for ruta in particiones}
+    for future in as_completed(futures):
+        resultado = future.result()
+        logger.info(f"Particion completada exitosamente: {resultado}")</pre>
+            </div>
+
+            <h2>Resultados Reales de Producción (Backfill de 18 Años)</h2>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Formato TLC</th>
+                    <th>Meses</th>
+                    <th>Registros</th>
+                    <th>Workers</th>
+                    <th>Tiempo</th>
+                    <th>Throughput</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Green Taxi</strong></td>
+                    <td>151 meses</td>
+                    <td>84,189,399</td>
+                    <td>15 Workers</td>
+                    <td>~20 min</td>
+                    <td>~70,000 filas/s</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Yellow Taxi</strong></td>
+                    <td>211 meses</td>
+                    <td>~1,900,000,000</td>
+                    <td>60 Workers</td>
+                    <td>~55 min</td>
+                    <td>~120,000 filas/s</td>
+                  </tr>
+                  <tr>
+                    <td><strong>FHVHV (Uber/Lyft)</strong></td>
+                    <td>90 meses</td>
+                    <td>~1,630,000,000</td>
+                    <td>60 Workers</td>
+                    <td>~67 min</td>
+                    <td>~405,000 filas/s</td>
+                  </tr>
+                  <tr>
+                    <td><strong>FHV (Livery)</strong></td>
+                    <td>138 meses</td>
+                    <td>~810,000,000</td>
+                    <td>60 Workers</td>
+                    <td>~15.4 min</td>
+                    <td>~875,000 filas/s</td>
+                  </tr>
+                  <tr style="background:var(--bg-tint); font-weight:700;">
+                    <td>TOTAL PIPELINE</td>
+                    <td>590 meses</td>
+                    <td>~4,424,000,000</td>
+                    <td>Dinámico</td>
+                    <td>~4.4 horas</td>
+                    <td>Escala Big Data</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- 4. CALIDAD Y ESQUEMA -->
+          <article id="sirius-art-calidad-y-esquema" class="doc-article">
+            <h1 class="doc-article__title">2. Calidad de Datos & Universal Safe Cast</h1>
+            <p class="doc-article__lead">
+              Estrategias para mitigar la deriva de esquemas (schema drift) acumulada durante 18 años y filtros rigurosos de consistencia temporal y financiera.
+            </p>
+
+            <h2>El Problema del Schema Drift en Números Flotantes</h2>
+            <p>
+              A lo largo de los años, columnas como <code>rate_code</code> o <code>vendor_id</code> cambiaron de <code>'1'</code> (string) a <code>1.0</code> (float) y luego a <code>1</code> (integer). Un cast directo de string flotante a entero en Spark genera valores <code>null</code> silenciosos.
+            </p>
+
+            <h2>Universal Safe Cast en Tres Fases</h2>
+            <p>
+              Se desarrolló una función reutilizable que normaliza el texto, lo absorbe como punto flotante y finalmente lo convierte al tipo entero final:
+            </p>
+
+            <div class="terminal-box" style="margin:1rem 0;">
+              <pre style="margin:0; color:#4ade80;">def safe_cast_int(col_name):
+    # '1.0' -> String -> Double -> Integer (1)
+    return F.col(col_name).cast(StringType()).cast(DoubleType()).cast(IntegerType())</pre>
+            </div>
+
+            <h2>Reglas de Negocio y Coexistencia</h2>
+            <ul>
+              <li><strong>Consistencia Temporal:</strong> Eliminación de viajes con <code>dropoff_datetime < pickup_datetime</code>.</li>
+              <li><strong>Unificación Yellow & Green:</strong> Coexistencia física bajo <code>staging/taxi/tipo_taxi={yellow|green}/</code>, compartiendo un mismo esquema y ahorrando duplicación de lógica.</li>
+              <li><strong>Deduplicación Estricta:</strong> Clave compuesta sobre <code>vendor_id, pickup_datetime, dropoff_datetime, pulocationid, dolocationid</code>.</li>
+            </ul>
+          </article>
+
+          <!-- 5. ATHENA MARTS -->
+          <article id="sirius-art-athena-marts" class="doc-article">
+            <h1 class="doc-article__title">1. Amazon Athena, Partition Projection y Data Marts</h1>
+            <p class="doc-article__lead">
+              Capa de materialización analítica (Gold) mediante Partition Projection y sentencias CTAS desacopladas en SQL, reduciendo 123.2 GB a 388.8 MB (99.7% de compresión).
+            </p>
+
+            <h2>Ventajas de Partition Projection vs Glue Crawlers</h2>
+            <p>
+              En lugar de ejecutar costosos Glue Crawlers que tardan más de 10 minutos escaneando miles de carpetas en S3, Partition Projection evalúa las rutas de particiones directamente en memoria en tiempo de consulta:
+            </p>
+            <ul>
+              <li>Tiempos de respuesta reducidos a <strong>2.0 – 3.4 segundos</strong> escaneando billones de filas.</li>
+              <li>Cero costo de llamadas a APIs de metadatos o crawlers periódicos.</li>
+            </ul>
+
+            <h2>Los 4 Data Marts de Negocio</h2>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Data Mart</th>
+                    <th>Pregunta de Negocio</th>
+                    <th>Filas</th>
+                    <th>Tiempo CTAS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>mart_cuota_mercado_mensual</strong></td>
+                    <td>Evolución mensual de cuota entre Yellow, Green, FHV y Apps (2009-2026).</td>
+                    <td>591</td>
+                    <td>6.3 s</td>
+                  </tr>
+                  <tr>
+                    <td><strong>mart_kpis_financieros</strong></td>
+                    <td>Tarifas promedio, propinas, peajes, recargos y pago a conductores.</td>
+                    <td>453</td>
+                    <td>15.6 s</td>
+                  </tr>
+                  <tr>
+                    <td><strong>mart_demanda_territorial</strong></td>
+                    <td>Corredores de movilidad entre los 5 distritos y zonas de NYC.</td>
+                    <td>1,370,940</td>
+                    <td>28.0 s</td>
+                  </tr>
+                  <tr>
+                    <td><strong>mart_patrones_temporales</strong></td>
+                    <td>Distribución horaria (24h) y semanal (7 días) de la demanda de viajes.</td>
+                    <td>6,552</td>
+                    <td>15.6 s</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2>Desacople: Disaster Recovery vs Carga Incremental</h2>
+            <p>
+              Siguiendo el principio de separar responsabilidades y diseñar para recuperarse de desastres:
+            </p>
+            <ul>
+              <li><code>scripts/materializar_marts.py</code>: Recrea la capa Gold completa desde cero mediante <code>DROP TABLE + CTAS</code> para los 18 años históricos.</li>
+              <li><code>scripts/incremental_marts.py</code>: Inserta con <code>INSERT INTO</code> únicamente el nuevo mes llegado a Staging con <strong>guardias de idempotencia</strong> que evitan duplicados accidentales.</li>
+            </ul>
+          </article>
+
+          <!-- 6. FINOPS COSTOS -->
+          <article id="sirius-art-finops-costos" class="doc-article">
+            <h1 class="doc-article__title">2. FinOps: Auditoría Real y Eficiencia de Costos</h1>
+            <p class="doc-article__lead">
+              Auditoría financiera completa del gasto de nube: cómputo distribuido de backfill frente al costo mensual en régimen de mantenimiento.
+            </p>
+
+            <h2>Auditoría Real del Backfill Histórico</h2>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Concepto</th>
+                    <th>Métrica Real</th>
+                    <th>Costo Bruto</th>
+                    <th>Impacto de Bolsillo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>AWS Glue (Spark)</strong></td>
+                    <td>755,184 DPU-segundos (209.77 DPU-h)</td>
+                    <td>$92.30 USD</td>
+                    <td>$0.00 USD (Créditos AWS)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Amazon Athena (CTAS)</strong></td>
+                    <td>~120 GB escaneados</td>
+                    <td>$0.60 USD</td>
+                    <td>$0.00 USD (Créditos AWS)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Amazon S3 Storage</strong></td>
+                    <td>~200 GB cargados en el mes</td>
+                    <td>$0.26 USD</td>
+                    <td>$0.00 USD (Créditos AWS)</td>
+                  </tr>
+                  <tr style="background:var(--bg-tint); font-weight:700;">
+                    <td>TOTAL CONSUMIDO</td>
+                    <td>Backfill de 18 Años (4.4B filas)</td>
+                    <td>$93.16 USD</td>
+                    <td>$0.00 USD (Saldo restante: $33.31)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2>Costo Mensual Recurrente en Mantenimiento</h2>
+            <p>
+              Tras escalar el clúster con Terraform a <strong>2 workers G.1X</strong>:
+            </p>
+            <div class="doc-table-wrapper">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Servicio AWS</th>
+                    <th>Dimensionamiento Mensual</th>
+                    <th>Costo Estimado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>AWS Glue PySpark</strong></td>
+                    <td>1 corrida mensual (~4 archivos, 3 min = 0.1 DPU-h)</td>
+                    <td>$0.04 USD</td>
+                  </tr>
+                  <tr>
+                    <td><strong>AWS Lambda & SQS</strong></td>
+                    <td>Menos de 100 eventos mensuales</td>
+                    <td>$0.00 USD (Free Tier)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Amazon Athena</strong></td>
+                    <td>Inserción incremental a los Marts (~2 GB escaneados)</td>
+                    <td>$0.01 USD</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Amazon S3 Storage</strong></td>
+                    <td>~200 GB totales (Row + Staging + Mart)</td>
+                    <td>$4.60 USD</td>
+                  </tr>
+                  <tr style="background:var(--bg-tint); font-weight:700;">
+                    <td>TOTAL MENSUAL</td>
+                    <td>Operación 100% Desatendida</td>
+                    <td>~$4.65 USD / mes</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- 7. POWER BI -->
+          <article id="sirius-art-powerbi" class="doc-article">
+            <h1 class="doc-article__title">3. Power BI Desktop & Seguridad Least Privilege</h1>
+            <p class="doc-article__lead">
+              Conexión analítica nativa mediante Simba Athena ODBC DSN bajo el principio de mínimo privilegio con el usuario IAM sirius-powerbi-reader.
+            </p>
+
+            <h2>Seguridad de Mínimo Privilegio (IAM Least Privilege)</h2>
+            <p>
+              Para conectar Power BI Desktop sin comprometer la infraestructura con credenciales administrativas, se aprovisionó el usuario <code>sirius-powerbi-reader</code> con permisos quirúrgicos:
+            </p>
+            <ul>
+              <li>Lectura exclusiva de metadatos en <code>sirius_mart_db</code> (Glue).</li>
+              <li>Ejecución de consultas restringida al Workgroup <code>sirius-eda</code>.</li>
+              <li>Lectura sobre <code>s3://sirius-mart-.../mart/*</code> y escritura temporal en <code>result_eda/*</code>.</li>
+              <li><strong>Cero acceso</strong> a las capas Row y Staging, a Terraform ni a funciones Lambda.</li>
+            </ul>
+
+            <h2>Conexión ODBC en Modo Import</h2>
+            <p>
+              Al configurar el DSN de usuario <code>sirius_mart</code> en modo <strong>Import</strong>, los 388 MB de la capa Gold se cargan en la RAM del equipo en menos de 2 segundos. Los analistas pueden interactuar, filtrar y calcular medidas DAX con latencia instantánea sin incurrir en costos adicionales de escaneo en Athena.
+            </p>
+
+            <h2>Los 3 Dashboards Estratégicos</h2>
+            <ol>
+              <li><strong>Evolución de Cuota de Mercado (18 Años):</strong> Desplazamiento del Taxi Amarillo frente a Uber/Lyft (>80% tras 2019) y caída del 85% durante el confinamiento COVID-19 en 2020.</li>
+              <li><strong>KPIs Financieros y Economía del Viaje:</strong> Tarifas base promedio, porcentaje de propina por tarjeta, peajes e ingresos netos de conductores por servicio.</li>
+              <li><strong>Demanda Territorial y Corredores de Movilidad:</strong> Flujos entre distritos de NYC y conexiones a los aeropuertos JFK y LaGuardia.</li>
+            </ol>
+          </article>
+
+          <!-- ==================== PAGINACIÓN INFERIOR ==================== -->
+          <div class="doc-pagination">
+            <div class="doc-pagination__card prev" id="sirius-pag-prev" style="visibility:hidden;">
+              <span class="doc-pagination__label">Anterior</span>
+              <span class="doc-pagination__title">« Resumen General</span>
+            </div>
+            <div class="doc-pagination__card next" id="sirius-pag-next">
+              <span class="doc-pagination__label">Siguiente</span>
+              <span class="doc-pagination__title">Ingesta Serverless »</span>
+            </div>
+          </div>
+
+        </main>
+      </div>
+
+    </div>
+  </div>
+
+
   <!-- ==================== FOOTER GLOBAL ==================== -->
   <footer class="footer">
     <div class="container">
@@ -1634,6 +2305,7 @@ ports:
             <li><a href="#proyectos-catalogo" class="footer__link">Mis Proyectos</a></li>
             <li><a href="#proyecto-idempotencia" class="footer__link">⚡ Caso Idempotencia</a></li>
             <li><a href="#proyecto-polaris" class="footer__link">🌟 Caso Polaris (K8s AWS)</a></li>
+            <li><a href="#proyecto-sirius" class="footer__link">🚕 Caso Sirius (Lakehouse AWS)</a></li>
             <li><a href="#terminal-general" class="footer__link">Terminal</a></li>
           </ul>
         </div>

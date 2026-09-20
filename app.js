@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initGeneralTerminal();
   initDocViewer();
   initPolarisDocViewer();
+  initSiriusDocViewer();
   initNavScroll();
   initMobileMenu();
   initSmoothScrollLinks();
@@ -37,12 +38,14 @@ function handleRouting() {
   const dashboardView = document.getElementById('view-dashboard');
   const idempView = document.getElementById('view-proyecto-idempotencia');
   const polarisView = document.getElementById('view-proyecto-polaris');
+  const siriusView = document.getElementById('view-proyecto-sirius');
   const navDropdownToggle = document.querySelector('.nav__dropdown-toggle');
 
   // CASO 1: PROYECTO IDEMPOTENCIA
   if (rawHash.startsWith('#proyecto-idempotencia') || rawHash.startsWith('#doc-idempotencia') || rawHash === '#idemp-incidentes') {
     if (dashboardView) dashboardView.classList.remove('active');
     if (polarisView) polarisView.classList.remove('active');
+    if (siriusView) siriusView.classList.remove('active');
     if (idempView) idempView.classList.add('active');
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -68,6 +71,7 @@ function handleRouting() {
   if (rawHash.startsWith('#proyecto-polaris') || rawHash.startsWith('#doc-polaris')) {
     if (dashboardView) dashboardView.classList.remove('active');
     if (idempView) idempView.classList.remove('active');
+    if (siriusView) siriusView.classList.remove('active');
     if (polarisView) polarisView.classList.add('active');
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -87,10 +91,35 @@ function handleRouting() {
     return;
   }
 
-  // CASO 3: DASHBOARD GENERAL (#inicio o ancla interna)
+  // CASO 3: PROYECTO SIRIUS (LAKEHOUSE & SPARK EN AWS)
+  if (rawHash.startsWith('#proyecto-sirius') || rawHash.startsWith('#doc-sirius')) {
+    if (dashboardView) dashboardView.classList.remove('active');
+    if (idempView) idempView.classList.remove('active');
+    if (polarisView) polarisView.classList.remove('active');
+    if (siriusView) siriusView.classList.add('active');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (navDropdownToggle) {
+      navDropdownToggle.innerHTML = `📁 Proyecto: <strong>Sirius</strong> ▾`;
+    }
+
+    let chapterId = 'resumen-general';
+    if (rawHash.includes('/')) {
+      chapterId = rawHash.split('/')[1];
+    }
+
+    if (typeof switchSiriusDocSection === 'function') {
+      switchSiriusDocSection(chapterId, false);
+    }
+    return;
+  }
+
+  // CASO 4: DASHBOARD GENERAL (#inicio o ancla interna)
   if (dashboardView) dashboardView.classList.add('active');
   if (idempView) idempView.classList.remove('active');
   if (polarisView) polarisView.classList.remove('active');
+  if (siriusView) siriusView.classList.remove('active');
 
   if (navDropdownToggle) {
     navDropdownToggle.innerHTML = `📁 Proyectos ▾`;
@@ -187,17 +216,35 @@ devsecops_and_quality:
   - SonarCloud & Hadolint (Quality gates de código y buenas prácticas de Dockerfile)
   - Infracost (Estimación continua de costos en CI/CD)
 orquestacion_y_datos:
+  - AWS Lakehouse (Glue 4.0 PySpark, Amazon Athena v3, S3 Medallion, Partition Projection)
   - Apache Airflow (CeleryExecutor, Celery workers, RabbitMQ, Git-Sync desacoplado)
+  - Business Intelligence (Power BI Desktop, DAX, ODBC Simba, IAM Least Privilege)
   - Bases de Datos (PostgreSQL analítico y metadatos, SQL Server, MySQL, MongoDB)`
   },
   'projects': {
     cmd: 'ls -la ~/proyectos/',
-    output: `drwxr-xr-x 4 devop devop 4096 Sep 17 20:00 .
+    output: `drwxr-xr-x 5 devop devop 4096 Sep 19 21:00 .
 drwxr-xr-x 6 devop devop 4096 Sep 17 17:30 ..
 -rwxr-xr-x 1 devop devop 1420 Sep 17 17:50 <span class="highlight-yellow">idempotencia</span> [FUERA DE PRODUCCIÓN] -> DBaaS Multi-Motor (Archivado)
 -rwxr-xr-x 1 devop devop 3840 Sep 17 20:00 <span class="highlight-green">polaris</span>      [PRODUCCIÓN]          -> K3s Self-Managed + Cilium + Airflow en AWS
+-rwxr-xr-x 1 devop devop 4424 Sep 19 21:00 <span class="highlight-blue" style="color:var(--primary-lighter);">sirius</span>       [PRODUCCIÓN]          -> Modern Data Lakehouse Serverless (PySpark 4.0 + Athena + Power BI)
 
-Usa el menú superior "📁 Proyectos ▾" o los botones en el catálogo para explorar cada portal de documentación.`
+Usa el menú superior "📁 Proyectos ▾", los botones del catálogo o ejecuta "sirius" para ver telemetría.`
+  },
+  'sirius': {
+    cmd: 'sirius --status --metrics',
+    output: `[PROYECTO] Sirius — NYC TLC Modern Data Lakehouse Serverless en AWS
+[ESTADO] <span class="highlight-green">[PRODUCCIÓN / ACTIVO]</span>
+[ESCALA] ~4,424,189,399 viajes procesados (18 años, 2009 - 2026, 590 Parquets)
+[ARQUITECTURA MEDALLION]
+  - Row (Bronze):     75.1 GB (590 archivos Parquet originales inmutables)
+  - Staging (Silver): 123.2 GB (Snappy Parquet deduplicado, safe cast universal)
+  - Mart (Gold):      388.8 MB (4 Data Marts CTAS, reducción analítica del 99.7%)
+[COMPUTE SPARK] AWS Glue 4.0 con multithreading en driver (~875,000 filas/seg)
+[MOTOR ANALÍTICO] Amazon Athena v3 con Partition Projection (consultas en 2.0s - 3.4s)
+[FINOPS AUDITADO]
+  - Backfill histórico: $92.30 USD Spark (100% absorbido por créditos promocionales AWS)
+  - Mantenimiento recurrente: ~$4.65 USD / mes (2 workers G.1X en Glue + S3)`
   },
   'health': {
     cmd: 'uptime && free -h',
@@ -510,6 +557,165 @@ function switchPolarisDocSection(sectionId, updateHash = true) {
 }
 
 /* ==========================================================================
+   4.2 Visor de Documentación Técnica Estilo Docusaurus (Sirius)
+   ========================================================================== */
+const SIRIUS_DOC_SECTIONS = [
+  { id: 'resumen-general', title: 'Sirius — Modern Data Lakehouse Serverless en AWS', short: 'Resumen General', cat: 'Visión General', catId: 'arquitectura', prev: null, next: 'ingesta-serverless' },
+  { id: 'ingesta-serverless', title: '1. Ingesta Serverless & S3 Row', short: 'Ingesta Serverless', cat: 'Arquitectura & Ingesta', catId: 'arquitectura', prev: 'resumen-general', next: 'cicd-gitops' },
+  { id: 'cicd-gitops', title: '2. CI/CD, GitOps & OIDC', short: 'CI/CD & GitOps', cat: 'Arquitectura & Ingesta', catId: 'arquitectura', prev: 'ingesta-serverless', next: 'glue-pyspark' },
+  { id: 'glue-pyspark', title: '1. Glue 4.0 & Multithreading', short: 'Glue & PySpark', cat: 'Procesamiento PySpark', catId: 'spark', prev: 'cicd-gitops', next: 'calidad-y-esquema' },
+  { id: 'calidad-y-esquema', title: '2. Calidad & Schema Drift', short: 'Calidad & Schema Drift', cat: 'Procesamiento PySpark', catId: 'spark', prev: 'glue-pyspark', next: 'athena-marts' },
+  { id: 'athena-marts', title: '1. Athena Marts & Projection', short: 'Athena Marts', cat: 'Capa Gold, FinOps & BI', catId: 'gold', prev: 'calidad-y-esquema', next: 'finops-costos' },
+  { id: 'finops-costos', title: '2. FinOps: Auditoría Real', short: 'FinOps & Costos', cat: 'Capa Gold, FinOps & BI', catId: 'gold', prev: 'athena-marts', next: 'powerbi' },
+  { id: 'powerbi', title: '3. Power BI & Seguridad IAM', short: 'Power BI & IAM', cat: 'Capa Gold, FinOps & BI', catId: 'gold', prev: 'finops-costos', next: null }
+];
+
+function initSiriusDocViewer() {
+  // Manejador de clics en la barra lateral de Sirius
+  document.querySelectorAll('[data-sirius-target]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('data-sirius-target');
+      switchSiriusDocSection(targetId);
+    });
+  });
+
+  // Acordeones colapsables para las 3 categorías de Sirius
+  const categories = [
+    { btn: 'sirius-cat-btn-arquitectura', box: 'sirius-cat-box-arquitectura' },
+    { btn: 'sirius-cat-btn-spark', box: 'sirius-cat-box-spark' },
+    { btn: 'sirius-cat-btn-gold', box: 'sirius-cat-box-gold' }
+  ];
+
+  categories.forEach(({ btn, box }) => {
+    const btnEl = document.getElementById(btn);
+    const boxEl = document.getElementById(box);
+    if (btnEl && boxEl) {
+      btnEl.addEventListener('click', () => {
+        boxEl.classList.toggle('collapsed');
+      });
+    }
+  });
+
+  // Pestañas del navbar superior de Sirius
+  const tabResumen = document.getElementById('sirius-nav-tab-resumen');
+  const tabIngesta = document.getElementById('sirius-nav-tab-ingesta');
+  const tabSpark = document.getElementById('sirius-nav-tab-spark');
+  const tabGold = document.getElementById('sirius-nav-tab-gold');
+  const tabFinops = document.getElementById('sirius-nav-tab-finops');
+
+  if (tabResumen) tabResumen.addEventListener('click', () => switchSiriusDocSection('resumen-general'));
+  if (tabIngesta) tabIngesta.addEventListener('click', () => switchSiriusDocSection('ingesta-serverless'));
+  if (tabSpark) tabSpark.addEventListener('click', () => switchSiriusDocSection('glue-pyspark'));
+  if (tabGold) tabGold.addEventListener('click', () => switchSiriusDocSection('athena-marts'));
+  if (tabFinops) tabFinops.addEventListener('click', () => switchSiriusDocSection('finops-costos'));
+
+  // Paginación anterior / siguiente de Sirius
+  const prevBtn = document.getElementById('sirius-pag-prev');
+  const nextBtn = document.getElementById('sirius-pag-next');
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      const targetId = prevBtn.getAttribute('data-target-doc');
+      if (targetId) switchSiriusDocSection(targetId);
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      const targetId = nextBtn.getAttribute('data-target-doc');
+      if (targetId) switchSiriusDocSection(targetId);
+    });
+  }
+}
+
+function switchSiriusDocSection(sectionId, updateHash = true) {
+  const sectionData = SIRIUS_DOC_SECTIONS.find(s => s.id === sectionId);
+  if (!sectionData) return;
+
+  // 1. Actualizar barra lateral activa
+  document.querySelectorAll('[data-sirius-target]').forEach(link => {
+    if (link.getAttribute('data-sirius-target') === sectionId) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+
+  // 2. Asegurar que la categoría correspondiente esté expandida
+  if (sectionData.catId) {
+    const boxEl = document.getElementById(`sirius-cat-box-${sectionData.catId}`);
+    if (boxEl && boxEl.classList.contains('collapsed')) {
+      boxEl.classList.remove('collapsed');
+    }
+  }
+
+  // 3. Mostrar artículo correspondiente
+  document.querySelectorAll('#view-proyecto-sirius .doc-article').forEach(art => {
+    if (art.id === `sirius-art-${sectionId}`) {
+      art.classList.add('active');
+    } else {
+      art.classList.remove('active');
+    }
+  });
+
+  // 4. Actualizar migas de pan
+  const crumbCat = document.getElementById('sirius-breadcrumb-cat');
+  const crumbCur = document.getElementById('sirius-breadcrumb-current');
+  if (crumbCat) crumbCat.textContent = sectionData.cat;
+  if (crumbCur) crumbCur.textContent = sectionData.short;
+
+  // 5. Actualizar pestañas del navbar superior
+  const tabResumen = document.getElementById('sirius-nav-tab-resumen');
+  const tabIngesta = document.getElementById('sirius-nav-tab-ingesta');
+  const tabSpark = document.getElementById('sirius-nav-tab-spark');
+  const tabGold = document.getElementById('sirius-nav-tab-gold');
+  const tabFinops = document.getElementById('sirius-nav-tab-finops');
+
+  if (tabResumen && tabIngesta && tabSpark && tabGold && tabFinops) {
+    tabResumen.classList.toggle('active', sectionId === 'resumen-general');
+    tabIngesta.classList.toggle('active', sectionData.catId === 'arquitectura' && sectionId !== 'resumen-general');
+    tabSpark.classList.toggle('active', sectionData.catId === 'spark');
+    tabGold.classList.toggle('active', sectionData.catId === 'gold' && sectionId !== 'finops-costos');
+    tabFinops.classList.toggle('active', sectionId === 'finops-costos');
+  }
+
+  // 6. Actualizar botones de paginación
+  const prevBtn = document.getElementById('sirius-pag-prev');
+  const nextBtn = document.getElementById('sirius-pag-next');
+
+  if (prevBtn) {
+    if (sectionData.prev) {
+      const prevData = SIRIUS_DOC_SECTIONS.find(s => s.id === sectionData.prev);
+      prevBtn.style.visibility = 'visible';
+      prevBtn.setAttribute('data-target-doc', sectionData.prev);
+      prevBtn.querySelector('.doc-pagination__title').textContent = `« ${prevData.short}`;
+    } else {
+      prevBtn.style.visibility = 'hidden';
+    }
+  }
+
+  if (nextBtn) {
+    if (sectionData.next) {
+      const nextData = SIRIUS_DOC_SECTIONS.find(s => s.id === sectionData.next);
+      nextBtn.style.visibility = 'visible';
+      nextBtn.setAttribute('data-target-doc', sectionData.next);
+      nextBtn.querySelector('.doc-pagination__title').textContent = `${nextData.short} »`;
+    } else {
+      nextBtn.style.visibility = 'hidden';
+    }
+  }
+
+  // 7. Scroll suave al inicio del documento
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // 8. Actualizar URL si corresponde
+  if (updateHash) {
+    history.pushState(null, '', `#doc-sirius/${sectionId}`);
+  }
+}
+
+/* ==========================================================================
    5. Scroll Activo en Navbar del Dashboard
    ========================================================================== */
 function initNavScroll() {
@@ -673,24 +879,28 @@ function initSmoothScrollLinks() {
     const href = anchor.getAttribute('href');
     if (!href || href === '#') return;
 
-    // Si apunta al visor de documentación de Idempotencia o Polaris
+    // Si apunta al visor de documentación de Idempotencia, Polaris o Sirius
     if (href.startsWith('#proyecto-idempotencia') || href.startsWith('#doc-idempotencia') ||
-        href.startsWith('#proyecto-polaris') || href.startsWith('#doc-polaris')) {
+        href.startsWith('#proyecto-polaris') || href.startsWith('#doc-polaris') ||
+        href.startsWith('#proyecto-sirius') || href.startsWith('#doc-sirius')) {
       return; // Dejar que el router active la vista correspondiente
     }
 
     const dashboardView = document.getElementById('view-dashboard');
     const idempView = document.getElementById('view-proyecto-idempotencia');
     const polarisView = document.getElementById('view-proyecto-polaris');
+    const siriusView = document.getElementById('view-proyecto-sirius');
 
     // Caso A: Estamos dentro de algún visor de documentación y se hace clic en una sección del dashboard
     const isInsideDocViewer = (idempView && idempView.classList.contains('active')) ||
-                              (polarisView && polarisView.classList.contains('active'));
+                              (polarisView && polarisView.classList.contains('active')) ||
+                              (siriusView && siriusView.classList.contains('active'));
 
     if (isInsideDocViewer) {
       e.preventDefault();
       if (idempView) idempView.classList.remove('active');
       if (polarisView) polarisView.classList.remove('active');
+      if (siriusView) siriusView.classList.remove('active');
       if (dashboardView) dashboardView.classList.add('active');
 
       const navDropdownToggle = document.querySelector('.nav__dropdown-toggle');
