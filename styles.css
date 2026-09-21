@@ -2047,4 +2047,37 @@ section {
   border-radius: 16px;
 }
 
+/* ==========================================================================
+   Estilos de Figuras e Imágenes en Documentación Técnica
+   ========================================================================== */
+.doc-article figure {
+  margin: 1.75rem 0;
+  text-align: center;
+}
+
+.doc-article img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  display: block;
+  margin: 0 auto;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.doc-article img:hover {
+  transform: scale(1.01);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+}
+
+.doc-article figcaption {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin-top: 0.75rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+
 

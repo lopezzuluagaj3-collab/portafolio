@@ -1900,6 +1900,12 @@ s3://sirius-row-603437461408/row/
 ├── fhvhv/anio=2026/mes=01/fhvhv_tripdata_2026-01.parquet
 └── fhv/anio=2026/mes=01/fhv_tripdata_2026-01.parquet</pre>
             </div>
+
+            <h2>Evidencia de Infraestructura en Amazon S3</h2>
+            <figure>
+              <img src="./assets/img/sirius/s3_bukets.png" alt="Buckets S3 en AWS Lakehouse">
+              <figcaption><strong>Amazon S3 Lakehouse:</strong> Despliegue de los buckets de almacenamiento de la arquitectura Medallion (Raw/Bronze, Staging/Silver, Mart/Gold).</figcaption>
+            </figure>
           </article>
 
           <!-- 2. CI/CD & GITOPS -->
@@ -2043,6 +2049,16 @@ with ThreadPoolExecutor(max_workers=4) as executor:
                 </tbody>
               </table>
             </div>
+
+            <h2>Evidencia de Ejecución en AWS Glue 4.0</h2>
+            <figure>
+              <img src="./assets/img/sirius/glue_job_metrix.png" alt="Métricas de Ejecución en AWS Glue">
+              <figcaption><strong>AWS Glue Jobs:</strong> Historial de ejecuciones en verde (Succeeded), DPU asignados y monitoreo del procesamiento distribuido en Apache Spark.</figcaption>
+            </figure>
+            <figure>
+              <img src="./assets/img/sirius/glue_categority_table.png" alt="Esquema de Tablas en AWS Glue Data Catalog">
+              <figcaption><strong>Glue Data Catalog:</strong> Esquema tipado, compresión Snappy y particionamiento en S3 (<code>anio</code>, <code>mes</code>).</figcaption>
+            </figure>
           </article>
 
           <!-- 4. CALIDAD Y ESQUEMA -->
@@ -2140,6 +2156,16 @@ with ThreadPoolExecutor(max_workers=4) as executor:
               <li><code>scripts/materializar_marts.py</code>: Recrea la capa Gold completa desde cero mediante <code>DROP TABLE + CTAS</code> para los 18 años históricos.</li>
               <li><code>scripts/incremental_marts.py</code>: Inserta con <code>INSERT INTO</code> únicamente el nuevo mes llegado a Staging con <strong>guardias de idempotencia</strong> que evitan duplicados accidentales.</li>
             </ul>
+
+            <h2>Evidencia de Ejecución en Amazon Athena v3</h2>
+            <figure>
+              <img src="./assets/img/sirius/captura_respuesta_athena.png" alt="Rendimiento de Consultas en Amazon Athena">
+              <figcaption><strong>Athena FinOps:</strong> Consulta analítica agregando Data Marts en <strong>~1.2 segundos</strong> escaneando solo <strong>15 - 45 MB</strong> gracias al formato Parquet Snappy particionado.</figcaption>
+            </figure>
+            <figure>
+              <img src="./assets/img/sirius/captura_query_athena.png" alt="Consulta SQL en Athena Query Editor">
+              <figcaption><strong>Athena Query Editor:</strong> Sentencia SQL analítica ejecutada contra las tablas materializadas en <code>sirius_mart_db</code>.</figcaption>
+            </figure>
           </article>
 
           <!-- 6. FINOPS COSTOS -->
@@ -2237,7 +2263,7 @@ with ThreadPoolExecutor(max_workers=4) as executor:
           <article id="sirius-art-powerbi" class="doc-article">
             <h1 class="doc-article__title">3. Power BI Desktop & Seguridad Least Privilege</h1>
             <p class="doc-article__lead">
-              Conexión analítica nativa mediante Simba Athena ODBC DSN bajo el principio de mínimo privilegio con el usuario IAM sirius-powerbi-reader.
+              Conexión analítica nativa mediante Simba Athena ODBC DSN bajo el principio de mínimo privilegio con el usuario IAM sirius-powerbi-reader y visualizaciones ejecutivas en modo Import.
             </p>
 
             <h2>Seguridad de Mínimo Privilegio (IAM Least Privilege)</h2>
@@ -2248,21 +2274,53 @@ with ThreadPoolExecutor(max_workers=4) as executor:
               <li>Lectura exclusiva de metadatos en <code>sirius_mart_db</code> (Glue).</li>
               <li>Ejecución de consultas restringida al Workgroup <code>sirius-eda</code>.</li>
               <li>Lectura sobre <code>s3://sirius-mart-.../mart/*</code> y escritura temporal en <code>result_eda/*</code>.</li>
-              <li><strong>Cero acceso</strong> a las capas Row y Staging, a Terraform ni a funciones Lambda.</li>
+              <li><strong>Cero acceso</strong> a las capas Bronze y Silver, a Terraform ni a funciones Lambda.</li>
             </ul>
 
             <h2>Conexión ODBC en Modo Import</h2>
             <p>
-              Al configurar el DSN de usuario <code>sirius_mart</code> en modo <strong>Import</strong>, los 388 MB de la capa Gold se cargan en la RAM del equipo en menos de 2 segundos. Los analistas pueden interactuar, filtrar y calcular medidas DAX con latencia instantánea sin incurrir en costos adicionales de escaneo en Athena.
+              Al configurar el DSN de usuario <code>sirius_mart</code> en modo <strong>Import</strong>, los Data Marts se cargan en la RAM del equipo en menos de 2 segundos. Los analistas pueden interactuar, filtrar y calcular medidas DAX con latencia instantánea sin incurrir en costos adicionales de escaneo en Athena.
             </p>
 
-            <h2>Los 3 Dashboards Estratégicos</h2>
-            <ol>
-              <li><strong>Evolución de Cuota de Mercado (18 Años):</strong> Desplazamiento del Taxi Amarillo frente a Uber/Lyft (>80% tras 2019) y caída del 85% durante el confinamiento COVID-19 en 2020.</li>
-              <li><strong>KPIs Financieros y Economía del Viaje:</strong> Tarifas base promedio, porcentaje de propina por tarjeta, peajes e ingresos netos de conductores por servicio.</li>
-              <li><strong>Demanda Territorial y Corredores de Movilidad:</strong> Flujos entre distritos de NYC y conexiones a los aeropuertos JFK y LaGuardia.</li>
-            </ol>
+            <h2>📊 Los 3 Dashboards Estratégicos en Power BI</h2>
+
+            <div style="margin-top: 2rem;">
+              <h3>Página 1: Visión Ejecutiva y Cuota de Mercado (2009 – 2026)</h3>
+              <p>Evolución de 4.42B de viajes analizados, adopción tecnológica de Uber/Lyft (>80% de cuota) y shock de abril de 2020 por confinamiento COVID-19.</p>
+              <figure>
+                <img src="./assets/img/sirius/dashboard_1.png" alt="Página 1: Visión Ejecutiva y Cuota de Mercado">
+                <figcaption><strong>Dashboard Página 1:</strong> KPIs de Total Viajes (4.42B), Cuota Apps (80.9%), Cuota Taxi (13.7%), gráfico de áreas apiladas 100% y volumen mensual histórico.</figcaption>
+              </figure>
+            </div>
+
+            <div style="margin-top: 2.5rem;">
+              <h3>Página 2: KPIs Financieros y Rendimiento Económico</h3>
+              <p>Estructura de costos, facturación bruta acumulada ($84.2B USD), tarifa base media ($18.45 USD), tasa de propinas (16.8%) y compensación media por viaje a conductores ($14.20 USD).</p>
+              <figure>
+                <img src="./assets/img/sirius/dashboard_2.png" alt="Página 2: KPIs Financieros y Rendimiento Económico">
+                <figcaption><strong>Dashboard Página 2:</strong> Análisis financiero, comparativa de tarifa por viaje y evolución de costo por milla ($/milla) entre modalidades.</figcaption>
+              </figure>
+            </div>
+
+            <div style="margin-top: 2.5rem;">
+              <h3>Página 3: Dinámica Espacio-Temporal y Horaria</h3>
+              <p>Matriz cruzada de flujos origen-destino entre los distritos de NYC y curva horaria de demanda (0-23h) con filtros desplegables tipo acordeón para análisis interactivo por día de la semana y servicio.</p>
+              <figure>
+                <img src="./assets/img/sirius/dashboard_3.png" alt="Página 3: Dinámica Espacio-Temporal y Horaria">
+                <figcaption><strong>Dashboard Página 3:</strong> Filtros desplegables tipo acordeón, matriz territorial de viajes y curva horaria reactiva que revela horas pico laborales vs. ocio nocturno.</figcaption>
+              </figure>
+            </div>
+
+            <div style="margin-top: 2.5rem;">
+              <h3>🏛️ Modelo de Datos Semántico (Semantic Model)</h3>
+              <p>Relaciones entre los 4 Data Marts de la capa Gold optimizados con compresión VertiPaq y medidas DAX dinámicas.</p>
+              <figure>
+                <img src="./assets/img/sirius/model_view.png" alt="Modelo de Datos Semántico en Power BI">
+                <figcaption><strong>Vista de Modelo:</strong> Diagrama relacional de tablas analíticas en Power BI Desktop.</figcaption>
+              </figure>
+            </div>
           </article>
+
 
           <!-- ==================== PAGINACIÓN INFERIOR ==================== -->
           <div class="doc-pagination">
