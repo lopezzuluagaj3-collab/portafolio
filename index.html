@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Juan Diego López Zuluaga — Portafolio Profesional DevOps & Cloud Infrastructure</title>
-  <meta name="description" content="Portafolio profesional de Juan Diego López Zuluaga, Lead DevOps. Arquitectura cloud, hardening perimetral con Tailscale y CrowdSec, orquestación de bases de datos y CI/CD.">
+  <title>Juan Diego López Zuluaga — Portafolio Profesional DevOps & Cloud Infrastructure Engineer</title>
+  <meta name="description" content="Portafolio profesional de Juan Diego López Zuluaga, DevOps & Cloud Infrastructure Engineer. Arquitectura cloud, hardening perimetral con Tailscale y CrowdSec, orquestación de bases de datos y CI/CD.">
   <meta name="author" content="Juan Diego López Zuluaga">
 
   <!-- Favicon e Identidad -->
@@ -108,7 +108,7 @@
         <div class="hero__content">
           <div class="hero__tag-role">
             <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#ff9280;"></span>
-            Lead DevOps & Cloud Infrastructure
+            DevOps & Cloud Infrastructure Engineer
           </div>
           <h1 class="hero__title">
             Infraestructura Resiliente, <span>Segura</span> y Automatizada
@@ -325,7 +325,7 @@
           <div class="card project-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
               <span class="badge badge--primary">K8s & Data Platform</span>
-              <span class="badge badge--success">En Producción / AWS</span>
+              <span class="badge badge--success">Proyecto Completo / AWS</span>
             </div>
 
             <h3 class="project-card__title">Polaris — Plataforma ETL sobre K8s Self-Managed en AWS</h3>
@@ -356,7 +356,7 @@
           <div class="card project-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
               <span class="badge badge--primary">Data Lakehouse & Spark</span>
-              <span class="badge badge--success">En Producción / AWS</span>
+              <span class="badge badge--success">Proyecto Completo / AWS</span>
             </div>
 
             <h3 class="project-card__title">Sirius — Modern Data Lakehouse Serverless en AWS (NYC TLC)</h3>
@@ -591,7 +591,7 @@
             </p>
 
             <p>
-              <strong>IP pública de la VPS:</strong> <code>46.224.101.88</code> &nbsp;&nbsp; <strong>IP privada (Tailscale) de la VPS:</strong> <code>100.99.206.50</code>
+              <strong>IP pública de la VPS:</strong> <code>&lt;IP_PÚBLICA_VPS&gt;</code> &nbsp;&nbsp; <strong>IP privada (Tailscale) de la VPS:</strong> <code>&lt;IP_PRIVADA_TAILSCALE&gt;</code>
             </p>
 
             <p>
@@ -614,7 +614,7 @@
             <h3>Método de verificación en 3 capas (auditoría obligatoria ante dudas de exposición):</h3>
             <pre><code>docker ps                                          # qué publica Docker
 sudo ss -tulnp                                      # qué escucha realmente el host
-timeout 2 bash -c "echo > /dev/tcp/46.224.101.88/&lt;puerto&gt;" &amp;&amp; echo "ABIERTO" || echo "cerrado"</code></pre>
+timeout 2 bash -c "echo > /dev/tcp/&lt;IP_PÚBLICA_VPS&gt;/&lt;puerto&gt;" &amp;&amp; echo "ABIERTO" || echo "cerrado"</code></pre>
 
             <h2>2.2 Patrón de corrección aplicado</h2>
             <p>En cada <code>docker-compose.yml</code> afectado, cambiar:</p>
@@ -624,7 +624,7 @@ ports:
 
 # Corregido y aislado:
 ports:
-  - "100.99.206.50:PUERTO:PUERTO"   # solo accesible vía Tailscale</code></pre>
+  - "&lt;IP_PRIVADA_TAILSCALE&gt;:PUERTO:PUERTO"   # solo accesible vía Tailscale</code></pre>
             <p>
               Y recrear con: <code>docker compose up -d --force-recreate &lt;servicio&gt;</code>. Esto <strong>no</strong> afecta la comunicación interna entre contenedores (que usa el nombre de contenedor sobre la red Docker <code>red-proxy</code>, no el binding público), ni requiere tocar volúmenes.
             </p>
@@ -661,37 +661,37 @@ ports:
                 <tr>
                   <td><code>81</code></td>
                   <td>NPM panel admin</td>
-                  <td><code>100.99.206.50</code> (Tailscale only)</td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;</code> (Tailscale only)</td>
                   <td>✅ Cerrado a internet</td>
                 </tr>
                 <tr>
                   <td><code>1433</code></td>
                   <td>SQL Server</td>
-                  <td><code>100.99.206.50</code> (Tailscale only)</td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;</code> (Tailscale only)</td>
                   <td>✅ Cerrado a internet</td>
                 </tr>
                 <tr>
                   <td><code>5432</code></td>
                   <td>PostgreSQL</td>
-                  <td><code>100.99.206.50</code> (Tailscale only)</td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;</code> (Tailscale only)</td>
                   <td>✅ Cerrado a internet</td>
                 </tr>
                 <tr>
                   <td><code>3306</code></td>
                   <td>MySQL</td>
-                  <td><code>100.99.206.50</code> (Tailscale only)</td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;</code> (Tailscale only)</td>
                   <td>✅ Cerrado a internet</td>
                 </tr>
                 <tr>
                   <td><code>27017</code></td>
                   <td>MongoDB</td>
-                  <td><code>100.99.206.50</code> (Tailscale only)</td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;</code> (Tailscale only)</td>
                   <td>✅ Cerrado a internet</td>
                 </tr>
                 <tr>
                   <td><code>9000</code></td>
                   <td>Portainer</td>
-                  <td><code>100.99.206.50</code> (Tailscale only)</td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;</code> (Tailscale only)</td>
                   <td>✅ Correcto desde instalación</td>
                 </tr>
                 <tr>
@@ -740,7 +740,7 @@ ports:
             <h2>3.2 Tailscale — red privada del equipo</h2>
             <ul>
               <li>Tailnet bajo la cuenta de administración de Juan (<code>lopezzuluagaj3@gmail.com</code>).</li>
-              <li>Dispositivos conectados: VPS (<code>idempotencia</code>, IP privada <code>100.99.206.50</code>), PC de Juan (<code>pcjuandiego</code>) y PC de Santiago Botero (<code>santi</code>).</li>
+              <li>Dispositivos conectados: VPS (<code>idempotencia</code>, IP privada <code>&lt;IP_PRIVADA_TAILSCALE&gt;</code>), PC de Juan (<code>pcjuandiego</code>) y PC de Santiago Botero (<code>santi</code>).</li>
               <li>Utilizado para acceder de forma privada a: las 4 bases de datos, el panel de NPM (<code>:81</code>) y Portainer (<code>:9000</code>).</li>
             </ul>
           </article>
@@ -798,13 +798,13 @@ ports:
                 <tr>
                   <td>Nginx Proxy Manager</td>
                   <td><code>nginx-proxy-manager</code></td>
-                  <td>panel en <code>100.99.206.50:81</code></td>
+                  <td>panel en <code>&lt;IP_PRIVADA_TAILSCALE&gt;:81</code></td>
                   <td>81</td>
                 </tr>
                 <tr>
                   <td>Portainer CE</td>
                   <td><code>portainer</code></td>
-                  <td><code>100.99.206.50:9000</code></td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;:9000</code></td>
                   <td>9000</td>
                 </tr>
               </tbody>
@@ -820,7 +820,7 @@ ports:
           <!-- 6. BASES DE DATOS -->
           <article id="doc-art-bases-datos" class="doc-article">
             <h1 class="doc-article__title">6. Bases de datos</h1>
-            <p>Las cuatro bases de datos comparten el mismo patrón de seguridad: publicadas únicamente sobre la IP de Tailscale (<code>100.99.206.50:PUERTO</code>), nunca sobre <code>0.0.0.0</code>.</p>
+            <p>Las cuatro bases de datos comparten el mismo patrón de seguridad: publicadas únicamente sobre la IP de Tailscale (<code>&lt;IP_PRIVADA_TAILSCALE&gt;:PUERTO</code>), nunca sobre <code>0.0.0.0</code>.</p>
 
             <table>
               <thead>
@@ -880,7 +880,7 @@ ports:
 
             <h2>8.1 Error 500 en /auth/register — connection string con IP pública</h2>
             <p><strong>Síntoma:</strong> Timeout de conexión SQL (<code>SqlException</code>) al registrar un usuario.</p>
-            <p><strong>Causa:</strong> La connection string apuntaba a <code>Server=46.224.101.88</code> en vez de <code>Server=idempotencia-sqlserver</code>, cayendo en un bloqueo por hairpin NAT.</p>
+            <p><strong>Causa:</strong> La connection string apuntaba a <code>Server=&lt;IP_PÚBLICA_VPS&gt;</code> en vez de <code>Server=idempotencia-sqlserver</code>, cayendo en un bloqueo por hairpin NAT.</p>
             <p><strong>Solución:</strong> Corregir el servidor al nombre del contenedor en la red Docker. Conexión restablecida de inmediato con latencia &lt;1ms.</p>
 
             <h2>8.2 Volumen duplicado de SQL Server al recrear el contenedor</h2>
@@ -1670,6 +1670,7 @@ ports:
         </div>
 
         <div class="doc-navbar__nav">
+          <span class="doc-navbar__item" style="opacity:0.6; cursor:default;">Manual de Usuario</span>
           <span class="doc-navbar__item active" id="sirius-nav-tab-resumen">Resumen General</span>
           <span class="doc-navbar__item" id="sirius-nav-tab-ingesta">Ingesta & IaC</span>
           <span class="doc-navbar__item" id="sirius-nav-tab-spark">Glue PySpark 4.0</span>

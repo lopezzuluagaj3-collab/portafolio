@@ -1,7 +1,7 @@
 # Portafolio Profesional DevOps & Cloud Infrastructure — Juan Diego López Zuluaga
 > **Repositorio oficial y centralizado que alberga el portafolio integral de todos mis proyectos de ingeniería DevOps, infraestructura Cloud, orquestación en Kubernetes, seguridad perimetral y plataformas de datos.**
 
-Este repositorio **es el portafolio oficial y consolidado de todos mis proyectos** desarrollados como **Lead DevOps & Cloud Infrastructure Engineer**. No corresponde a un proyecto aislado, sino al espacio centralizado donde presento, estructuro y demuestro la totalidad de mis casos de estudio técnicos, arquitecturas de alta disponibilidad, decisiones de diseño (ADRs), pipelines de automatización CI/CD y portales interactivos de documentación técnica profunda.
+Este repositorio **es el portafolio oficial y consolidado de todos mis proyectos** desarrollados como **DevOps & Cloud Infrastructure Engineer**. No corresponde a un proyecto aislado, sino al espacio centralizado donde presento, estructuro y demuestro la totalidad de mis casos de estudio técnicos, arquitecturas de alta disponibilidad, decisiones de diseño (ADRs), pipelines de automatización CI/CD y portales interactivos de documentación técnica profunda.
 
 El portafolio incluye una **aplicación web interactiva de alto impacto visual** ([index.html](./index.html)) construida extrayendo el sistema de diseño (UI/UX) de Docusaurus: paleta violeta (`#7c3aed`) con acentos en degradado coral (`#ff9280`, `#ff6f57`), cuadrícula radial de puntos, efectos glassmorphic, simulación interactiva de terminal Unix, soporte nativo para temas claro/oscuro y un **motor de desplazamiento suave tipo inercia** (`easeInOutCubic`).
 
@@ -10,7 +10,7 @@ El portafolio incluye una **aplicación web interactiva de alto impacto visual**
 ## 👤 Perfil Profesional y Contacto
 
 - **Ingeniero:** Juan Diego López Zuluaga
-- **Rol:** Lead DevOps & Cloud Infrastructure Engineer
+- **Rol:** DevOps & Cloud Infrastructure Engineer
 - **Ubicación:** Medellín, Colombia (Disponible para proyectos Remotos / Híbridos)
 - **Correo Electrónico:** [lopezzuluagaj3@gmail.com](mailto:lopezzuluagaj3@gmail.com)
 - **LinkedIn:** [linkedin.com/in/juan-diego-lopez-zuluaga](https://www.linkedin.com/in/juan-diego-lopez-zuluaga/)
@@ -33,7 +33,7 @@ d:\portafolio\
 ```
 
 ### 1. 🌟 Polaris — Plataforma ETL sobre Kubernetes Self-Managed en AWS
-- **Estado:** 🟢 **En Producción / AWS**
+- **Estado:** 🟢 **Proyecto Completo / AWS**
 - **Documentación Completa:** [proyectos/polaris/resumen-general.md](./proyectos/polaris/resumen-general.md)
 - **Enfoque:** Demostración profunda de dominio de **Kubernetes, Helm 3 y Cilium CNI (eBPF)** en un entorno real de datos sobre AWS, operando un control plane autoadministrado en EC2 sin recurrir al costo de EKS.
 - **Aspectos Destacados:**
@@ -50,7 +50,7 @@ d:\portafolio\
 - **Documentación Completa:** [proyectos/idempotencia/resumen-general.md](./proyectos/idempotencia/resumen-general.md)
 - **Enfoque:** Plataforma de autoservicio de bases de datos relacionales y no relacionales con módulo de IA bajo Ollama, operando de forma confinada y resiliente en una única VPS de 4 GB de RAM.
 - **Aspectos Destacados:**
-  - **Resolución Crítica Docker vs UFW:** Descubrimiento de que Docker bypassea `ufw` al publicar puertos directamente en iptables; mitigación inmediata enlazando servicios exclusivamente a la IP privada de **Tailscale** (`100.99.206.50`).
+  - **Resolución Crítica Docker vs UFW:** Descubrimiento de que Docker bypassea `ufw` al publicar puertos directamente en iptables; mitigación inmediata enlazando servicios exclusivamente a la IP privada de **Tailscale** (`<IP_PRIVADA_TAILSCALE>`).
   - **Defensa Perimetral Activa:** Agente **CrowdSec IPS** con bouncer en iptables para bloquear escaneos y fuerza bruta, sumado a un mecanismo de **Port Knocking Dinámico** vía scripts de PowerShell/Bash.
   - **Cuotas Estrictas de Recursos:** Confinamiento de 4 motores de bases de datos (SQL Server 2022, PostgreSQL 16, MySQL 8.4, MongoDB 7) bajo límites de 512 MB de RAM y 0.5 CPU.
   - **Cero Pérdida de Datos en Incidentes:** Rescate en caliente y migración mediante backup T-SQL ante colisiones de volúmenes de Docker, declarando volúmenes existentes como `external: true`.

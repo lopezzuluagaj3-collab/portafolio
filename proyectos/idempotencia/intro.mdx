@@ -27,7 +27,7 @@ públicamente.
 - **Cuatro motores de base de datos** — SQL Server 2022, PostgreSQL 16,
   MongoDB 7 y MySQL 8.4, cada uno en su propio contenedor con
   `mem_limit`/`cpus` acotados, publicados **únicamente** sobre la IP
-  privada de Tailscale (`100.99.206.50:PUERTO`) — nunca sobre `0.0.0.0`.
+  privada de Tailscale (`<IP_PRIVADA_TAILSCALE>:PUERTO`) — nunca sobre `0.0.0.0`.
   Las connection strings del backend siempre usan el **nombre del
   contenedor** (ej. `idempotencia-sqlserver`), nunca la IP pública ni la de
   Tailscale, para evitar timeouts intermitentes.

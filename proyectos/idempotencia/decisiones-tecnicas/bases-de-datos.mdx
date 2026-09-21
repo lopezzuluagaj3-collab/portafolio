@@ -37,6 +37,6 @@ Toda la lógica de negocio (procedimientos almacenados) vive actualmente dentro 
 - **Comunicación interna entre contenedores:** el backend debe usar siempre el **nombre del contenedor** en las connection strings (ej. `idempotencia-sqlserver`), no la IP pública ni la de Tailscale — usar IP pública desde dentro de la propia VPS puede causar timeouts intermitentes por hairpin NAT combinado con el firewall.
 
 ## 6.3 Conexión desde DBeaver / herramientas externas (equipo interno)
-- **Host:** `100.99.206.50` (IP privada de Tailscale de la VPS)
+- **Host:** `<IP_PRIVADA_TAILSCALE>` (IP privada de Tailscale de la VPS)
 - **Puerto:** el que corresponda a cada motor{/* (1433 / 5432 / 27017 / 3306) */}
 - **SSL/TrustServerCertificate:** activado donde aplique

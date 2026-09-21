@@ -9,8 +9,8 @@
 
 VPS única (4 GB de RAM) alojando el stack completo del proyecto **Idempotencia**: un producto **gestor de bases de datos** para usuarios finales (por eso corren 4 motores de DB). Incluye frontend, backend (producción y QA), y cuatro bases de datos, todo detrás de Nginx Proxy Manager (NPM) con SSL de Let's Encrypt. El acceso administrativo (SSH, bases de datos, paneles internos) está cerrado al público y se gestiona mediante **Tailscale** (VPN privada) y **port knocking**.
 
-**IP pública de la VPS:** `46.224.101.88`
-**IP privada (Tailscale) de la VPS:** `100.99.206.50`
+**IP pública de la VPS:** `<IP_PÚBLICA_VPS>`
+**IP privada (Tailscale) de la VPS:** `<IP_PRIVADA_TAILSCALE>`
 
 **Modelo de producto:** los usuarios finales de Idempotencia necesitarán conectar sus propias herramientas externas (Airflow, DBeaver, etc.) directamente a bases de datos gestionadas, con credenciales propias — no solo a través de la app web. Esto implica que, a futuro, algunos puertos de base de datos deberán exponerse de forma controlada (ver sección 10).
 
@@ -28,7 +28,7 @@ Esto se confirmó como la causa de un ataque de fuerza bruta real detectado cont
 ```bash
 docker ps                                          # qué publica Docker
 sudo ss -tulnp                                      # qué escucha realmente el host
-timeout 2 bash -c "echo > /dev/tcp/46.224.101.88/<puerto>" && echo "ABIERTO" || echo "cerrado"
+timeout 2 bash -c "echo > /dev/tcp/<IP_PÚBLICA_VPS>/<puerto>" && echo "ABIERTO" || echo "cerrado"
 ```
 
 ### 2.2 Patrón de corrección aplicado
@@ -41,7 +41,7 @@ ports:
 por:
 ```yaml
 ports:
-  - "100.99.206.50:PUERTO:PUERTO"   # solo accesible vía Tailscale
+  - "<IP_PRIVADA_TAILSCALE>:PUERTO:PUERTO"   # solo accesible vía Tailscale
 ```
 y recrear: `docker compose up -d --force-recreate <servicio>`. Esto **no** afecta la comunicación interna entre contenedores (que usa el nombre de contenedor sobre la red Docker, no el binding público), ni requiere tocar volúmenes.
 
@@ -52,12 +52,12 @@ y recrear: `docker compose up -d --force-recreate <servicio>`. Esto **no** afect
 | 22 | SSH | público, restringido — ver 3.1 | ✅ Controlado |
 | 80 | NPM (HTTP) | público | ✅ Correcto (tráfico real) |
 | 443 | NPM (HTTPS) | público | ✅ Correcto (tráfico real) |
-| 81 | NPM panel admin | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
-| 1433 | SQL Server | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
-| 5432 | Postgres | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
-| 3306 | MySQL | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
-| 27017 | MongoDB | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
-| 9000 | Portainer | `100.99.206.50` (Tailscale only) | ✅ Correcto desde instalación |
+| 81 | NPM panel admin | `<IP_PRIVADA_TAILSCALE>` (Tailscale only) | ✅ Cerrado |
+| 1433 | SQL Server | `<IP_PRIVADA_TAILSCALE>` (Tailscale only) | ✅ Cerrado |
+| 5432 | Postgres | `<IP_PRIVADA_TAILSCALE>` (Tailscale only) | ✅ Cerrado |
+| 3306 | MySQL | `<IP_PRIVADA_TAILSCALE>` (Tailscale only) | ✅ Cerrado |
+| 27017 | MongoDB | `<IP_PRIVADA_TAILSCALE>` (Tailscale only) | ✅ Cerrado |
+| 9000 | Portainer | `<IP_PRIVADA_TAILSCALE>` (Tailscale only) | ✅ Correcto desde instalación |
 | 8090, 6060 | CrowdSec (API/métricas) | `127.0.0.1` | ✅ No expuesto |
 | 5555 | idempotencia-backend (prod) | interno (sin publicar) | ✅ No expuesto |
 | **8080** | idempotencia-frontend (prod) | **público** | ⏳ Pendiente de cerrar |
@@ -89,7 +89,7 @@ El puerto 22 permanece cerrado por defecto. Para conectarse:
 
 ### 3.2 Tailscale — red privada del equipo
 - Tailnet propia bajo la cuenta `lopezzuluagaj3@gmail.com`
-- Dispositivos conectados: la VPS (`idempotencia`, IP privada `100.99.206.50`), la PC de Juan (`pcjuandiego`) y la PC de Santiago Botero (`santi`)
+- Dispositivos conectados: la VPS (`idempotencia`, IP privada `<IP_PRIVADA_TAILSCALE>`), la PC de Juan (`pcjuandiego`) y la PC de Santiago Botero (`santi`)
 - Usado para acceder de forma privada a: las 4 bases de datos, el panel de NPM (`:81`), y Portainer (`:9000`)
 - Plan gratuito, límite de 3 usuarios (suficiente para el equipo actual)
 
@@ -131,8 +131,8 @@ Todos corren en Docker Compose, conectados a la red externa compartida **`red-pr
 | Frontend (QA) | `idempotencia-frontend-qa` | público en `:8081` (pendiente cerrar) | — |
 | Backend (prod) | `idempotencia-backend` | `api.idempotencia.andrescortes.dev` | 5555 |
 | Backend (QA) | `idempotencia-qa-back` | público en `:5556` (pendiente cerrar) | 5556 |
-| Nginx Proxy Manager | — | panel en `100.99.206.50:81` | — |
-| Portainer | `portainer` | `100.99.206.50:9000` | 9000 |
+| Nginx Proxy Manager | — | panel en `<IP_PRIVADA_TAILSCALE>:81` | — |
+| Portainer | `portainer` | `<IP_PRIVADA_TAILSCALE>:9000` | 9000 |
 
 > **Documentación (Docusaurus):** ya no corre en la VPS de forma permanente. Se migró a **Vercel** (con CI/CD integrado). El contenedor `idempotencia-documentacion` (puerto 7777) sigue existiendo en la VPS, expuesto públicamente — pendiente evaluar si debe eliminarse por completo.
 
@@ -161,7 +161,7 @@ Un `limit_req_zone` mal ubicado directamente en un Proxy Host causaba caídas de
 
 ## 6. Bases de datos
 
-Las cuatro bases de datos comparten el mismo patrón de seguridad: publicadas únicamente sobre la IP de Tailscale (`100.99.206.50:PUERTO`), nunca sobre `0.0.0.0`.
+Las cuatro bases de datos comparten el mismo patrón de seguridad: publicadas únicamente sobre la IP de Tailscale (`<IP_PRIVADA_TAILSCALE>:PUERTO`), nunca sobre `0.0.0.0`.
 
 | Motor | Contenedor | Puerto | Usuario admin | Notas |
 |---|---|---|---|---|
@@ -184,7 +184,7 @@ Toda la lógica de negocio (procedimientos almacenados) vive actualmente dentro 
 - **Comunicación interna entre contenedores:** el backend debe usar siempre el **nombre del contenedor** en las connection strings (ej. `idempotencia-sqlserver`), no la IP pública ni la de Tailscale — usar IP pública desde dentro de la propia VPS puede causar timeouts intermitentes por hairpin NAT combinado con el firewall.
 
 ### 6.3 Conexión desde DBeaver / herramientas externas (equipo interno)
-- **Host:** `100.99.206.50` (IP privada de Tailscale de la VPS)
+- **Host:** `<IP_PRIVADA_TAILSCALE>` (IP privada de Tailscale de la VPS)
 - **Puerto:** el que corresponda (1433 / 5432 / 27017 / 3306)
 - **SSL/TrustServerCertificate:** activado donde aplique
 
@@ -224,12 +224,12 @@ Dashboard visual para gestión de contenedores (CPU/RAM por contenedor, reinicio
 
 ```bash
 docker volume create portainer_data
-docker run -d -p 100.99.206.50:9000:9000 --name portainer --restart=unless-stopped \
+docker run -d -p <IP_PRIVADA_TAILSCALE>:9000:9000 --name portainer --restart=unless-stopped \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v portainer_data:/data \
   portainer/portainer-ce:latest
 ```
-**Acceso:** `http://100.99.206.50:9000` (requiere Tailscale activo). Nota: el setup inicial de usuario admin tiene una ventana de ~5 minutos; si expira, se necesita el `setup_token` (`docker logs portainer | grep setup_token`) junto con usuario/contraseña.
+**Acceso:** `http://<IP_PRIVADA_TAILSCALE>:9000` (requiere Tailscale activo). Nota: el setup inicial de usuario admin tiene una ventana de ~5 minutos; si expira, se necesita el `setup_token` (`docker logs portainer | grep setup_token`) junto con usuario/contraseña.
 
 ---
 
@@ -237,7 +237,7 @@ docker run -d -p 100.99.206.50:9000:9000 --name portainer --restart=unless-stopp
 
 ### 8.1 Error 500 en `/auth/register` — connection string con IP pública
 **Síntoma:** timeout de conexión SQL (`SqlException`) al registrar un usuario.
-**Causa:** la connection string de `ColmenaDbContext` apuntaba a `Server=46.224.101.88` en vez de `Server=idempotencia-sqlserver`.
+**Causa:** la connection string de `ColmenaDbContext` apuntaba a `Server=<IP_PÚBLICA_VPS>` en vez de `Server=idempotencia-sqlserver`.
 **Solución:** corregir el `Server=` al nombre del contenedor y reiniciar. Confirmado con registro exitoso y JWT devuelto.
 
 ### 8.2 Volumen duplicado de SQL Server al recrear el contenedor

@@ -7,7 +7,7 @@ title: Incidentes resueltos
 
 ## 8.1 Error 500 en `/auth/register` — connection string con IP pública
 **Síntoma:** timeout de conexión SQL (`SqlException`) al registrar un usuario.
-**Causa:** la connection string de `ColmenaDbContext` apuntaba a `Server=46.224.101.88` en vez de `Server=idempotencia-sqlserver`.
+**Causa:** la connection string de `ColmenaDbContext` apuntaba a `Server=<IP_PÚBLICA_VPS>` en vez de `Server=idempotencia-sqlserver`.
 **Solución:** corregir el `Server=` al nombre del contenedor y reiniciar. Confirmado con registro exitoso y JWT devuelto.
 
 ## 8.2 Volumen duplicado de SQL Server al recrear el contenedor

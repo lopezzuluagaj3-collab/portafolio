@@ -38,7 +38,7 @@ Dashboard visual para gestión de contenedores (CPU/RAM por contenedor, reinicio
 {/*
 ```bash
 docker volume create portainer_data
-docker run -d -p 100.99.206.50:9000:9000 --name portainer --restart=unless-stopped \
+docker run -d -p <IP_PRIVADA_TAILSCALE>:9000:9000 --name portainer --restart=unless-stopped \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v portainer_data:/data \
   portainer/portainer-ce:latest
@@ -47,4 +47,4 @@ docker run -d -p 100.99.206.50:9000:9000 --name portainer --restart=unless-stopp
 
 Instalado como contenedor Docker, con el socket del host montado para poder gestionar el resto de contenedores y un volumen dedicado para persistir su configuración.
 
-**Acceso:** panel de Portainer vía Tailscale{/* (`http://100.99.206.50:9000`) */} (requiere Tailscale activo). Nota: el setup inicial de usuario admin tiene una ventana de ~5 minutos; si expira, se necesita el `setup_token` (`docker logs portainer | grep setup_token`) junto con usuario/contraseña.
+**Acceso:** panel de Portainer vía Tailscale{/* (`http://<IP_PRIVADA_TAILSCALE>:9000`) */} (requiere Tailscale activo). Nota: el setup inicial de usuario admin tiene una ventana de ~5 minutos; si expira, se necesita el `setup_token` (`docker logs portainer | grep setup_token`) junto con usuario/contraseña.

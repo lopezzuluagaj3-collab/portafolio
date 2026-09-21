@@ -4,7 +4,7 @@
 ---
 
 ## 📌 Metadatos del Proyecto
-- **Rol:** Lead DevOps / Ingeniero Cloud / SRE
+- **Rol:** DevOps & Cloud Infrastructure Engineer / SRE
 - **Periodo:** [Mes Año - Mes Año]
 - **Estado:** [Producción / En Desarrollo / PoC]
 - **Repositorio:** [Enlace a GitHub o GitLab]

@@ -1,7 +1,7 @@
 # Portafolio Profesional DevOps — Juan Diego López Zuluaga
 > **Compendio Ejecutivo de Proyectos: Infraestructura Cloud, Kubernetes, Seguridad Perimetral y Datos**
 
-Este documento recopila el contexto ejecutivo, las decisiones arquitectónicas y las acciones tomadas desde mi rol como **Lead DevOps & Cloud Infrastructure Engineer** a través de los proyectos consolidados en este portafolio (**Polaris** e **Idempotencia**).
+Este documento recopila el contexto ejecutivo, las decisiones arquitectónicas y las acciones tomadas desde mi rol como **DevOps & Cloud Infrastructure Engineer** a través de los proyectos consolidados en este portafolio (**Polaris** e **Idempotencia**).
 
 ---
 
@@ -18,7 +18,7 @@ Este documento recopila el contexto ejecutivo, las decisiones arquitectónicas y
 - **Motores Soportados:** SQL Server 2022, PostgreSQL 16, MySQL 8.4 y MongoDB 7.
 - **Módulo de IA:** Gateway con FastAPI y Ollama (`qwen2.5:3b`) para generación self-service de API keys compatibles con OpenAI.
 - **Frontend & Backend:** React + Vite servido en Nginx y APIs en .NET 10 (con ambientes separados de Producción y QA).
-- **Entorno de Despliegue:** Todo el stack orquestado en una **VPS única de 4 GB de RAM** (`46.224.101.88`).
+- **Entorno de Despliegue:** Todo el stack orquestado en una **VPS única de 4 GB de RAM** (`<IP_PÚBLICA_VPS>`).
 
 ---
 
@@ -26,7 +26,7 @@ Este documento recopila el contexto ejecutivo, las decisiones arquitectónicas y
 
 ### 1. Hardening Perimetral y Hallazgo Crítico de Docker vs UFW
 - **Descubrimiento:** Se detectó que Docker inyecta reglas directamente en `iptables`, saltándose `ufw` y exponiendo puertos declarados con `0.0.0.0` a internet. Esto originó un ataque real de fuerza bruta contra el usuario `sa` de SQL Server.
-- **Solución implementada:** Se reconfiguraron todos los contenedores para enlazarse exclusivamente a la IP de la red privada **Tailscale** (`100.99.206.50:PUERTO`), eliminando por completo la exposición pública de las 4 bases de datos y paneles administrativos.
+- **Solución implementada:** Se reconfiguraron todos los contenedores para enlazarse exclusivamente a la IP de la red privada **Tailscale** (`<IP_PRIVADA_TAILSCALE>:PUERTO`), eliminando por completo la exposición pública de las 4 bases de datos y paneles administrativos.
 - **Auditoría en 3 capas:** Creación de un procedimiento de verificación con `docker ps`, `ss -tulnp` y probing TCP mediante `/dev/tcp`.
 
 ### 2. Defensa Activa con CrowdSec y Port Knocking

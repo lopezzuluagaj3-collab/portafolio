@@ -15,7 +15,7 @@ Esto se confirmó como la causa de un ataque de fuerza bruta real detectado cont
 ```bash
 docker ps                                          # qué publica Docker
 sudo ss -tulnp                                      # qué escucha realmente el host
-timeout 2 bash -c "echo > /dev/tcp/46.224.101.88/<puerto>" && echo "ABIERTO" || echo "cerrado"
+timeout 2 bash -c "echo > /dev/tcp/<IP_PÚBLICA_VPS>/<puerto>" && echo "ABIERTO" || echo "cerrado"
 ```
 
 ## 2.2 Patrón de corrección aplicado
@@ -28,7 +28,7 @@ ports:
 por:
 ```yaml
 ports:
-  - "100.99.206.50:PUERTO:PUERTO"   # solo accesible vía Tailscale
+  - "<IP_PRIVADA_TAILSCALE>:PUERTO:PUERTO"   # solo accesible vía Tailscale
 ```
 y recrear: `docker compose up -d --force-recreate <servicio>`. Esto **no** afecta la comunicación interna entre contenedores (que usa el nombre de contenedor sobre la red Docker, no el binding público), ni requiere tocar volúmenes.
 
@@ -43,12 +43,12 @@ documentación (algunos siguen pendientes de cerrar). Referencia interna:
 | 22 | SSH | público, restringido — ver Acceso remoto | ✅ Controlado |
 | 80 | NPM (HTTP) | público | ✅ Correcto (tráfico real) |
 | 443 | NPM (HTTPS) | público | ✅ Correcto (tráfico real) |
-| 81 | NPM panel admin | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
-| 1433 | SQL Server | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
-| 5432 | Postgres | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
-| 3306 | MySQL | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
-| 27017 | MongoDB | `100.99.206.50` (Tailscale only) | ✅ Cerrado |
-| 9000 | Portainer | `100.99.206.50` (Tailscale only) | ✅ Correcto desde instalación |
+| 81 | NPM panel admin | `<IP_PRIVADA_TAILSCALE>` (Tailscale only) | ✅ Cerrado |
+| 1433 | SQL Server | `<IP_PRIVADA_TAILSCALE>` (Tailscale only) | ✅ Cerrado |
+| 5432 | Postgres | `<IP_PRIVADA_TAILSCALE>` (Tailscale only) | ✅ Cerrado |
+| 3306 | MySQL | `<IP_PRIVADA_TAILSCALE>` (Tailscale only) | ✅ Cerrado |
+| 27017 | MongoDB | `<IP_PRIVADA_TAILSCALE>` (Tailscale only) | ✅ Cerrado |
+| 9000 | Portainer | `<IP_PRIVADA_TAILSCALE>` (Tailscale only) | ✅ Correcto desde instalación |
 | 8090, 6060 | CrowdSec (API/métricas) | `127.0.0.1` | ✅ No expuesto |
 | 5555 | idempotencia-backend (prod) | interno (sin publicar) | ✅ No expuesto |
 | 8080 | idempotencia-frontend (prod) | público | ⏳ Pendiente de cerrar |

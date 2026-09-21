@@ -7,7 +7,7 @@ title: Resumen general
 
 VPS única (4 GB de RAM) alojando el stack completo del proyecto **Idempotencia**: un producto **gestor de bases de datos** para usuarios finales (por eso corren 4 motores de DB). Incluye frontend, backend (producción y QA), y cuatro bases de datos, todo detrás de Nginx Proxy Manager (NPM) con SSL de Let's Encrypt. El acceso administrativo (SSH, bases de datos, paneles internos) está cerrado al público y se gestiona mediante **Tailscale** (VPN privada) y **port knocking**.
 
-**IP pública de la VPS:** `46.224.101.88`
-**IP privada (Tailscale) de la VPS:** `100.99.206.50`
+**IP pública de la VPS:** `<IP_PÚBLICA_VPS>`
+**IP privada (Tailscale) de la VPS:** `<IP_PRIVADA_TAILSCALE>`
 
 **Modelo de producto:** los usuarios finales de Idempotencia necesitarán conectar sus propias herramientas externas (Airflow, DBeaver, etc.) directamente a bases de datos gestionadas, con credenciales propias — no solo a través de la app web. Esto implica que, a futuro, algunos puertos de base de datos deberán exponerse de forma controlada (ver [Pendientes abiertos](./pendientes-abiertos)).

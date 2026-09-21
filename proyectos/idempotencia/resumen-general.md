@@ -17,11 +17,11 @@ Idempotencia fue un proyecto grupal enfocado en construir una plataforma de **Da
 - **Motores Soportados:** SQL Server 2022, PostgreSQL 16, MySQL 8.4 y MongoDB 7.
 - **Módulo de IA:** Gateway con FastAPI y Ollama (`qwen2.5:3b`) para generación self-service de API keys compatibles con OpenAI.
 - **Frontend & Backend:** React + Vite servido en Nginx y APIs en .NET 10 (ambientes de Producción y QA).
-- **Entorno de Despliegue:** Stack orquestado en una **VPS única de 4 GB de RAM** (`46.224.101.88`).
+- **Entorno de Despliegue:** Stack orquestado en una **VPS única de 4 GB de RAM** (`<IP_PÚBLICA_VPS>`).
 
 ---
 
-## 🛡️ Mi Rol: Lead DevOps
+## 🛡️ Mi Rol: DevOps & Cloud Infrastructure Engineer
 
 - **Hardening Perimetral:** Descubrimiento y mitigación crítica del bypass de Docker sobre UFW (aislamiento mediante malla privada Tailscale y port knocking).
 - **Defensa Activa:** Configuración de CrowdSec IPS con bouncer iptables y mitigación de fuerza bruta.

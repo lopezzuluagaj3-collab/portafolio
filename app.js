@@ -194,7 +194,7 @@ const GENERAL_TERMINAL_COMMANDS = {
   'whoami': {
     cmd: 'whoami --profile',
     output: `[USUARIO] Juan Diego López Zuluaga
-[ROL] Lead DevOps & Cloud Infrastructure Engineer
+[ROL] DevOps & Cloud Infrastructure Engineer
 [ENFOQUE] Infraestructura como Código, Hardening Perimetral, Contenedores & CI/CD
 [FILOSOFÍA] "Seguridad por diseño, contención estricta y eficiencia máxima de recursos."
 [LOCALIDAD] Medellín, Colombia | Remoto / Híbrido
