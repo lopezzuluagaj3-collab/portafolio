@@ -41,82 +41,57 @@ function handleRouting() {
   const siriusView = document.getElementById('view-proyecto-sirius');
   const navDropdownToggle = document.querySelector('.nav__dropdown-toggle');
 
-  // CASO 1: PROYECTO IDEMPOTENCIA
+  // SUB-CASO: PÁGINAS DEDICADAS DE PROYECTO (Donde NO existe #view-dashboard)
+  if (!dashboardView) {
+    if (idempView) {
+      idempView.classList.add('active');
+      let chapterId = 'resumen-general';
+      if (rawHash.includes('/')) {
+        chapterId = rawHash.split('/')[1];
+      } else if (rawHash === '#idemp-incidentes') {
+        chapterId = 'incidentes';
+      }
+      if (typeof switchDocSection === 'function') {
+        switchDocSection(chapterId, false);
+      }
+    } else if (polarisView) {
+      polarisView.classList.add('active');
+      let chapterId = 'resumen-general';
+      if (rawHash.includes('/')) {
+        chapterId = rawHash.split('/')[1];
+      }
+      if (typeof switchPolarisDocSection === 'function') {
+        switchPolarisDocSection(chapterId, false);
+      }
+    } else if (siriusView) {
+      siriusView.classList.add('active');
+      let chapterId = 'resumen-general';
+      if (rawHash.includes('/')) {
+        chapterId = rawHash.split('/')[1];
+      }
+      if (typeof switchSiriusDocSection === 'function') {
+        switchSiriusDocSection(chapterId, false);
+      }
+    }
+    return;
+  }
+
+  // CASO DE REDIRECCIÓN EN DASHBOARD PRINCIPAL SI LLEGA UN HASH DE PROYECTO ANTIGUO
   if (rawHash.startsWith('#proyecto-idempotencia') || rawHash.startsWith('#doc-idempotencia') || rawHash === '#idemp-incidentes') {
-    if (dashboardView) dashboardView.classList.remove('active');
-    if (polarisView) polarisView.classList.remove('active');
-    if (siriusView) siriusView.classList.remove('active');
-    if (idempView) idempView.classList.add('active');
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    if (navDropdownToggle) {
-      navDropdownToggle.innerHTML = `📁 Proyecto: <strong>Idempotencia</strong> ▾`;
-    }
-
-    let chapterId = 'resumen-general';
-    if (rawHash.includes('/')) {
-      chapterId = rawHash.split('/')[1];
-    } else if (rawHash === '#idemp-incidentes') {
-      chapterId = 'incidentes';
-    }
-
-    if (typeof switchDocSection === 'function') {
-      switchDocSection(chapterId, false);
-    }
+    window.location.href = './proyectos/idempotencia/' + (rawHash.includes('/') ? '#' + rawHash : '');
     return;
   }
-
-  // CASO 2: PROYECTO POLARIS (KUBERNETES & AWS)
   if (rawHash.startsWith('#proyecto-polaris') || rawHash.startsWith('#doc-polaris')) {
-    if (dashboardView) dashboardView.classList.remove('active');
-    if (idempView) idempView.classList.remove('active');
-    if (siriusView) siriusView.classList.remove('active');
-    if (polarisView) polarisView.classList.add('active');
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    if (navDropdownToggle) {
-      navDropdownToggle.innerHTML = `📁 Proyecto: <strong>Polaris</strong> ▾`;
-    }
-
-    let chapterId = 'resumen-general';
-    if (rawHash.includes('/')) {
-      chapterId = rawHash.split('/')[1];
-    }
-
-    if (typeof switchPolarisDocSection === 'function') {
-      switchPolarisDocSection(chapterId, false);
-    }
+    window.location.href = './proyectos/polaris/' + (rawHash.includes('/') ? '#' + rawHash : '');
     return;
   }
-
-  // CASO 3: PROYECTO SIRIUS (LAKEHOUSE & SPARK EN AWS)
   if (rawHash.startsWith('#proyecto-sirius') || rawHash.startsWith('#doc-sirius')) {
-    if (dashboardView) dashboardView.classList.remove('active');
-    if (idempView) idempView.classList.remove('active');
-    if (polarisView) polarisView.classList.remove('active');
-    if (siriusView) siriusView.classList.add('active');
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    if (navDropdownToggle) {
-      navDropdownToggle.innerHTML = `📁 Proyecto: <strong>Sirius</strong> ▾`;
-    }
-
-    let chapterId = 'resumen-general';
-    if (rawHash.includes('/')) {
-      chapterId = rawHash.split('/')[1];
-    }
-
-    if (typeof switchSiriusDocSection === 'function') {
-      switchSiriusDocSection(chapterId, false);
-    }
+    window.location.href = './proyectos/sirius/' + (rawHash.includes('/') ? '#' + rawHash : '');
     return;
   }
 
-  // CASO 4: DASHBOARD GENERAL (#inicio o ancla interna)
-  if (dashboardView) dashboardView.classList.add('active');
+  // CASO: DASHBOARD GENERAL (#inicio o ancla interna)
+  dashboardView.classList.add('active');
   if (idempView) idempView.classList.remove('active');
   if (polarisView) polarisView.classList.remove('active');
   if (siriusView) siriusView.classList.remove('active');
@@ -751,32 +726,44 @@ function initNavScroll() {
 function initMobileMenu() {
   const mobileBtn = document.getElementById('mobile-menu-btn');
   const navMenu = document.querySelector('.navbar__nav');
+  const dropdown = document.querySelector('.nav__dropdown');
+  const dropdownToggle = document.querySelector('.nav__dropdown-toggle');
 
-  if (!mobileBtn || !navMenu) return;
+  if (mobileBtn && navMenu) {
+    mobileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navMenu.classList.toggle('mobile-open');
+    });
+  }
 
-  mobileBtn.addEventListener('click', () => {
-    const isVisible = navMenu.style.display === 'flex';
-    navMenu.style.display = isVisible ? 'none' : 'flex';
+  if (dropdownToggle && dropdown) {
+    dropdownToggle.addEventListener('click', (e) => {
+      if (window.innerWidth <= 996) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+      }
+    });
+  }
 
-    if (!isVisible) {
-      navMenu.style.position = 'absolute';
-      navMenu.style.top = '72px';
-      navMenu.style.left = '0';
-      navMenu.style.right = '0';
-      navMenu.style.background = 'var(--navbar-bg)';
-      navMenu.style.flexDirection = 'column';
-      navMenu.style.padding = '1.5rem';
-      navMenu.style.borderBottom = '1px solid var(--border)';
-      navMenu.style.backdropFilter = 'blur(12px)';
-    }
-  });
-
+  // Cerrar menú al hacer clic en cualquier enlace
   document.querySelectorAll('.nav__link, .nav__dropdown-item').forEach(link => {
     link.addEventListener('click', () => {
       if (window.innerWidth <= 996 && navMenu) {
-        navMenu.style.display = 'none';
+        navMenu.classList.remove('mobile-open');
+        if (dropdown) dropdown.classList.remove('open');
       }
     });
+  });
+
+  // Cerrar menú al hacer clic fuera del navbar
+  document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 996 && navMenu && navMenu.classList.contains('mobile-open')) {
+      if (!navMenu.contains(e.target) && !mobileBtn.contains(e.target)) {
+        navMenu.classList.remove('mobile-open');
+        if (dropdown) dropdown.classList.remove('open');
+      }
+    }
   });
 }
 

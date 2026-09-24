@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idempotencia: DBaaS Multi-Motor & Hardening VPS — Juan Diego López Zuluaga</title>
+  <meta name="description" content="Documentación técnica del proyecto Idempotencia: plataforma DBaaS con 4 motores de bases de datos, hardening perimetral y Tailscale.">
+  <meta name="author" content="Juan Diego López Zuluaga">
+
+  <!-- Favicon e Identidad -->
+  <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../../assets/logo.svg">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Hoja de estilos modularizada -->
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="doc-page">
+  <!-- ==================== NAVBAR GLOBAL ==================== -->
+  <header class="navbar">
+    <div class="container navbar__inner">
+      <a href="../../index.html#inicio" class="navbar__brand" aria-label="Inicio">
+        <img src="../../assets/logo.svg" alt="Logo" class="navbar__logo">
+        <span>Juan Diego <span style="color:var(--primary); font-weight:600;">/ DevOps</span></span>
+      </a>
+
+      <nav class="navbar__nav" id="navbar-nav">
+        <a href="../../index.html#inicio" class="nav__link">Inicio</a>
+        <a href="../../index.html#especialidades" class="nav__link">Especialidades</a>
+        
+        <!-- Menú Desplegable de Proyectos -->
+        <div class="nav__dropdown">
+          <span class="nav__dropdown-toggle" id="projects-dropdown-btn">
+            📁 Proyecto: <strong>Idempotencia</strong> ▾
+          </span>
+          <div class="nav__dropdown-menu">
+            <a href="#" class="nav__dropdown-item active">
+              <span style="font-size:1.2rem;">⚡</span>
+              <div>
+                <strong>Idempotencia</strong>
+                <small>DBaaS Multi-Motor (Fuera de Producción)</small>
+              </div>
+            </a>
+            <a href="../polaris/" class="nav__dropdown-item ">
+              <span style="font-size:1.2rem;">🌟</span>
+              <div>
+                <strong>Polaris</strong>
+                <small>K8s Self-Managed + Cilium + ETL en AWS</small>
+              </div>
+            </a>
+            <a href="../sirius/" class="nav__dropdown-item ">
+              <span style="font-size:1.2rem;">🚕</span>
+              <div>
+                <strong>Sirius</strong>
+                <small>Modern Data Lakehouse en AWS (Spark & Athena)</small>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <a href="../../index.html#proyectos-catalogo" class="nav__link">Mis Proyectos</a>
+        <a href="../../index.html#terminal-general" class="nav__link">Terminal</a>
+        <a href="../../index.html#contacto" class="nav__link">Contacto</a>
+      </nav>
+
+      <div class="navbar__actions">
+        <!-- Conmutador de tema -->
+        <button class="theme-toggle" id="theme-toggle-btn" aria-label="Cambiar tema">
+          <svg id="theme-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- Botón a GitHub -->
+        <a href="https://github.com/lopezzuluagaj3-collab" target="_blank" rel="noopener noreferrer" class="button button--primary" style="padding: 0.55rem 1rem; font-size: 0.88rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          GitHub
+        </a>
+
+        <!-- Botón Menú Móvil -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menú">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+
+
+  <div id="view-proyecto-idempotencia" class="view-section project-view active">
+    <div class="doc-viewer">
+
+
+
+      <!-- CONTENEDOR PRINCIPAL DE 2 COLUMNAS -->
+      <div class="doc-container">
+
+        <!-- BARRA LATERAL IZQUIERDA (SIDEBAR CON ACORDEÓN) -->
+        <aside class="doc-sidebar">
+          <div class="doc-sidebar__title">
+            <span>Idempotencia Docs</span>
+            <span class="badge badge--warning" style="font-size:0.65rem; padding:0.15rem 0.45rem;">Fuera de Producción</span>
+          </div>
+
+          <div class="doc-sidebar__category" id="doc-category-box">
+            <button class="doc-sidebar__category-btn" id="doc-category-toggle" type="button">
+              <span>☁️ Documentación Técnica</span>
+              <svg class="doc-sidebar__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+
+            <ul class="doc-sidebar__list">
+              <li><a class="doc-sidebar__link active" data-doc-target="resumen-general">Resumen general</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="firewall">Firewall</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="acceso-remoto">Acceso remoto</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="github">GitHub / control de versiones</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="servicios">Servicios desplegados</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="bases-datos">Bases de datos</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="monitoreo">Monitoreo y seguridad activa</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="incidentes">Incidentes resueltos</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="backups">Backups y persistencia</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="pendientes">Pendientes abiertos</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="kubernetes">Kubernetes</a></li>
+              <li><a class="doc-sidebar__link" data-doc-target="lecciones">Lecciones operativas</a></li>
+            </ul>
+          </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL DE LA DOCUMENTACIÓN -->
+        <main class="doc-main">
+
+          <!-- MIGAS DE PAN (BREADCRUMBS) -->
+          <nav class="doc-breadcrumbs" aria-label="breadcrumbs">
+            <span style="cursor:pointer;" onclick="switchDocSection('resumen-general')">🏠</span>
+            <span>›</span>
+            <span>☁️ Documentación Técnica</span>
+            <span>›</span>
+            <span class="doc-breadcrumbs__pill" id="doc-breadcrumb-current">Resumen general</span>
+          </nav>
+
+          <!-- 1. RESUMEN GENERAL (Idéntico a la imagen) -->
+          <article id="doc-art-resumen-general" class="doc-article active">
+            <h1 class="doc-article__title">1. Resumen general</h1>
+
+            <div class="doc-alert doc-alert--warning" style="margin-bottom: 1.5rem;">
+              <span class="doc-alert__icon">⚠️</span>
+              <div class="doc-alert__body">
+                <strong>Estado del Proyecto: Fuera de Producción / Archivado.</strong> La infraestructura activa fue desmantelada al concluir el ciclo de evaluación y entrega; esta documentación preserva la arquitectura, decisiones de hardening y bitácora técnica de lecciones aprendidas.
+              </div>
+            </div>
+            
+            <p>
+              VPS única (4 GB de RAM) alojando el stack completo del proyecto <strong>Idempotencia</strong>: un producto <strong>gestor de bases de datos</strong> para usuarios finales (por eso corren 4 motores de DB). Incluye frontend, backend (producción y QA), y cuatro bases de datos, todo detrás de Nginx Proxy Manager (NPM) con SSL de Let's Encrypt. El acceso administrativo (SSH, bases de datos, paneles internos) está cerrado al público y se gestiona mediante <strong>Tailscale</strong> (VPN privada) y <strong>port knocking</strong>.
+            </p>
+
+            <p>
+              <strong>IP pública de la VPS:</strong> <code>&lt;IP_PÚBLICA_VPS&gt;</code> &nbsp;&nbsp; <strong>IP privada (Tailscale) de la VPS:</strong> <code>&lt;IP_PRIVADA_TAILSCALE&gt;</code>
+            </p>
+
+            <p>
+              <strong>Modelo de producto:</strong> los usuarios finales de Idempotencia necesitarán conectar sus propias herramientas externas (Airflow, DBeaver, etc.) directamente a bases de datos gestionadas, con credenciales propias — no solo a través de la app web. Esto implica que, a futuro, algunos puertos de base de datos deberán exponerse de forma controlada (ver <a href="javascript:void(0)" onclick="switchDocSection('pendientes')" style="color:var(--primary); font-weight:600;">Pendientes abiertos</a>).
+            </p>
+          </article>
+
+          <!-- 2. FIREWALL -->
+          <article id="doc-art-firewall" class="doc-article">
+            <h1 class="doc-article__title">2. Firewall — estado actual y hallazgo crítico</h1>
+
+            <h2>2.1 Hallazgo de seguridad: Docker bypassea ufw</h2>
+            <p>
+              Se descubrió que <strong>Docker inyecta sus propias reglas en <code>iptables</code></strong> (cadenas <code>DOCKER</code> / <code>FORWARD</code>) al publicar un puerto con <code>ports: "0.0.0.0:PUERTO:PUERTO"</code> en un <code>docker-compose.yml</code>. Estas reglas son independientes de <code>ufw</code> y se evalúan aparte — por lo que <strong>un puerto podía estar públicamente accesible desde internet aunque <code>ufw status</code> no mostrara ninguna regla <code>ALLOW</code> para él</strong>. Es un conflicto conocido entre Docker y ufw.
+            </p>
+            <p>
+              Esto se confirmó como la causa de un ataque de fuerza bruta real detectado contra el usuario <code>sa</code> de SQL Server, pese a que el diseño original asumía que ese puerto ya estaba restringido solo a Tailscale.
+            </p>
+
+            <h3>Método de verificación en 3 capas (auditoría obligatoria ante dudas de exposición):</h3>
+            <pre><code>docker ps                                          # qué publica Docker
+sudo ss -tulnp                                      # qué escucha realmente el host
+timeout 2 bash -c "echo > /dev/tcp/&lt;IP_PÚBLICA_VPS&gt;/&lt;puerto&gt;" &amp;&amp; echo "ABIERTO" || echo "cerrado"</code></pre>
+
+            <h2>2.2 Patrón de corrección aplicado</h2>
+            <p>En cada <code>docker-compose.yml</code> afectado, cambiar:</p>
+            <pre><code># Inseguro:
+ports:
+  - "0.0.0.0:PUERTO:PUERTO"
+
+# Corregido y aislado:
+ports:
+  - "&lt;IP_PRIVADA_TAILSCALE&gt;:PUERTO:PUERTO"   # solo accesible vía Tailscale</code></pre>
+            <p>
+              Y recrear con: <code>docker compose up -d --force-recreate &lt;servicio&gt;</code>. Esto <strong>no</strong> afecta la comunicación interna entre contenedores (que usa el nombre de contenedor sobre la red Docker <code>red-proxy</code>, no el binding público), ni requiere tocar volúmenes.
+            </p>
+
+            <h2>2.3 Estado de cada puerto (snapshot actual)</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Puerto</th>
+                  <th>Servicio</th>
+                  <th>Binding</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>22</code></td>
+                  <td>SSH</td>
+                  <td>público, restringido con Port Knocking</td>
+                  <td>✅ Controlado</td>
+                </tr>
+                <tr>
+                  <td><code>80</code></td>
+                  <td>NPM (HTTP)</td>
+                  <td>público (0.0.0.0)</td>
+                  <td>✅ Correcto (tráfico real)</td>
+                </tr>
+                <tr>
+                  <td><code>443</code></td>
+                  <td>NPM (HTTPS)</td>
+                  <td>público (0.0.0.0)</td>
+                  <td>✅ Correcto (tráfico real)</td>
+                </tr>
+                <tr>
+                  <td><code>81</code></td>
+                  <td>NPM panel admin</td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;</code> (Tailscale only)</td>
+                  <td>✅ Cerrado a internet</td>
+                </tr>
+                <tr>
+                  <td><code>1433</code></td>
+                  <td>SQL Server</td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;</code> (Tailscale only)</td>
+                  <td>✅ Cerrado a internet</td>
+                </tr>
+                <tr>
+                  <td><code>5432</code></td>
+                  <td>PostgreSQL</td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;</code> (Tailscale only)</td>
+                  <td>✅ Cerrado a internet</td>
+                </tr>
+                <tr>
+                  <td><code>3306</code></td>
+                  <td>MySQL</td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;</code> (Tailscale only)</td>
+                  <td>✅ Cerrado a internet</td>
+                </tr>
+                <tr>
+                  <td><code>27017</code></td>
+                  <td>MongoDB</td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;</code> (Tailscale only)</td>
+                  <td>✅ Cerrado a internet</td>
+                </tr>
+                <tr>
+                  <td><code>9000</code></td>
+                  <td>Portainer</td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;</code> (Tailscale only)</td>
+                  <td>✅ Correcto desde instalación</td>
+                </tr>
+                <tr>
+                  <td><code>8090, 6060</code></td>
+                  <td>CrowdSec (LAPI/métricas)</td>
+                  <td><code>127.0.0.1</code></td>
+                  <td>✅ No expuesto</td>
+                </tr>
+                <tr>
+                  <td><code>5555</code></td>
+                  <td>idempotencia-backend (prod)</td>
+                  <td>interno en red Docker (sin publicar)</td>
+                  <td>✅ No expuesto</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2>2.4 Hardening base del sistema</h2>
+            <ul>
+              <li><code>PermitRootLogin no</code>, <code>PasswordAuthentication no</code> (solo login por llave SSH Ed25519/RSA).</li>
+              <li>Usuario dedicado <code>devop</code> con permisos sudo controlados.</li>
+              <li><code>fail2ban</code> activo (jail <code>sshd</code>).</li>
+              <li><strong>CrowdSec</strong> instalado como capa de detección y bloqueo activo en kernel.</li>
+              <li><code>unattended-upgrades</code> instalado para parches automáticos de seguridad.</li>
+            </ul>
+          </article>
+
+          <!-- 3. ACCESO REMOTO -->
+          <article id="doc-art-acceso-remoto" class="doc-article">
+            <h1 class="doc-article__title">3. Acceso remoto</h1>
+
+            <h2>3.1 SSH — Port knocking</h2>
+            <p>El puerto 22 permanece cerrado por defecto en el firewall. Para conectarse:</p>
+            <ol>
+              <li>
+                Se ejecuta el script PowerShell (<code>conectar.ps1</code>) que:
+                <ul>
+                  <li>Envía una secuencia de paquetes TCP a los puertos <code>7000, 8000, 9000</code> para abrir el 22.</li>
+                  <li>Lanza automáticamente la sesión SSH con llave privada autorizada.</li>
+                  <li>En segundo plano, tras un tiempo de espera configurable (15s), envía otra secuencia (<code>6000, 5000, 4000</code>) para volver a cerrar el puerto en iptables — sin interrumpir la sesión establecida.</li>
+                </ul>
+              </li>
+              <li>Cada miembro del equipo con acceso requiere su propia llave autorizada en <code>~/.ssh/authorized_keys</code> de la VPS.</li>
+            </ol>
+
+            <h2>3.2 Tailscale — red privada del equipo</h2>
+            <ul>
+              <li>Tailnet bajo la cuenta de administración de Juan (<code>lopezzuluagaj3@gmail.com</code>).</li>
+              <li>Dispositivos conectados: VPS (<code>idempotencia</code>, IP privada <code>&lt;IP_PRIVADA_TAILSCALE&gt;</code>), PC de Juan (<code>pcjuandiego</code>) y PC de Santiago Botero (<code>santi</code>).</li>
+              <li>Utilizado para acceder de forma privada a: las 4 bases de datos, el panel de NPM (<code>:81</code>) y Portainer (<code>:9000</code>).</li>
+            </ul>
+          </article>
+
+          <!-- 4. GITHUB / CONTROL DE VERSIONES -->
+          <article id="doc-art-github" class="doc-article">
+            <h1 class="doc-article__title">4. GitHub / control de versiones</h1>
+
+            <h2>4.1 Organización</h2>
+            <p>Organización dedicada donde solo el rol DevOps (Juan) cuenta con privilegios administrativos.</p>
+
+            <h2>4.2 Estrategia de ramas</h2>
+            <pre><code>feature/* ──► develop ──► QA ──► main</code></pre>
+            <ul>
+              <li><strong>main:</strong> producción, desplegada automáticamente en la VPS vía GitHub Actions.</li>
+              <li><strong>QA:</strong> ambiente de pruebas también desplegado en la VPS en puertos dedicados.</li>
+              <li>Solo los roles <strong>QA</strong> y <strong>DevOps</strong> tienen permiso de push/merge a <code>main</code> y <code>QA</code>.</li>
+            </ul>
+
+            <h2>4.3 Branch protection rules</h2>
+            <ul>
+              <li>Pull request obligatorio antes de mergear.</li>
+              <li>Restricción de push y merge limitada al team <code>qa-devop</code>.</li>
+              <li>Bloqueo estricto de force-push y eliminación de ramas críticas.</li>
+            </ul>
+          </article>
+
+          <!-- 5. SERVICIOS DESPLEGADOS -->
+          <article id="doc-art-servicios" class="doc-article">
+            <h1 class="doc-article__title">5. Servicios desplegados</h1>
+            <p>Todos corren bajo Docker Compose, conectados a la red externa compartida <code>red-proxy</code>.</p>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Servicio</th>
+                  <th>Contenedor</th>
+                  <th>Dominio / Puerto</th>
+                  <th>Puerto interno</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Frontend (prod)</td>
+                  <td><code>idempotencia-frontend</code></td>
+                  <td>idempotencia.andrescortes.dev</td>
+                  <td>80</td>
+                </tr>
+                <tr>
+                  <td>Backend (prod)</td>
+                  <td><code>idempotencia-backend</code></td>
+                  <td>api.idempotencia.andrescortes.dev</td>
+                  <td>5555</td>
+                </tr>
+                <tr>
+                  <td>Nginx Proxy Manager</td>
+                  <td><code>nginx-proxy-manager</code></td>
+                  <td>panel en <code>&lt;IP_PRIVADA_TAILSCALE&gt;:81</code></td>
+                  <td>81</td>
+                </tr>
+                <tr>
+                  <td>Portainer CE</td>
+                  <td><code>portainer</code></td>
+                  <td><code>&lt;IP_PRIVADA_TAILSCALE&gt;:9000</code></td>
+                  <td>9000</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2>5.1 Frontend</h2>
+            <p>Build multi-stage: Node 20-alpine (build) + Nginx 1.27-alpine (serve estático). <code>mem_limit: 256m</code>, <code>cpus: 0.5</code>. CI/CD automatizado en GitHub Actions.</p>
+
+            <h2>5.2 Backend (.NET 10)</h2>
+            <p>Dockerfile multi-stage (SDK 10.0 → ASP.NET runtime 10.0), usuario no-root <code>app</code>. <code>appsettings.json</code> montado en modo solo lectura (<code>:ro</code>). Connection strings estrictamente por nombre de contenedor (<code>Server=idempotencia-sqlserver</code>).</p>
+          </article>
+
+          <!-- 6. BASES DE DATOS -->
+          <article id="doc-art-bases-datos" class="doc-article">
+            <h1 class="doc-article__title">6. Bases de datos</h1>
+            <p>Las cuatro bases de datos comparten el mismo patrón de seguridad: publicadas únicamente sobre la IP de Tailscale (<code>&lt;IP_PRIVADA_TAILSCALE&gt;:PUERTO</code>), nunca sobre <code>0.0.0.0</code>.</p>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Motor</th>
+                  <th>Contenedor</th>
+                  <th>Puerto</th>
+                  <th>Notas</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>SQL Server 2022</td>
+                  <td><code>idempotencia-sqlserver</code></td>
+                  <td>1433</td>
+                  <td>Base principal (<code>master</code>) — Procedimientos de negocio</td>
+                </tr>
+                <tr>
+                  <td>PostgreSQL 16</td>
+                  <td><code>idempotencia-postgres</code></td>
+                  <td>5432</td>
+                  <td>Base <code>main</code> — Provisioning clientes</td>
+                </tr>
+                <tr>
+                  <td>MySQL 8.4</td>
+                  <td><code>idempotencia-mysql</code></td>
+                  <td>3306</td>
+                  <td>Base <code>main</code> — Caching SHA2 Password</td>
+                </tr>
+                <tr>
+                  <td>MongoDB 7</td>
+                  <td><code>idempotencia-mongodb</code></td>
+                  <td>27017</td>
+                  <td>Auth database: <code>admin</code></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p>Todos los motores cuentan con <code>mem_limit: 512m</code>, <code>cpus: 0.5</code> y rotación estricta de logs (<code>max-size: 10m</code>).</p>
+          </article>
+
+          <!-- 7. MONITOREO Y SEGURIDAD -->
+          <article id="doc-art-monitoreo" class="doc-article">
+            <h1 class="doc-article__title">7. Monitoreo y seguridad activa</h1>
+
+            <h2>7.1 CrowdSec</h2>
+            <p>Instalado nativo en el host con el bouncer <code>crowdsec-firewall-bouncer-iptables</code>. Colecciones activas: <code>linux</code>, <code>sshd</code> y <code>nginx</code>.</p>
+            <p>API local reubicada en <code>127.0.0.1:8090</code> para evitar conflictos de puerto con el frontend. Ingesta de logs de Nginx Proxy Manager declarada en <code>/etc/crowdsec/acquis.d/nginx.yaml</code>.</p>
+
+            <h2>7.2 Portainer</h2>
+            <p>Dashboard visual para telemetría de CPU y RAM en tiempo real, reinicio de contenedores y lectura de logs sin depender de SSH.</p>
+          </article>
+
+          <!-- 8. INCIDENTES RESUELTOS -->
+          <article id="doc-art-incidentes" class="doc-article">
+            <h1 class="doc-article__title">8. Incidentes resueltos (bitácora)</h1>
+
+            <h2>8.1 Error 500 en /auth/register — connection string con IP pública</h2>
+            <p><strong>Síntoma:</strong> Timeout de conexión SQL (<code>SqlException</code>) al registrar un usuario.</p>
+            <p><strong>Causa:</strong> La connection string apuntaba a <code>Server=&lt;IP_PÚBLICA_VPS&gt;</code> en vez de <code>Server=idempotencia-sqlserver</code>, cayendo en un bloqueo por hairpin NAT.</p>
+            <p><strong>Solución:</strong> Corregir el servidor al nombre del contenedor en la red Docker. Conexión restablecida de inmediato con latencia &lt;1ms.</p>
+
+            <h2>8.2 Volumen duplicado de SQL Server al recrear el contenedor</h2>
+            <p><strong>Síntoma:</strong> Al aplicar <code>--force-recreate</code>, Docker creó un nuevo volumen vacío ocultando los datos reales por discrepancia en el nombre de la carpeta.</p>
+            <p><strong>Solución:</strong> Backup preventivo inmediato vía T-SQL (<code>.bak</code>), extracción de los 8 procedimientos almacenados, purga del volumen vacío y declaración explícita de volumen externo:</p>
+            <pre><code>volumes:
+  sqlserver-data:
+    external: true
+    name: idempotencia-db_sqlserver-data</code></pre>
+            <p>Resultado: <strong>Cero pérdida de datos</strong>.</p>
+
+            <h2>8.3 appsettings.json montado como directorio</h2>
+            <p>Docker crea un directorio si el archivo no existe en el momento del primer bind mount. Corregido eliminando la imagen y reconstruyendo con <code>docker compose build --no-cache</code>.</p>
+
+            <h2>8.4 Permisos del appsettings.json (chmod 600 vs 644)</h2>
+            <p>El proceso dentro del contenedor corre como usuario no-root <code>app</code>. Un permiso 600 bloqueaba su lectura. Se ajustó a <code>644</code> montado como solo lectura.</p>
+          </article>
+
+          <!-- 9. BACKUPS Y PERSISTENCIA -->
+          <article id="doc-art-backups" class="doc-article">
+            <h1 class="doc-article__title">9. Backups y persistencia</h1>
+            <p><strong>Respaldos realizados (ad-hoc):</strong></p>
+            <ul>
+              <li>Backup completo de SQL Server (<code>.bak</code>) en <code>/home/devop/idempotencia-db-sqlserver/</code>.</li>
+              <li>Exportación de stored procedures de negocio en texto plano (<code>sps_backup.sql</code>).</li>
+            </ul>
+            <p>Se encuentra planificada la automatización de respaldos periódicos vía cron para los 4 motores hacia almacenamiento externo.</p>
+          </article>
+
+          <!-- 10. PENDIENTES ABIERTOS -->
+          <article id="doc-art-pendientes" class="doc-article">
+            <h1 class="doc-article__title">10. Pendientes abiertos</h1>
+            <ul>
+              <li><strong>Alta prioridad:</strong> Parametrizar la IP de Tailscale vía secrets y cerrar puertos de QA al exterior.</li>
+              <li><strong>Media prioridad:</strong> Backups automatizados recurrentes y persistencia de DataProtection Keys.</li>
+              <li><strong>Mediano plazo:</strong> Migrar la lógica de negocio de la base <code>master</code> a una base de datos dedicada (<code>idempotencia_app</code>).</li>
+            </ul>
+          </article>
+
+          <!-- 11. KUBERNETES -->
+          <article id="doc-art-kubernetes" class="doc-article">
+            <h1 class="doc-article__title">11. Kubernetes — evaluado y descartado por ahora</h1>
+            <p>
+              Se evaluó migrar los contenedores a Kubernetes (k3s). Conclusión técnica: <strong>no es viable en el servidor actual</strong>. La VPS es un solo nodo físico de 4 GB de RAM, y K8s consume entre 1.0 y 1.4 GB únicamente para su plano de control (API server, etcd, kubelet) sin aportar tolerancia a fallos entre máquinas.
+            </p>
+            <p>
+              Se continuará con Docker Compose optimizado y se reevaluará Kubernetes gestionado solo si el proyecto escala a múltiples servidores físicos.
+            </p>
+          </article>
+
+          <!-- 12. LECCIONES OPERATIVAS -->
+          <article id="doc-art-lecciones" class="doc-article">
+            <h1 class="doc-article__title">12. Lecciones operativas (referencia rápida)</h1>
+            <ul>
+              <li><strong>Docker bypassea ufw</strong> al publicar puertos: verificar siempre con <code>ss -tulnp</code> y pruebas TCP reales.</li>
+              <li>Las cadenas de conexión dentro de contenedores deben usar siempre el <strong>nombre del contenedor</strong>, nunca IPs públicas.</li>
+              <li>Antes de un <code>--force-recreate</code> con datos persistentes, verificar con <code>docker inspect</code> cuál es el volumen en uso y declararlo <code>external: true</code>.</li>
+              <li>Un contenedor en estado "Up" no garantiza servicio: validar con logs y pruebas de conexión internas.</li>
+            </ul>
+          </article>
+
+          <!-- PAGINACIÓN ANTERIOR / SIGUIENTE ESTILO DOCUSAURUS -->
+          <div class="doc-pagination">
+            <div class="doc-pagination__card prev" id="doc-pag-prev" style="visibility:hidden;">
+              <span class="doc-pagination__label">Anterior</span>
+              <span class="doc-pagination__title">« </span>
+            </div>
+            <div class="doc-pagination__card next" id="doc-pag-next">
+              <span class="doc-pagination__label">Siguiente</span>
+              <span class="doc-pagination__title">Firewall »</span>
+            </div>
+          </div>
+
+        </main>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- Botón Flotante para Subir Suavemente (Scroll to Top) -->
+  <button id="scroll-to-top-btn" class="scroll-to-top" aria-label="Volver arriba" title="Subir suavemente al inicio">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <!-- Lógica JavaScript Modular -->
+  <script src="../../app.js"></script>
+</body>
+</html>

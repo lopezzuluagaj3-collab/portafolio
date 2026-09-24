@@ -35,6 +35,10 @@ La decisión de operar Kubernetes yo mismo, en lugar de usar un servicio gestion
 1. **Costo**: administrar el control plane directamente sobre EC2 evita el cargo fijo por clúster que cobra EKS, relevante para un proyecto de portafolio sin presupuesto de producción.
 2. **Aprendizaje real**: operar K3s desde cero — bootstrap del control plane, unión de workers, instalación de CNI, gestión de storage — obliga a entender los fundamentos de Kubernetes que un servicio gestionado abstrae. Esa base hace que una migración futura a EKS sea mucho más eficaz, porque ya se entiende qué está pasando por debajo del servicio gestionado.
 
+## Por qué Cilium con eBPF en vez de iptables
+
+En clústeres tradicionales, `kube-proxy` e `iptables` recorren listas secuenciales de reglas con complejidad algorítmica lineal $O(N)$, aumentando la latencia y bloqueando la memoria del kernel cada vez que escalan servicios. Se implementó **Cilium con eBPF** para reemplazar `kube-proxy`, resolviendo el enrutamiento mediante **BPF Hash Maps** en tiempo constante $O(1)$ directamente en el espacio del kernel, garantizando latencia ultrabaja y aislamiento de red nativo.
+
 ## Decisión de arquitectura: 3 repositorios
 
 Polaris se distribuye deliberadamente en tres repositorios independientes, cada uno con una responsabilidad clara. Esta separación permite que cada componente tenga su propio ciclo de vida, su propio pipeline de CI/CD y sus propias validaciones de calidad, sin acoplar cambios de infraestructura con cambios de lógica de negocio.

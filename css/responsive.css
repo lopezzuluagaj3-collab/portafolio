@@ -1,0 +1,173 @@
+/* ==========================================================================
+   RESPONSIVIDAD Y ADAPTABILIDAD MÓVIL (Escalabilidad UI/UX)
+   ========================================================================== */
+
+/* ---------- 1. Tablets y Pantallas Medianas (<= 996px) ---------- */
+@media screen and (max-width: 996px) {
+  /* Navbar Global en Móvil */
+  .navbar__nav {
+    display: none;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: var(--navbar-bg);
+    flex-direction: column;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    box-shadow: var(--shadow-lg);
+    gap: 1.25rem;
+    z-index: 1001;
+    animation: fadeInView 0.25s ease forwards;
+  }
+
+  .navbar__nav.mobile-open {
+    display: flex;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  .nav__dropdown {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav__dropdown-toggle {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+  }
+
+  .nav__dropdown-menu {
+    position: static;
+    box-shadow: none;
+    background: var(--bg-tint);
+    border: 1px solid var(--border);
+    width: 100%;
+    margin-top: 0.4rem;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+    display: none;
+  }
+
+  .nav__dropdown.open .nav__dropdown-menu {
+    display: flex;
+  }
+
+  /* Dashboard Grid */
+  .hero__grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .hero__subtitle {
+    margin: 0 auto 2rem;
+  }
+
+  .hero__actions,
+  .hero__stats {
+    justify-content: center;
+  }
+
+  .project-spotlight {
+    grid-template-columns: 1fr;
+    padding: 2rem;
+  }
+
+  .adr-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  /* Doc Viewer Layout Móvil */
+  .doc-container {
+    flex-direction: column;
+  }
+
+  .doc-sidebar {
+    width: 100%;
+    min-width: 100%;
+    position: static;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 1rem 1.5rem;
+    max-height: 380px;
+    overflow-y: auto;
+  }
+
+  .doc-main {
+    padding: 1.75rem 1.25rem 4rem;
+  }
+
+  .doc-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+
+  .doc-table {
+    min-width: 580px;
+  }
+
+  .doc-code-block pre {
+    overflow-x: auto;
+    word-break: normal;
+  }
+
+  .doc-pagination {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .doc-pagination__link {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ---------- 2. Móviles Pequeños (<= 640px) ---------- */
+@media screen and (max-width: 640px) {
+  .hero {
+    padding: 6.5rem 1rem 4rem;
+  }
+
+  .hero__title {
+    font-size: 2.15rem;
+  }
+
+  .section-header__title {
+    font-size: 1.75rem;
+  }
+
+  .project-specs {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .doc-article__title {
+    font-size: 1.85rem;
+  }
+
+  .doc-breadcrumbs {
+    font-size: 0.8rem;
+  }
+}

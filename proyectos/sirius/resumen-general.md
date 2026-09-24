@@ -30,7 +30,7 @@ El dataset de NYC TLC es uno de los mayores benchmarks mundiales de transporte p
 
 Desempeñé un rol integral de **Lead Cloud Data & DevOps Engineer**:
 
-- **DevOps / Platform Engineer:** Arquitectura Serverless como Código con Terraform, pipeline CI/CD en GitHub Actions autenticado vía OpenID Connect (OIDC) sin credenciales permanentes, escaneo estático de seguridad con Checkov, análisis de código con SonarCloud y auditoría de costos con Infracost.
+- **DevOps / Platform Engineer:** Arquitectura Serverless como Código con Terraform (Remote Backend en S3 con DynamoDB State Locking), pipeline CI/CD en GitHub Actions autenticado vía OpenID Connect (OIDC) sin credenciales permanentes, escaneo estático de seguridad con Checkov, análisis de código con SonarCloud y auditoría de costos con Infracost.
 - **Data Engineer:** Optimización del clúster Glue PySpark con multithreading (`ThreadPoolExecutor`), diseño de casting universal (*Safe Cast*), particionado eficiente Snappy Parquet y diseño de consultas analíticas CTAS en Amazon Athena con Partition Projection.
 - **BI / Analytics Engineer:** Integración de Power BI Desktop mediante ODBC DSN bajo el principio de mínimo privilegio IAM, modelado relacional y construcción de dashboards ejecutivos.
 

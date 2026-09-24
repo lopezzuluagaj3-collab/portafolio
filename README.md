@@ -21,39 +21,56 @@ El portafolio incluye una **aplicación web interactiva de alto impacto visual**
 
 ## 🚀 Proyectos Consolidados en este Portafolio
 
-```
+```text
 d:\portafolio\
-├── index.html                  # Aplicación Web SPA (Dashboard + Visores Docusaurus)
-├── styles.css                  # Sistema de diseño, tokens UI/UX y transiciones
-├── app.js                      # Enrutador, motor de scroll inercial y terminal interactiva
+├── index.html                  # Dashboard Principal ejecutivo (~519 líneas limpias)
+├── styles.css                  # Punto de entrada maestro con @import modular
+├── app.js                      # Enrutador agnóstico, terminal interactiva y scroll suave
 ├── portafolio.md               # Resumen ejecutivo de acciones DevOps
-└── proyectos/                  # Documentación técnica modular por proyecto
-    ├── polaris/                # Caso: Kubernetes Self-Managed en AWS + ETL Airflow
-    └── idempotencia/           # Caso: DBaaS Multi-Motor & Hardening VPS
+├── css/                        # Arquitectura CSS modularizada y escalable
+│   ├── tokens.css              # Variables, paleta violeta/coral y tema oscuro
+│   ├── base.css                # Reseteo, contenedores y botones base
+│   ├── navbar.css              # Barra de navegación, dropdowns y menú móvil
+│   ├── dashboard.css           # Secciones: Hero, Especialidades, Terminal, Cards
+│   ├── doc-viewer.css          # Visores Docusaurus: Sidebar, artículos, tablas, código
+│   └── responsive.css          # Reglas de adaptabilidad y media queries
+└── proyectos/                  # Páginas y documentación técnica modular por proyecto
+    ├── idempotencia/           # Caso: DBaaS Multi-Motor & Hardening VPS (index.html dedicado)
+    ├── polaris/                # Caso: Kubernetes Self-Managed en AWS (index.html dedicado)
+    └── sirius/                 # Caso: Modern Data Lakehouse en AWS (index.html dedicado)
 ```
 
 ### 1. 🌟 Polaris — Plataforma ETL sobre Kubernetes Self-Managed en AWS
 - **Estado:** 🟢 **Proyecto Completo / AWS**
-- **Documentación Completa:** [proyectos/polaris/resumen-general.md](./proyectos/polaris/resumen-general.md)
+- **Documentación Completa:** [proyectos/polaris/index.html](./proyectos/polaris/index.html)
 - **Enfoque:** Demostración profunda de dominio de **Kubernetes, Helm 3 y Cilium CNI (eBPF)** en un entorno real de datos sobre AWS, operando un control plane autoadministrado en EC2 sin recurrir al costo de EKS.
 - **Aspectos Destacados:**
-  - **Topología de Red AWS:** VPC `12.0.0.0/16` aislada con subred pública (Bastión Proxy NGINX Ingress + EIP) y subred privada para el plano de control K3s y workers detrás de NAT Gateway.
-  - **Desacoplamiento en 3 Repositorios:** `polaris-infrastructure` (Terraform + Ansible), `polaris-kubernetes` (Helm + Cilium + Ingress + Observabilidad) y `polaris-airflow` (Runtime Docker + DAGs).
-  - **Git-Sync:** Los DAGs no residen en la imagen de Airflow; Kubernetes los sincroniza en tiempo real cada 30 segundos, permitiendo iterar la lógica sin downtime ni reconstrucción de imágenes.
-  - **DevSecOps en CI/CD:** Escaneos automatizados con **Trivy** (imágenes y manifiestos), **Checkov** (IaC), **SonarCloud** (Quality Gate) y **Infracost** (~$414 USD/mes) mediante GitHub Actions autenticado por **AWS OIDC** (sin credenciales estáticas de larga duración).
-  - **Modelo Analítico:** Pipeline ETL que descarga el dataset *Brazilian E-Commerce de Olist*, limpia y normaliza pagos/reseñas, y carga transaccionalmente en un esquema estrella sobre PostgreSQL para visualización en Power BI.
+  - **Cilium eBPF O(1):** Sustitución de `kube-proxy` e `iptables` ($O(N)$) por mapas BPF en el kernel para resolución instantánea sin bloqueos de tabla.
+  - **StatefulSets & EBS CSI:** Persistencia con `volumeClaimTemplates` en PostgreSQL y RabbitMQ para evitar colisiones de datos.
+  - **Desacoplamiento en 3 Repositorios:** `polaris-infrastructure` (Terraform + Ansible), `polaris-kubernetes` (Helm + Cilium + Ingress + Observabilidad) y `polaris-airflow` (Runtime Docker + DAGs vía Git-Sync).
+  - **DevSecOps en CI/CD:** Escaneos automatizados con **Trivy**, **Checkov**, **SonarCloud** e **Infracost** mediante GitHub Actions autenticado por **AWS OIDC**.
 
 ---
 
-### 2. ⚡ Idempotencia — Plataforma DBaaS Multi-Motor & Hardening VPS
+### 2. 🚕 Sirius — Modern Data Lakehouse Serverless en AWS (NYC TLC)
+- **Estado:** 🟢 **Proyecto Completo / AWS**
+- **Documentación Completa:** [proyectos/sirius/index.html](./proyectos/sirius/index.html)
+- **Enfoque:** Arquitectura Medallion (Bronze/Silver/Gold) procesando más de **18 años de datos (4,424 millones de viajes)** con Apache Spark en AWS Glue 4.0, Athena y Power BI.
+- **Aspectos Destacados:**
+  - **FinOps & Formato Columnar:** Ahorro >95% en Athena mediante Parquet Snappy particionado y Partition Projection en memoria (consultas en 2.0s - 3.4s).
+  - **Throughput Distribuido:** Multithreading en driver de Glue PySpark alcanzando hasta ~875,000 filas/seg.
+  - **Zero Trust IaC:** Despliegue con Terraform mediante Remote Backend en S3 con **DynamoDB State Locking**, autenticación GitHub Actions OIDC y Quality Gates con Checkov, SonarCloud e Infracost.
+
+---
+
+### 3. ⚡ Idempotencia — Plataforma DBaaS Multi-Motor & Hardening VPS
 - **Estado:** 🟡 **Fuera de Producción / Archivado** (Ciclo de entrega completado)
-- **Documentación Completa:** [proyectos/idempotencia/resumen-general.md](./proyectos/idempotencia/resumen-general.md)
+- **Documentación Completa:** [proyectos/idempotencia/index.html](./proyectos/idempotencia/index.html)
 - **Enfoque:** Plataforma de autoservicio de bases de datos relacionales y no relacionales con módulo de IA bajo Ollama, operando de forma confinada y resiliente en una única VPS de 4 GB de RAM.
 - **Aspectos Destacados:**
-  - **Resolución Crítica Docker vs UFW:** Descubrimiento de que Docker bypassea `ufw` al publicar puertos directamente en iptables; mitigación inmediata enlazando servicios exclusivamente a la IP privada de **Tailscale** (`<IP_PRIVADA_TAILSCALE>`).
-  - **Defensa Perimetral Activa:** Agente **CrowdSec IPS** con bouncer en iptables para bloquear escaneos y fuerza bruta, sumado a un mecanismo de **Port Knocking Dinámico** vía scripts de PowerShell/Bash.
-  - **Cuotas Estrictas de Recursos:** Confinamiento de 4 motores de bases de datos (SQL Server 2022, PostgreSQL 16, MySQL 8.4, MongoDB 7) bajo límites de 512 MB de RAM y 0.5 CPU.
-  - **Cero Pérdida de Datos en Incidentes:** Rescate en caliente y migración mediante backup T-SQL ante colisiones de volúmenes de Docker, declarando volúmenes existentes como `external: true`.
+  - **Resolución Crítica Docker vs UFW:** Mitigación del bypass de iptables de Docker enlazando sockets exclusivamente a la interfaz privada de **Tailscale**.
+  - **Defensa Perimetral Activa:** Agente **CrowdSec IPS** con bouncer en iptables y mecanismo de **Port Knocking Dinámico**.
+  - **Cuotas Estrictas de Recursos:** Confinamiento de 4 motores de bases de datos bajo límites de 512 MB de RAM y 0.5 CPU.
 
 ---
 
