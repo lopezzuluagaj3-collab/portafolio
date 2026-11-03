@@ -721,7 +721,7 @@ function initNavScroll() {
 }
 
 /* ==========================================================================
-   6. Menú Móvil
+   6. Menú Móvil (Estilo Drawer/Popover Opaco con Backdrop y Cierre ✕)
    ========================================================================== */
 function initMobileMenu() {
   const mobileBtn = document.getElementById('mobile-menu-btn');
@@ -729,10 +729,46 @@ function initMobileMenu() {
   const dropdown = document.querySelector('.nav__dropdown');
   const dropdownToggle = document.querySelector('.nav__dropdown-toggle');
 
+  // Asegurar la existencia del fondo atenuado (Backdrop)
+  let backdrop = document.getElementById('nav-backdrop');
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.id = 'nav-backdrop';
+    backdrop.className = 'nav-backdrop';
+    document.body.appendChild(backdrop);
+  }
+
+  function openMenu() {
+    if (!navMenu) return;
+    navMenu.classList.add('mobile-open');
+    if (mobileBtn) mobileBtn.classList.add('open');
+    if (backdrop) backdrop.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    if (!navMenu) return;
+    navMenu.classList.remove('mobile-open');
+    if (mobileBtn) mobileBtn.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('visible');
+    if (dropdown) dropdown.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
   if (mobileBtn && navMenu) {
     mobileBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      navMenu.classList.toggle('mobile-open');
+      if (navMenu.classList.contains('mobile-open')) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener('click', () => {
+      closeMenu();
     });
   }
 
@@ -749,20 +785,23 @@ function initMobileMenu() {
   // Cerrar menú al hacer clic en cualquier enlace
   document.querySelectorAll('.nav__link, .nav__dropdown-item').forEach(link => {
     link.addEventListener('click', () => {
-      if (window.innerWidth <= 996 && navMenu) {
-        navMenu.classList.remove('mobile-open');
-        if (dropdown) dropdown.classList.remove('open');
+      if (window.innerWidth <= 996) {
+        closeMenu();
       }
     });
   });
 
-  // Cerrar menú al hacer clic fuera del navbar
-  document.addEventListener('click', (e) => {
-    if (window.innerWidth <= 996 && navMenu && navMenu.classList.contains('mobile-open')) {
-      if (!navMenu.contains(e.target) && !mobileBtn.contains(e.target)) {
-        navMenu.classList.remove('mobile-open');
-        if (dropdown) dropdown.classList.remove('open');
-      }
+  // Cerrar menú con la tecla Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navMenu && navMenu.classList.contains('mobile-open')) {
+      closeMenu();
+    }
+  });
+
+  // Si se redimensiona a pantalla de escritorio, cerrar el menú móvil
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 996 && navMenu && navMenu.classList.contains('mobile-open')) {
+      closeMenu();
     }
   });
 }

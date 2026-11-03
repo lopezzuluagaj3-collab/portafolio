@@ -4,67 +4,181 @@
 
 /* ---------- 1. Tablets y Pantallas Medianas (<= 996px) ---------- */
 @media screen and (max-width: 996px) {
-  /* Navbar Global en Móvil */
-  .navbar__nav {
+  /* Fondo atenuado (Backdrop) al abrir el menú móvil */
+  .nav-backdrop {
     display: none;
-    position: absolute;
+    position: fixed;
     top: 72px;
     left: 0;
     right: 0;
-    background: var(--navbar-bg);
+    bottom: 0;
+    background: rgba(12, 8, 28, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999;
+    animation: fadeInBackdrop 0.22s ease forwards;
+  }
+
+  .nav-backdrop.visible {
+    display: block;
+  }
+
+  @keyframes fadeInBackdrop {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Menú desplegable móvil: Estilo tarjeta flotante sólida y opaca (Inspirado en imagen de referencia) */
+  .navbar__nav {
+    display: none;
+    position: fixed;
+    top: calc(72px + 10px);
+    left: 1rem;
+    right: 1rem;
+    max-width: 380px;
+    margin-left: auto; /* Anclado a la derecha debajo de las acciones */
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+    padding: 1rem 0.75rem;
     flex-direction: column;
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid var(--border);
-    backdrop-filter: saturate(180%) blur(16px);
-    -webkit-backdrop-filter: saturate(180%) blur(16px);
-    box-shadow: var(--shadow-lg);
-    gap: 1.25rem;
+    gap: 0.35rem;
     z-index: 1001;
-    animation: fadeInView 0.25s ease forwards;
+    max-height: calc(100vh - 96px);
+    overflow-y: auto;
+    animation: popMenu 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  [data-theme='dark'] .navbar__nav {
+    background: #18132b;
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.65);
   }
 
   .navbar__nav.mobile-open {
     display: flex;
   }
 
+  @keyframes popMenu {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Botón de Menú Móvil (Hamburger) */
   .mobile-menu-btn {
     display: flex;
   }
 
+  /* Enlaces dentro del menú (alineados a la izquierda y con buen área táctil) */
+  .navbar__nav .nav__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    text-align: left;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  }
+
+  .navbar__nav .nav__link:hover {
+    background: var(--bg-tint);
+    color: var(--primary);
+    transform: translateX(3px);
+  }
+
+  .navbar__nav .nav__link.active {
+    background: rgba(124, 58, 237, 0.1);
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  .navbar__nav .nav__link.active::after {
+    display: none;
+  }
+
+  /* Dropdown móvil con acordeón suave */
   .nav__dropdown {
     width: 100%;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
   .nav__dropdown-toggle {
-    width: 100%;
+    display: flex;
+    align-items: center;
     justify-content: space-between;
-    padding: 0.6rem 0;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .nav__dropdown-toggle:hover,
+  .nav__dropdown.open .nav__dropdown-toggle {
+    background: var(--bg-tint);
+    color: var(--primary);
   }
 
   .nav__dropdown-menu {
     position: static;
     box-shadow: none;
-    background: var(--bg-tint);
-    border: 1px solid var(--border);
-    width: 100%;
-    margin-top: 0.4rem;
+    background: transparent;
+    border: none;
+    border-left: 2px solid var(--border-strong);
+    width: auto;
+    margin: 0.35rem 0 0.5rem 0.85rem;
+    padding: 0.35rem 0 0.35rem 0.85rem;
     opacity: 1;
     visibility: visible;
     transform: none;
     pointer-events: auto;
     display: none;
+    flex-direction: column;
+    gap: 0.3rem;
   }
 
   .nav__dropdown.open .nav__dropdown-menu {
     display: flex;
+    animation: fadeInSubmenu 0.2s ease forwards;
+  }
+
+  @keyframes fadeInSubmenu {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .nav__dropdown-item {
+    padding: 0.55rem 0.75rem;
+    font-size: 0.88rem;
+    border-radius: var(--radius-sm);
+    color: var(--text);
+  }
+
+  .nav__dropdown-item:hover {
+    background: var(--bg-tint);
+    color: var(--primary);
   }
 
   /* Dashboard Grid */
   .hero__grid {
     grid-template-columns: 1fr;
     text-align: center;
+    gap: 2.5rem;
   }
 
   .hero__subtitle {
@@ -74,6 +188,15 @@
   .hero__actions,
   .hero__stats {
     justify-content: center;
+  }
+
+  /* Neutralizar rotación 3D en mockup para que no desborde la pantalla en móvil */
+  .mockup-frame {
+    transform: none !important;
+  }
+
+  .mockup-frame:hover {
+    transform: none !important;
   }
 
   .project-spotlight {
@@ -123,26 +246,79 @@
     min-width: 580px;
   }
 
-  .doc-code-block pre {
+  .doc-code-block pre,
+  .doc-article pre {
     overflow-x: auto;
     word-break: normal;
   }
 
+  .doc-article code {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
   .doc-pagination {
+    display: flex;
     flex-direction: column;
     gap: 0.75rem;
   }
 
-  .doc-pagination__link {
+  .doc-pagination__card {
     width: 100%;
+    text-align: center;
+  }
+
+  .doc-pagination__card.next {
     text-align: center;
   }
 }
 
-/* ---------- 2. Móviles Pequeños (<= 640px) ---------- */
+/* ---------- 2. Móviles (<= 640px) ---------- */
 @media screen and (max-width: 640px) {
+  /* Marca adaptativa: Juan Diego sin salto de línea */
+  .navbar__brand {
+    font-size: 1.05rem;
+    gap: 0.55rem;
+  }
+
+  .navbar__logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Ocultar "/ DevOps" en pantallas móviles para que Juan Diego nunca se corte ni rompa */
+  .navbar__brand-role,
+  .navbar__brand span > span {
+    display: none !important;
+  }
+
+  /* En móvil, transformar el botón de GitHub en icono cuadrado 40x40px */
+  .nav-github-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+  }
+
+  .nav-github-text {
+    display: none !important;
+  }
+
+  .navbar__actions {
+    gap: 0.5rem;
+  }
+
+  /* Menú flotante ajustado a los márgenes en pantallas pequeñas */
+  .navbar__nav {
+    left: 0.75rem;
+    right: 0.75rem;
+    max-width: 100%;
+    margin-left: 0;
+  }
+
   .hero {
-    padding: 6.5rem 1rem 4rem;
+    padding: 6.5rem 1rem 3.5rem;
   }
 
   .hero__title {
@@ -151,6 +327,23 @@
 
   .section-header__title {
     font-size: 1.75rem;
+  }
+
+  .projects-grid,
+  .security-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .terminal-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .terminal-header__actions {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .project-specs {
@@ -169,5 +362,27 @@
 
   .doc-breadcrumbs {
     font-size: 0.8rem;
+    flex-wrap: wrap;
+  }
+}
+
+/* ---------- 3. Móviles Ultra-Estrechos (<= 380px) ---------- */
+@media screen and (max-width: 380px) {
+  .navbar__brand {
+    font-size: 0.95rem;
+    max-width: 135px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .theme-toggle,
+  .nav-github-btn,
+  .mobile-menu-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .navbar__actions {
+    gap: 0.35rem;
   }
 }

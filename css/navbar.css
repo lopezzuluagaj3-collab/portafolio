@@ -28,6 +28,22 @@
   font-size: 1.25rem;
   letter-spacing: -0.02em;
   color: var(--text);
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.navbar__brand-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.navbar__brand-role {
+  color: var(--primary);
+  font-weight: 600;
 }
 
 .navbar__logo {
@@ -264,6 +280,19 @@
   gap: 0.85rem;
 }
 
+/* Botón GitHub en la navbar */
+.nav-github-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 /* Botón conmutador de tema */
 .theme-toggle {
   width: 40px;
@@ -275,7 +304,8 @@
   color: var(--text);
   background: var(--bg-tint);
   border: 1px solid var(--border);
-  transition: background-color 0.2s ease, transform 0.15s ease;
+  transition: background-color 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+  flex-shrink: 0;
 }
 
 .theme-toggle:hover {
@@ -299,5 +329,32 @@
   color: var(--text);
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  flex-shrink: 0;
+}
+
+.mobile-menu-btn:hover {
+  background: rgba(124, 58, 237, 0.12);
+  color: var(--primary);
+  transform: scale(1.04);
+}
+
+.mobile-menu-btn .icon-close {
+  display: none;
+}
+
+.mobile-menu-btn.open {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+.mobile-menu-btn.open .icon-hamburger {
+  display: none;
+}
+
+.mobile-menu-btn.open .icon-close {
+  display: block;
 }
 
