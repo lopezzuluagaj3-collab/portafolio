@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDocViewer();
   initPolarisDocViewer();
   initSiriusDocViewer();
+  initPleyadesDocViewer();
   initNavScroll();
   initMobileMenu();
   initSmoothScrollLinks();
@@ -39,6 +40,7 @@ function handleRouting() {
   const idempView = document.getElementById('view-proyecto-idempotencia');
   const polarisView = document.getElementById('view-proyecto-polaris');
   const siriusView = document.getElementById('view-proyecto-sirius');
+  const pleyadesView = document.getElementById('view-proyecto-pleyades');
   const navDropdownToggle = document.querySelector('.nav__dropdown-toggle');
 
   // SUB-CASO: PÁGINAS DEDICADAS DE PROYECTO (Donde NO existe #view-dashboard)
@@ -72,6 +74,15 @@ function handleRouting() {
       if (typeof switchSiriusDocSection === 'function') {
         switchSiriusDocSection(chapterId, false);
       }
+    } else if (pleyadesView) {
+      pleyadesView.classList.add('active');
+      let chapterId = 'resumen-general';
+      if (rawHash.includes('/')) {
+        chapterId = rawHash.split('/')[1];
+      }
+      if (typeof switchPleyadesDocSection === 'function') {
+        switchPleyadesDocSection(chapterId, false);
+      }
     }
     return;
   }
@@ -89,12 +100,17 @@ function handleRouting() {
     window.location.href = './proyectos/sirius/' + (rawHash.includes('/') ? '#' + rawHash : '');
     return;
   }
+  if (rawHash.startsWith('#proyecto-pleyades') || rawHash.startsWith('#doc-pleyades')) {
+    window.location.href = './proyectos/pleyades/' + (rawHash.includes('/') ? '#' + rawHash : '');
+    return;
+  }
 
   // CASO: DASHBOARD GENERAL (#inicio o ancla interna)
   dashboardView.classList.add('active');
   if (idempView) idempView.classList.remove('active');
   if (polarisView) polarisView.classList.remove('active');
   if (siriusView) siriusView.classList.remove('active');
+  if (pleyadesView) pleyadesView.classList.remove('active');
 
   if (navDropdownToggle) {
     navDropdownToggle.innerHTML = `📁 Proyectos ▾`;
@@ -198,13 +214,36 @@ orquestacion_y_datos:
   },
   'projects': {
     cmd: 'ls -la ~/proyectos/',
-    output: `drwxr-xr-x 5 devop devop 4096 Sep 19 21:00 .
+    output: `drwxr-xr-x 6 devop devop 4096 Nov 21 19:30 .
 drwxr-xr-x 6 devop devop 4096 Sep 17 17:30 ..
 -rwxr-xr-x 1 devop devop 1420 Sep 17 17:50 <span class="highlight-yellow">idempotencia</span> [FUERA DE PRODUCCIÓN] -> DBaaS Multi-Motor (Archivado)
 -rwxr-xr-x 1 devop devop 3840 Sep 17 20:00 <span class="highlight-green">polaris</span>      [PRODUCCIÓN]          -> K3s Self-Managed + Cilium + Airflow en AWS
 -rwxr-xr-x 1 devop devop 4424 Sep 19 21:00 <span class="highlight-blue" style="color:var(--primary-lighter);">sirius</span>       [PRODUCCIÓN]          -> Modern Data Lakehouse Serverless (PySpark 4.0 + Athena + Power BI)
+-rwxr-xr-x 1 devop devop 5120 Nov 21 19:30 <span class="highlight-purple" style="color:#a78bfa;">pleyades</span>     [PRODUCCIÓN]          -> SaaS Multi-Tenant Azure (AKS + Cilium eBPF + ArgoCD + Crossplane IDP)
 
-Usa el menú superior "📁 Proyectos ▾", los botones del catálogo o ejecuta "sirius" para ver telemetría.`
+Usa el menú superior "📁 Proyectos ▾", los botones del catálogo o los visores técnicos para ver telemetría.`
+  },
+  'pleyades': {
+    cmd: 'pleyades --status --sre-metrics',
+    output: `[PROYECTO] Pléyades — Plataforma SaaS Multi-Tenant Empresarial en Azure
+[ESTADO] <span class="highlight-green">[PRODUCCIÓN / ACTIVO]</span>
+[ARQUITECTURA DE INFRAESTRUCTURA & RED]
+  - Cómputo: AKS Managed (Kubelet 1.30+, 2 nodos Standard_D2s_v7 min_count=2)
+  - Red eBPF: Cilium CNI v1.16 nativo (encapsulación Cilium VXLAN, kube-proxy replacement)
+  - Ingress L7: Traefik v3.0 con middleware de autenticación per-tenant
+[CONTROL PLANE DECLARATIVO & GITOPS]
+  - GitOps: ArgoCD v2.11 App-of-Apps reconciliando repositorios de infraestructura y app
+  - Internal Developer Platform: Crossplane v1.16 + provider-azure-postgresql
+  - Provisión DB: PostgreSQL Flexible Server B1ms con escalado Warm Pool a 5 tenants
+[ARQUITECTURA DE SOFTWARE & SRE]
+  - Backend: Go 1.24 con Arquitectura Hexagonal y aislamiento Database-per-Tenant
+  - Hash de Seguridad: Bcrypt Cost 10 (~70 ms/op CPU-bound)
+  - Capacidad Física: 3.0 - 3.2 vCPUs útiles en 2 nodos (~43 a 46 hashes/s agregados)
+  - Ley de Little (50 VUs, Z=0): R = N / λ = 1.06s tiempo de respuesta medio total (p95 < 1500ms)
+[REPOSITORIOS GITHUB]
+  - App: github.com/lopezzuluagaj3-collab/pleyades-app
+  - GitOps: github.com/lopezzuluagaj3-collab/pleyades-gitops
+  - Terraform: github.com/lopezzuluagaj3-collab/pleyades-terraform`
   },
   'sirius': {
     cmd: 'sirius --status --metrics',
@@ -691,6 +730,142 @@ function switchSiriusDocSection(sectionId, updateHash = true) {
 }
 
 /* ==========================================================================
+   4.3 Visor de Documentación Técnica Estilo Docusaurus (Pléyades)
+   ========================================================================== */
+const PLEYADES_DOC_SECTIONS = [
+  { id: 'resumen-general', title: 'Pléyades — Plataforma SaaS Multi-Tenant Empresarial en Azure', short: 'Resumen General', cat: 'Visión General', catId: 'infra', prev: null, next: 'arquitectura-iac' },
+  { id: 'arquitectura-iac', title: '1. Arquitectura de Infraestructura como Código (IaC)', short: 'IaC, Terraform & OIDC', cat: 'Infraestructura & AKS', catId: 'infra', prev: 'resumen-general', next: 'aks-cilium-ebpf' },
+  { id: 'aks-cilium-ebpf', title: '2. Cómputo AKS y Networking eBPF con Cilium', short: 'AKS & Cilium eBPF O(1)', cat: 'Infraestructura & AKS', catId: 'infra', prev: 'arquitectura-iac', next: 'argocd-crossplane' },
+  { id: 'argocd-crossplane', title: '1. GitOps con ArgoCD y Plataforma de Autoservicio con Crossplane', short: 'ArgoCD & Crossplane IDP', cat: 'GitOps & Control Plane', catId: 'gitops', prev: 'aks-cilium-ebpf', next: 'sre-observabilidad' },
+  { id: 'sre-observabilidad', title: '2. Ingeniería de Confiabilidad de Sitios (SRE) y Observabilidad', short: 'SRE, Prometheus & k6', cat: 'GitOps & Control Plane', catId: 'gitops', prev: 'argocd-crossplane', next: 'arquitectura-hexagonal-go' },
+  { id: 'arquitectura-hexagonal-go', title: '1. Arquitectura Hexagonal y Microservicio Core en Go 1.24', short: 'Microservicio Core Go 1.24', cat: 'Arquitectura SaaS & Multi-Tenancy', catId: 'saas', prev: 'sre-observabilidad', next: 'multi-tenancy-sharding' },
+  { id: 'multi-tenancy-sharding', title: '2. Multi-Tenancy Estricto (Database-per-Tenant) y Sharding Dinámico', short: 'Multi-Tenancy & Aislamiento', cat: 'Arquitectura SaaS & Multi-Tenancy', catId: 'saas', prev: 'arquitectura-hexagonal-go', next: 'warm-pool-autoscaling' },
+  { id: 'warm-pool-autoscaling', title: '3. Aprovisionamiento Just-in-Time y Warm Pool Preventivo', short: 'Warm Pool & Auto-escalado', cat: 'Arquitectura SaaS & Multi-Tenancy', catId: 'saas', prev: 'multi-tenancy-sharding', next: 'capacidad-sre-little' },
+  { id: 'capacidad-sre-little', title: '4. Modelo Físico de Capacidad y Ley de Little', short: 'Capacidad & Ley de Little', cat: 'Arquitectura SaaS & Multi-Tenancy', catId: 'saas', prev: 'warm-pool-autoscaling', next: 'adrs-resumen' },
+  { id: 'adrs-resumen', title: '1. Bitácora de Decisiones de Arquitectura (ADRs 01 al 37)', short: 'Bitácora de 37 ADRs', cat: 'Gobernanza & Operaciones', catId: 'ops', prev: 'capacidad-sre-little', next: 'seguridad-deuda-tecnica' },
+  { id: 'seguridad-deuda-tecnica', title: '2. Matriz de Seguridad y Gestión de Deuda Técnica', short: 'Seguridad & Deuda Técnica', cat: 'Gobernanza & Operaciones', catId: 'ops', prev: 'adrs-resumen', next: 'guia-bootstrap-runbook' },
+  { id: 'guia-bootstrap-runbook', title: '3. Guía de Bootstrap, Runbooks Operativos y FinOps', short: 'Runbooks PowerShell & FinOps', cat: 'Gobernanza & Operaciones', catId: 'ops', prev: 'seguridad-deuda-tecnica', next: null }
+];
+
+function initPleyadesDocViewer() {
+  // Manejador de clics en la barra lateral de Pléyades
+  document.querySelectorAll('[data-pleyades-target]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('data-pleyades-target');
+      switchPleyadesDocSection(targetId);
+    });
+  });
+
+  // Acordeones colapsables para las 4 categorías de Pléyades
+  const categories = [
+    { btn: 'pleyades-cat-btn-infra', box: 'pleyades-cat-box-infra' },
+    { btn: 'pleyades-cat-btn-gitops', box: 'pleyades-cat-box-gitops' },
+    { btn: 'pleyades-cat-btn-saas', box: 'pleyades-cat-box-saas' },
+    { btn: 'pleyades-cat-btn-ops', box: 'pleyades-cat-box-ops' }
+  ];
+
+  categories.forEach(({ btn, box }) => {
+    const btnEl = document.getElementById(btn);
+    const boxEl = document.getElementById(box);
+    if (btnEl && boxEl) {
+      btnEl.addEventListener('click', () => {
+        boxEl.classList.toggle('collapsed');
+      });
+    }
+  });
+
+  // Paginación anterior / siguiente de Pléyades
+  const prevBtn = document.getElementById('pleyades-pag-prev');
+  const nextBtn = document.getElementById('pleyades-pag-next');
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      const targetId = prevBtn.getAttribute('data-target-doc');
+      if (targetId) switchPleyadesDocSection(targetId);
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      const targetId = nextBtn.getAttribute('data-target-doc');
+      if (targetId) switchPleyadesDocSection(targetId);
+    });
+  }
+}
+
+function switchPleyadesDocSection(sectionId, updateHash = true) {
+  const sectionData = PLEYADES_DOC_SECTIONS.find(s => s.id === sectionId);
+  if (!sectionData) return;
+
+  // 1. Actualizar barra lateral activa
+  document.querySelectorAll('[data-pleyades-target]').forEach(link => {
+    if (link.getAttribute('data-pleyades-target') === sectionId) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+
+  // 2. Asegurar que la categoría correspondiente esté expandida
+  if (sectionData.catId) {
+    const boxEl = document.getElementById(`pleyades-cat-box-${sectionData.catId}`);
+    if (boxEl && boxEl.classList.contains('collapsed')) {
+      boxEl.classList.remove('collapsed');
+    }
+  }
+
+  // 3. Mostrar artículo correspondiente
+  document.querySelectorAll('#view-proyecto-pleyades .doc-article').forEach(art => {
+    if (art.id === `pleyades-art-${sectionId}`) {
+      art.classList.add('active');
+    } else {
+      art.classList.remove('active');
+    }
+  });
+
+  // 4. Actualizar migas de pan
+  const crumbCat = document.getElementById('pleyades-breadcrumb-cat');
+  const crumbCur = document.getElementById('pleyades-breadcrumb-current');
+  if (crumbCat) crumbCat.textContent = sectionData.cat;
+  if (crumbCur) crumbCur.textContent = sectionData.short;
+
+  // 5. Actualizar botones de paginación
+  const prevBtn = document.getElementById('pleyades-pag-prev');
+  const nextBtn = document.getElementById('pleyades-pag-next');
+
+  if (prevBtn) {
+    if (sectionData.prev) {
+      const prevData = PLEYADES_DOC_SECTIONS.find(s => s.id === sectionData.prev);
+      prevBtn.style.visibility = 'visible';
+      prevBtn.setAttribute('data-target-doc', sectionData.prev);
+      prevBtn.querySelector('.doc-pagination__title').textContent = `« ${prevData.short}`;
+    } else {
+      prevBtn.style.visibility = 'hidden';
+    }
+  }
+
+  if (nextBtn) {
+    if (sectionData.next) {
+      const nextData = PLEYADES_DOC_SECTIONS.find(s => s.id === sectionData.next);
+      nextBtn.style.visibility = 'visible';
+      nextBtn.setAttribute('data-target-doc', sectionData.next);
+      nextBtn.querySelector('.doc-pagination__title').textContent = `${nextData.short} »`;
+    } else {
+      nextBtn.style.visibility = 'hidden';
+    }
+  }
+
+  // 6. Scroll suave al inicio del documento
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // 7. Actualizar URL si corresponde
+  if (updateHash) {
+    history.pushState(null, '', `#doc-pleyades/${sectionId}`);
+  }
+}
+
+/* ==========================================================================
    5. Scroll Activo en Navbar del Dashboard
    ========================================================================== */
 function initNavScroll() {
@@ -905,10 +1080,11 @@ function initSmoothScrollLinks() {
     const href = anchor.getAttribute('href');
     if (!href || href === '#') return;
 
-    // Si apunta al visor de documentación de Idempotencia, Polaris o Sirius
+    // Si apunta al visor de documentación de Idempotencia, Polaris, Sirius o Pléyades
     if (href.startsWith('#proyecto-idempotencia') || href.startsWith('#doc-idempotencia') ||
         href.startsWith('#proyecto-polaris') || href.startsWith('#doc-polaris') ||
-        href.startsWith('#proyecto-sirius') || href.startsWith('#doc-sirius')) {
+        href.startsWith('#proyecto-sirius') || href.startsWith('#doc-sirius') ||
+        href.startsWith('#proyecto-pleyades') || href.startsWith('#doc-pleyades')) {
       return; // Dejar que el router active la vista correspondiente
     }
 
@@ -916,17 +1092,20 @@ function initSmoothScrollLinks() {
     const idempView = document.getElementById('view-proyecto-idempotencia');
     const polarisView = document.getElementById('view-proyecto-polaris');
     const siriusView = document.getElementById('view-proyecto-sirius');
+    const pleyadesView = document.getElementById('view-proyecto-pleyades');
 
     // Caso A: Estamos dentro de algún visor de documentación y se hace clic en una sección del dashboard
     const isInsideDocViewer = (idempView && idempView.classList.contains('active')) ||
                               (polarisView && polarisView.classList.contains('active')) ||
-                              (siriusView && siriusView.classList.contains('active'));
+                              (siriusView && siriusView.classList.contains('active')) ||
+                              (pleyadesView && pleyadesView.classList.contains('active'));
 
     if (isInsideDocViewer) {
       e.preventDefault();
       if (idempView) idempView.classList.remove('active');
       if (polarisView) polarisView.classList.remove('active');
       if (siriusView) siriusView.classList.remove('active');
+      if (pleyadesView) pleyadesView.classList.remove('active');
       if (dashboardView) dashboardView.classList.add('active');
 
       const navDropdownToggle = document.querySelector('.nav__dropdown-toggle');

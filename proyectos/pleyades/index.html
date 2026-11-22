@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pléyades: Plataforma Cloud-Native SaaS, GitOps, Crossplane & SRE en Azure — Juan Diego López Zuluaga</title>
+  <meta name="description" content="Documentación técnica de Proyecto Pléyades: Plataforma SaaS Multi-Tenant en Azure con AKS, Cilium eBPF, ArgoCD, Crossplane IDP, Go 1.24 y SRE.">
+  <meta name="author" content="Juan Diego López Zuluaga">
+
+  <!-- Favicon e Identidad -->
+  <link rel="icon" type="image/x-icon" href="../../assets/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="../../assets/logo.svg">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Hoja de estilos modularizada -->
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="doc-page">
+  <!-- ==================== NAVBAR GLOBAL ==================== -->
+  <header class="navbar">
+    <div class="container navbar__inner">
+      <a href="../../index.html#inicio" class="navbar__brand" aria-label="Inicio">
+        <img src="../../assets/logo.svg" alt="Logo" class="navbar__logo">
+        <span class="navbar__brand-text">Juan Diego <span class="navbar__brand-role" style="color:var(--primary); font-weight:600;">/ DevOps</span></span>
+      </a>
+
+      <nav class="navbar__nav" id="navbar-nav">
+        <a href="../../index.html#inicio" class="nav__link">Inicio</a>
+        <a href="../../index.html#especialidades" class="nav__link">Especialidades</a>
+        
+        <!-- Menú Desplegable de Proyectos -->
+        <div class="nav__dropdown">
+          <span class="nav__dropdown-toggle" id="projects-dropdown-btn">
+            📁 Proyecto: <strong>Pléyades</strong> ▾
+          </span>
+          <div class="nav__dropdown-menu">
+            <a href="../idempotencia/" class="nav__dropdown-item">
+              <span style="font-size:1.2rem;">⚡</span>
+              <div>
+                <strong>Idempotencia</strong>
+                <small>DBaaS Multi-Motor (Fuera de Producción)</small>
+              </div>
+            </a>
+            <a href="../polaris/" class="nav__dropdown-item">
+              <span style="font-size:1.2rem;">🌟</span>
+              <div>
+                <strong>Polaris</strong>
+                <small>K8s Self-Managed + Cilium + ETL en AWS</small>
+              </div>
+            </a>
+            <a href="../sirius/" class="nav__dropdown-item">
+              <span style="font-size:1.2rem;">🚕</span>
+              <div>
+                <strong>Sirius</strong>
+                <small>Modern Data Lakehouse en AWS (Spark & Athena)</small>
+              </div>
+            </a>
+            <a href="#" class="nav__dropdown-item active">
+              <span style="font-size:1.2rem;">🌌</span>
+              <div>
+                <strong>Pléyades</strong>
+                <small>Cloud-Native SaaS, Crossplane & SRE en Azure</small>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <a href="../../index.html#proyectos-catalogo" class="nav__link">Mis Proyectos</a>
+        <a href="../../index.html#terminal-general" class="nav__link">Terminal</a>
+        <a href="../../index.html#contacto" class="nav__link">Contacto</a>
+      </nav>
+
+      <div class="navbar__actions">
+        <!-- Conmutador de tema -->
+        <button class="theme-toggle" id="theme-toggle-btn" aria-label="Cambiar tema">
+          <svg id="theme-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- Botón a GitHub -->
+        <a href="https://github.com/lopezzuluagaj3-collab" target="_blank" rel="noopener noreferrer" class="button button--primary nav-github-btn" aria-label="GitHub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          <span class="nav-github-text">GitHub</span>
+        </a>
+
+        <!-- Botón Menú Móvil -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menú">
+          <svg class="icon-hamburger" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <svg class="icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div id="view-proyecto-pleyades" class="view-section project-view active">
+    <div class="doc-viewer">
+
+      <!-- LAYOUT DOCS: BARRA LATERAL + CONTENIDO -->
+      <div class="doc-container">
+
+        <!-- BARRA LATERAL IZQUIERDA CON ACORDEONES -->
+        <aside class="doc-sidebar">
+          <div class="doc-sidebar__title">
+            <span>🌌 Pléyades Docs</span>
+            <span class="badge badge--success" style="font-size:0.65rem; padding:0.15rem 0.45rem;">Azure SaaS</span>
+          </div>
+
+          <!-- ENLACE INDEPENDIENTE: RESUMEN GENERAL -->
+          <ul class="doc-sidebar__list" style="margin-bottom:0.75rem;">
+            <li class="doc-sidebar__item">
+              <a href="#doc-pleyades/resumen-general" class="doc-sidebar__link active" data-pleyades-target="resumen-general">
+                📌 Resumen General & Misión
+              </a>
+            </li>
+          </ul>
+
+          <!-- CATEGORÍA 1: INFRAESTRUCTURA CLOUD & AKS -->
+          <div class="doc-sidebar__category" id="pleyades-cat-box-infra">
+            <button class="doc-sidebar__category-btn" id="pleyades-cat-btn-infra" type="button">
+              <span class="doc-sidebar__category-icon">☁️</span>
+              <span class="doc-sidebar__category-label">Infraestructura & AKS</span>
+              <span class="doc-sidebar__category-arrow">▾</span>
+            </button>
+            <ul class="doc-sidebar__list">
+              <li class="doc-sidebar__item">
+                <a href="#doc-pleyades/arquitectura-iac" class="doc-sidebar__link" data-pleyades-target="arquitectura-iac">
+                  1. IaC, Terraform & OIDC
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-pleyades/aks-cilium-ebpf" class="doc-sidebar__link" data-pleyades-target="aks-cilium-ebpf">
+                  2. AKS & Cilium eBPF O(1)
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- CATEGORÍA 2: GITOPS & CONTROL PLANE -->
+          <div class="doc-sidebar__category" id="pleyades-cat-box-gitops">
+            <button class="doc-sidebar__category-btn" id="pleyades-cat-btn-gitops" type="button">
+              <span class="doc-sidebar__category-icon">🐙</span>
+              <span class="doc-sidebar__category-label">GitOps & Control Plane</span>
+              <span class="doc-sidebar__category-arrow">▾</span>
+            </button>
+            <ul class="doc-sidebar__list">
+              <li class="doc-sidebar__item">
+                <a href="#doc-pleyades/argocd-crossplane" class="doc-sidebar__link" data-pleyades-target="argocd-crossplane">
+                  1. ArgoCD & Crossplane IDP
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-pleyades/sre-observabilidad" class="doc-sidebar__link" data-pleyades-target="sre-observabilidad">
+                  2. SRE, Prometheus & k6
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- CATEGORÍA 3: ARQUITECTURA SAAS & MULTI-TENANCY -->
+          <div class="doc-sidebar__category" id="pleyades-cat-box-saas">
+            <button class="doc-sidebar__category-btn" id="pleyades-cat-btn-saas" type="button">
+              <span class="doc-sidebar__category-icon">⚡</span>
+              <span class="doc-sidebar__category-label">Arquitectura SaaS & Multi-Tenancy</span>
+              <span class="doc-sidebar__category-arrow">▾</span>
+            </button>
+            <ul class="doc-sidebar__list">
+              <li class="doc-sidebar__item">
+                <a href="#doc-pleyades/arquitectura-hexagonal-go" class="doc-sidebar__link" data-pleyades-target="arquitectura-hexagonal-go">
+                  1. Microservicio Core Go 1.24
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-pleyades/multi-tenancy-sharding" class="doc-sidebar__link" data-pleyades-target="multi-tenancy-sharding">
+                  2. Multi-Tenancy & Aislamiento
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-pleyades/warm-pool-autoscaling" class="doc-sidebar__link" data-pleyades-target="warm-pool-autoscaling">
+                  3. Warm Pool & Auto-escalado
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-pleyades/capacidad-sre-little" class="doc-sidebar__link" data-pleyades-target="capacidad-sre-little">
+                  4. Capacidad & Ley de Little
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- CATEGORÍA 4: GOBERNANZA & OPERACIONES -->
+          <div class="doc-sidebar__category" id="pleyades-cat-box-ops">
+            <button class="doc-sidebar__category-btn" id="pleyades-cat-btn-ops" type="button">
+              <span class="doc-sidebar__category-icon">📜</span>
+              <span class="doc-sidebar__category-label">Gobernanza & Operaciones</span>
+              <span class="doc-sidebar__category-arrow">▾</span>
+            </button>
+            <ul class="doc-sidebar__list">
+              <li class="doc-sidebar__item">
+                <a href="#doc-pleyades/adrs-resumen" class="doc-sidebar__link" data-pleyades-target="adrs-resumen">
+                  1. Bitácora de 37 ADRs
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-pleyades/seguridad-deuda-tecnica" class="doc-sidebar__link" data-pleyades-target="seguridad-deuda-tecnica">
+                  2. Seguridad & Deuda Técnica
+                </a>
+              </li>
+              <li class="doc-sidebar__item">
+                <a href="#doc-pleyades/guia-bootstrap-runbook" class="doc-sidebar__link" data-pleyades-target="guia-bootstrap-runbook">
+                  3. Runbooks PowerShell & FinOps
+                </a>
+              </li>
+            </ul>
+          </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL DEL DOCUMENTO -->
+        <main class="doc-main">
+
+          <!-- MIGAS DE PAN ESTILO DOCUSAURUS -->
+          <nav class="doc-breadcrumbs">
+            <a href="../../index.html#inicio" class="doc-breadcrumbs__item">🏠 Inicio</a>
+            <span class="doc-breadcrumbs__separator">›</span>
+            <span class="doc-breadcrumbs__item" id="pleyades-breadcrumb-cat">Visión General</span>
+            <span class="doc-breadcrumbs__separator">›</span>
+            <span class="doc-breadcrumbs__current" id="pleyades-breadcrumb-current">Resumen General & Misión</span>
+          </nav>
+
+          <!-- ==================== ARTÍCULOS TÉCNICOS ==================== -->
+
+          <!-- 0. RESUMEN GENERAL -->
+          <article id="pleyades-art-resumen-general" class="doc-article active">
+            <h1 class="doc-article__title">🌌 Proyecto Pléyades — Plataforma Cloud-Native SaaS en Azure</h1>
+            <p class="doc-article__lead">
+              Plataforma SaaS empresarial Multi-Tenant de alto rendimiento en Microsoft Azure (`eastus2` / `centralus`), gobernada 100% mediante GitOps pull-based con ArgoCD, Internal Developer Platform (IDP) con Crossplane, microservicio hexagonal en Go 1.24 y modelo matemático de confiabilidad SRE (Ley de Little).
+            </p>
+
+            <div class="terminal-box" style="margin-bottom:1.5rem;">
+              <pre><code>[METADATOS DE PLATAFORMA]
+Autor: Juan Diego López Zuluaga (DevOps, Cloud Platform & SRE Senior Engineer)
+Cloud Provider: Microsoft Azure (eastus2 / centralus)
+Arquitectura: 3 Repositorios Desacoplados (IaC, GitOps & Microservicio Go 1.24)
+Confiabilidad SRE: Modelo analítico Ley de Little (p95 &lt; 1500 ms @ 50 VUs)
+Contenedor: Distroless OCI (10.3 MB en GHCR) | Zero Static Secrets (Azure OIDC)</code></pre>
+            </div>
+
+            <h2>Los 5 Pilares Arquitectónicos de Pléyades</h2>
+            <ul>
+              <li><strong>Gobernanza Declarativa GitOps (Pull-Based):</strong> Eliminación total de despliegues push desde CI. ArgoCD reconcilia y autorrepara continuamente el estado vivo del clúster AKS.</li>
+              <li><strong>Internal Developer Platform (IDP) con Crossplane:</strong> Auto-escalado horizontal de bases de datos relacionales en la nube. Al superar el umbral preventivo (5/7 tenants), la app dispara la provisión autónoma de nuevos servidores Azure PostgreSQL Flexible Server vía Custom Resources.</li>
+              <li><strong>Multi-Tenancy con Aislamiento Estricto (Database-per-Tenant):</strong> Cada cliente cuenta con su propia base de datos PostgreSQL, usuario dedicado con contraseña efímera (<em>Show-Once Pattern</em>), revocación estricta (<code>REVOKE CONNECT ON DATABASE ... FROM PUBLIC</code>) y cuota estricta (<code>CONNECTION LIMIT 2</code>).</li>
+              <li><strong>SRE & Modelo Matemático de Capacidad:</strong> Dimensionamiento del pool de conexiones contra límites reales de B1ms (35 conns utilizables, pool=3/pod) y derivación de latencias por la <strong>Ley de Little en sistema cerrado</strong> ($R = \frac{N}{\lambda} - Z$).</li>
+              <li><strong>Zero Static Secrets:</strong> Azure Workload Identity y Entra ID mediante federación OIDC en Terraform, GitHub Actions y Crossplane.</li>
+            </ul>
+
+            <h2>Topología del Ecosistema (3 Repositorios)</h2>
+            <div class="terminal-box">
+              <pre><code>pleyades-infrastructure/   ──► Terraform Modular, AKS (Cilium eBPF KPR), Blob Storage tfstate
+pleyades-gitops/           ──► ArgoCD App-of-Apps, Crossplane Provider v2.8.4, Stack SRE
+pleyades-app/              ──► Go 1.24 Hexagonal, pgx/v5, Distroless (10.3 MB), Suite k6</code></pre>
+            </div>
+
+            <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1.5rem;">
+              <a href="https://github.com/lopezzuluagaj3-collab/pleyades-infrastructure" target="_blank" rel="noopener noreferrer" class="button button--primary">Repo: Infrastructure ➔</a>
+              <a href="https://github.com/lopezzuluagaj3-collab/pleyades-gitops" target="_blank" rel="noopener noreferrer" class="button button--accent">Repo: GitOps ➔</a>
+              <a href="https://github.com/lopezzuluagaj3-collab/pleyades-app" target="_blank" rel="noopener noreferrer" class="button button--secondary">Repo: App SaaS ➔</a>
+            </div>
+          </article>
+
+          <!-- 1. ARQUITECTURA IAC -->
+          <article id="pleyades-art-arquitectura-iac" class="doc-article">
+            <h1 class="doc-article__title">1. Arquitectura de Infraestructura como Código (IaC)</h1>
+            <p class="doc-article__lead">
+              Aprovisionamiento declarativo e idempotente de la infraestructura base en Azure mediante Terraform modular, state locking nativo con Azure Blob Leases, federación OIDC con Entra ID y bases de datos gestionadas.
+            </p>
+
+            <h2>Decisiones de Arquitectura del Dominio (ADRs)</h2>
+
+            <h3>📌 ADR 02: Estructura Modular y Scaffolding Inicial en Terraform</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Estructurar el repositorio de infraestructura desacoplando la raíz mediante la carpeta <code>modules/</code> (<code>networking</code>, <code>aks</code>, <code>resource_group</code>, <code>identity</code>), cada uno con <code>main.tf</code>, <code>variables.tf</code>, <code>outputs.tf</code> y <code>locals.tf</code>.</li>
+              <li><strong>Justificación:</strong> Alta cohesión, bajo acoplamiento y reducción drástica del radio de impacto (<em>blast radius</em>), validando la tubería de CI/CD desde el primer commit.</li>
+            </ul>
+
+            <h3>📌 ADR 03: Gestión de Estado Remoto en Azure Blob Storage</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Configurar el backend en un Azure Storage Account dedicado dentro de un Resource Group aislado (<code>rg-pleyades-tfstate</code>), con contenedor Blob para <code>tfstate</code>.</li>
+              <li><strong>Justificación:</strong> Aislamiento de privilegios para metadata sensible y bloqueo nativo concurrente (<em>State Locking</em>) mediante Azure Blob Leases para evitar corrupción de estado en ejecuciones simultáneas.</li>
+            </ul>
+
+            <h3>📌 ADR 04: Seguridad "Zero Static Secrets" mediante OIDC y Federated Credentials</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Eliminar el uso de contraseñas o <em>Service Principal Secrets</em>. Se implementan <strong>Federated Identity Credentials</strong> sobre una <strong>User-Assigned Managed Identity (UAMI)</strong> en Microsoft Entra ID.</li>
+              <li><strong>Lección Técnica Crítica (Immutable Subject Claims):</strong> GitHub emite tokens OIDC con formato inmutable (<code>repo:&lt;org&gt;@&lt;org_id&gt;/&lt;repo&gt;@&lt;repo_id&gt;:&lt;context&gt;</code>) para prevenir suplantación si se renombra la organización. Entra ID exige coincidencia estricta; omitir los IDs numéricos dispara el error <code>AADSTS700213</code>.</li>
+              <li><strong>Credenciales Federadas Configuradas:</strong>
+                <ol>
+                  <li><strong>Pull Requests:</strong> <code>repo:&lt;org&gt;@&lt;org_id&gt;/&lt;repo&gt;@&lt;repo_id&gt;:pull_request</code> (para validación y <code>terraform plan</code>).</li>
+                  <li><strong>Rama Principal:</strong> <code>repo:&lt;org&gt;@&lt;org_id&gt;/&lt;repo&gt;@&lt;repo_id&gt;:ref:refs/heads/main</code> (sincronización tras merge).</li>
+                  <li><strong>Producción:</strong> <code>repo:&lt;org&gt;@&lt;org_id&gt;/&lt;repo&gt;@&lt;repo_id&gt;:environment:production</code> (para ejecución controlada de <code>terraform apply</code>).</li>
+                </ol>
+              </li>
+            </ul>
+
+            <h3>📌 ADR 30: Azure PostgreSQL Flexible Server en Región Habilitada (centralus)</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Aprovisionar <strong>Azure Database for PostgreSQL Flexible Server</strong> (<code>psql-pleyades-dev-01</code>) en <code>centralus</code> con SKU Burstable <code>Standard_B1ms</code>, TLS obligatorio (<code>require_secure_transport = on</code>) y regla de firewall <code>allow-azure-internal</code> (<code>0.0.0.0</code> - <code>0.0.0.0</code>).</li>
+              <li><strong>Hallazgo de Cuota Regional:</strong> Azure restringe nuevas instancias Flexible Server en <code>eastus2</code> para suscripciones estándar/estudiante (código <code>ParameterOutOfRange: supportedServerVersions: []</code>). <code>centralus</code> soporta versiones 11 a 18 sin restricciones. Se asumió la regla 0.0.0.0 en desarrollo para eludir el coste de un VNet Peering transcontinental.</li>
+            </ul>
+
+            <h2>Runbook de Bootstrap: Pasos 1 al 5 (PowerShell)</h2>
+            <div class="terminal-box">
+              <pre><code># Paso 1: Definición de Variables Base
+$LOCATION         = "eastus2"
+$RG_STATE_NAME    = "rg-pleyades-tfstate"
+$STORAGE_ACC_NAME = "stpleyadesstate"
+$CONTAINER_NAME   = "tfstate"
+$IDENTITY_NAME    = "uami-github-pleyades-infra"
+$GITHUB_ORG       = "lopezzuluagaj3-collab"
+$GITHUB_ORG_ID    = "242297171"
+$GITHUB_REPO      = "pleyades-infrastructure"
+$GITHUB_REPO_ID   = "1448483627"
+
+# Paso 2: Creación del Backend Remoto de Terraform
+az group create --name $RG_STATE_NAME --location $LOCATION
+az storage account create --name $STORAGE_ACC_NAME --resource-group $RG_STATE_NAME --location $LOCATION --sku Standard_LRS --encryption-services blob --allow-blob-public-access false
+az storage container create --name $CONTAINER_NAME --account-name $STORAGE_ACC_NAME --auth-mode login
+
+# Paso 3: Aprovisionamiento de Managed Identity (UAMI)
+az identity create --name $IDENTITY_NAME --resource-group $RG_STATE_NAME --location $LOCATION
+$CLIENT_ID    = az identity show --name $IDENTITY_NAME --resource-group $RG_STATE_NAME --query "clientId" -o tsv
+$PRINCIPAL_ID = az identity show --name $IDENTITY_NAME --resource-group $RG_STATE_NAME --query "principalId" -o tsv
+$SUB_ID       = az account show --query "id" -o tsv
+$STORAGE_ID   = az storage account show --name $STORAGE_ACC_NAME --resource-group $RG_STATE_NAME --query "id" -o tsv
+
+# Paso 4: Creación de Credenciales Federadas (Federated Identity Credentials)
+az identity federated-credential create --name "gha-pull-requests" --identity-name $IDENTITY_NAME --resource-group $RG_STATE_NAME --issuer "https://token.actions.githubusercontent.com" --subject "repo:${GITHUB_ORG}@${GITHUB_ORG_ID}/${GITHUB_REPO}@${GITHUB_REPO_ID}:pull_request" --audiences "api://AzureADTokenExchange"
+az identity federated-credential create --name "gha-main-branch" --identity-name $IDENTITY_NAME --resource-group $RG_STATE_NAME --issuer "https://token.actions.githubusercontent.com" --subject "repo:${GITHUB_ORG}@${GITHUB_ORG_ID}/${GITHUB_REPO}@${GITHUB_REPO_ID}:ref:refs/heads/main" --audiences "api://AzureADTokenExchange"
+az identity federated-credential create --name "gha-prod-env" --identity-name $IDENTITY_NAME --resource-group $RG_STATE_NAME --issuer "https://token.actions.githubusercontent.com" --subject "repo:${GITHUB_ORG}@${GITHUB_ORG_ID}/${GITHUB_REPO}@${GITHUB_REPO_ID}:environment:production" --audiences "api://AzureADTokenExchange"
+
+# Paso 5: Asignación de Roles RBAC
+az role assignment create --assignee $PRINCIPAL_ID --role "Storage Blob Data Contributor" --scope $STORAGE_ID
+az role assignment create --assignee $PRINCIPAL_ID --role "Contributor" --scope "/subscriptions/$SUB_ID"</code></pre>
+            </div>
+          </article>
+
+          <!-- 2. AKS CILIUM EBPF -->
+          <article id="pleyades-art-aks-cilium-ebpf" class="doc-article">
+            <h1 class="doc-article__title">2. Cómputo AKS y Networking eBPF con Cilium</h1>
+            <p class="doc-article__lead">
+              Plano de datos de ultra-alto rendimiento en Kubernetes mediante Kube-Proxy Replacement (KPR), mapas BPF $\mathcal{O}(1)$ en el kernel de Linux y análisis de gobernanza de cuotas de cómputo en la nube.
+            </p>
+
+            <h2>Decisiones de Arquitectura del Dominio (ADRs)</h2>
+
+            <h3>📌 ADR 06: AKS con Cilium eBPF, Standard_D2s_v7 y CIDRs Desacoplados</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Aprovisionar <code>aks-pleyades-dev</code> utilizando:
+                <ol>
+                  <li><strong>Node Pool & SKU:</strong> <code>Standard_D2s_v7</code> (2 vCPUs, 8 GiB RAM) con autoescalado 1 a 2 nodos en dev, y <code>min_count = 2</code> en el perfil de producción multi-nodo (ADR 22).</li>
+                  <li><strong>Data Plane:</strong> <strong>Azure CNI Overlay</strong> con <strong>Cilium eBPF nativo</strong> y <strong>Kube-Proxy Replacement (KPR)</strong>.</li>
+                  <li><strong>Desacoplamiento de CIDRs:</strong> Asignación explícita de <code>service_cidr = "172.16.0.0/16"</code>, <code>dns_service_ip = "172.16.0.10"</code> y <code>pod_cidr = "10.244.0.0/16"</code>.</li>
+                  <li><strong>Seguridad Cloud-Native:</strong> OIDC Issuer y Azure Workload Identity activados.</li>
+                </ol>
+              </li>
+              <li><strong>Hallazgos Críticos:</strong>
+                <ul>
+                  <li><strong>Cuota Regional:</strong> Límite estricto de 4 vCPUs regionales en <code>eastus2</code>. La familia v7 (<code>Standard_D2s_v7</code>) cuenta con cuota aprobada y disponibilidad en zonas.</li>
+                  <li><strong>Colisión de Red (ServiceCidrOverlapExistingSubnetsCidr):</strong> Azure asigna <code>10.0.0.0/16</code> por defecto a Services en Overlay. Al residir la VNet en <code>10.0.0.0/16</code> y la subred de AKS en <code>10.0.1.0/24</code>, se producía solapamiento; el desacoplamiento a <code>172.16.0.0/16</code> garantiza aislamiento total.</li>
+                  <li><strong>Tensión de Cuota vs. PDB (minAvailable: 2) y Upgrades:</strong> Con cuota de 4 vCPUs (2 nodos), un upgrade con <code>maxSurge: 1</code> falla por <code>QuotaExceeded</code> (intenta 3er nodo transitorio de 2 vCPUs alcanzando 6 vCPUs). La estrategia in-place (<code>maxSurge: 0</code>) <strong>solo es viable con 2 nodos activos (<code>min_count = 2</code>)</strong>; en clúster de 1 solo nodo generaría un deadlock insalvable al no poder drenar pods respetando el PDB.</li>
+                </ul>
+              </li>
+            </ul>
+
+            <h2>Data Plane eBPF vs. iptables Tradicional</h2>
+            <div style="overflow-x:auto;">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Característica</th>
+                    <th>Networking Tradicional (iptables)</th>
+                    <th>Pléyades (Cilium eBPF Native)</th>
+                    <th>Beneficio Operacional</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>Complejidad</strong></td><td>$\mathcal{O}(N)$ (búsqueda secuencial)</td><td>$\mathcal{O}(1)$ (hash table BPF en kernel)</td><td>Latencia sub-milisegundo constante sin importar cantidad de Services.</td></tr>
+                  <tr><td><strong>Consumo CPU</strong></td><td>Alto en recargas continuas de reglas</td><td>Mínimo (bytecode JIT nativo)</td><td>Ahorro de ciclos de CPU para las cargas de negocio.</td></tr>
+                  <tr><td><strong>Visibilidad</strong></td><td>Básica (logs conntrack)</td><td>Profunda (Hubble L3/L4/L7 Flow Monitor)</td><td>Trazabilidad visual de flujos de red en tiempo real.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- 3. ARGOCD & CROSSPLANE -->
+          <article id="pleyades-art-argocd-crossplane" class="doc-article">
+            <h1 class="doc-article__title">1. GitOps con ArgoCD y Plataforma de Autoservicio con Crossplane</h1>
+            <p class="doc-article__lead">
+              Gobernanza declarativa pull-based con ArgoCD, Internal Developer Platform (IDP) con Crossplane, Workload Identity (OIDC), promoción automatizada cross-repositorio y gestión de secretos en AKS.
+            </p>
+
+            <h2>Decisiones de Arquitectura del Dominio (ADRs)</h2>
+
+            <h3>📌 ADR 05: Pipeline CI/CD Desacoplado por Jobs Concurrente en GitHub Actions</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Separar el flujo en jobs independientes (<code>validate-fmt</code>, <code>tflint</code>, <code>security-checkov</code>, <code>infracost</code>, <code>terraform-plan</code>, <code>apply</code>). Permite paralelismo masivo, feedback rápido en PRs y visibilidad granular de compuertas.</li>
+            </ul>
+
+            <h3>📌 ADR 07: Bootstrap Automatizado de ArgoCD mediante Terraform Helm Provider</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Desplegar ArgoCD de forma automatizada e idempotente desde Terraform con <code>helm_release.argocd</code> en namespace <code>argocd</code>. Configurado en <strong>Single-Replica</strong> (~500 MB RAM) desactivando Redis HA para maximizar el espacio libre en los nodos de trabajo.</li>
+            </ul>
+
+            <h3>📌 ADR 08: Compuertas de Seguridad DevSecOps para Repositorio GitOps</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Pipeline de CI en <code>pleyades-gitops</code> con 4 validaciones paralelas: <code>yamllint</code>, <code>gitleaks</code>, <code>kubeconform</code> (esquemas OpenAPI de K8s y CRDs) y <code>trivy config</code> (auditoría CIS Benchmark). Al ser GitOps puro con auto-sync, el CI en PR es la única compuerta de seguridad antes de producción.</li>
+            </ul>
+
+            <h3>📌 ADR 09: Crossplane Azure Storage Provider con Workload Identity (OIDC) y Sync Waves</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Paquetes modulares por servicio (<code>provider-azure-storage</code> v2.8.4, ~300 MB RAM frente a 1.5–2 GB del paquete monolítico). Autenticación sin secretos estáticos vía Azure Workload Identity (OIDC) con <code>uami-crossplane-pleyades</code>. Orquestación con <strong>Sync Waves</strong> de ArgoCD: Wave 0 para Providers y Wave 1 para ProviderConfig.</li>
+            </ul>
+
+            <h3>📌 ADR 29: Pipeline de Promoción Automatizada Cross-Repository y Entrega Continua GitOps</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Desacoplamiento estricto de repositorios. Al integrar a <code>main</code> en <code>pleyades-app</code>, se publica imagen inmutable con commit SHA en GHCR, y el workflow clona <code>pleyades-gitops</code>, actualiza <code>apps/app/deployment.yaml</code> y abre automáticamente un Pull Request de promoción mediante Personal Access Token (PAT).</li>
+            </ul>
+
+            <h3>📌 ADR 32: Orquestación Declarativa de PostgreSQL Flexible Server con Crossplane</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Despliegue de <code>provider-azure-dbforpostgresql</code> v2.8.4 con credencial federada <code>fic-crossplane-dbforpostgresql</code>. Permite aprovisionar instancias <code>FlexibleServer</code> de Azure directamente como objetos nativos de Kubernetes sin intervención manual.</li>
+            </ul>
+
+            <h2>Inventario Completo de Secrets en AKS (Paso 7 de Bootstrap)</h2>
+            <div style="overflow-x:auto;">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Namespace</th>
+                    <th>Nombre del Secret</th>
+                    <th>Tipo / Gestión</th>
+                    <th>Propósito</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>pleyades-app</code></td><td><code>pleyades-app-secret</code></td><td>Opaque (ArgoCD <code>ignoreDifferences</code>)</td><td>Credenciales de conexión a Azure PostgreSQL (<code>DB_USER</code>, <code>DB_PASSWORD</code>) y clave simétrica JWT.</td></tr>
+                  <tr><td><code>database</code></td><td><code>postgres-secret</code></td><td>Opaque (GitOps declarativo)</td><td>Credenciales BD in-cluster de desarrollo. StatefulSet escalado a 0 réplicas en AKS tras migrar a Azure Flexible Server.</td></tr>
+                  <tr><td><code>crossplane-system</code></td><td><em>Sin secretos estáticos</em></td><td><strong>Workload Identity (OIDC)</strong></td><td>Autenticación OIDC federada proyectada (<code>fic-crossplane-storage</code> y <code>fic-crossplane-dbforpostgresql</code>).</td></tr>
+                  <tr><td><code>crossplane-system</code></td><td><code>psql-pleyades-dev-02-conn</code></td><td>Opaque (Crossplane auto)</td><td>Credenciales autogeneradas por Crossplane al provisionar servidores secundarios (<code>writeConnectionSecretToRef</code>).</td></tr>
+                  <tr><td><code>argocd</code></td><td><code>argocd-initial-admin-secret</code></td><td>Opaque (Helm auto)</td><td>Contraseña inicial de administrador de ArgoCD.</td></tr>
+                  <tr><td><code>monitoring</code></td><td><code>monitoring-grafana</code></td><td>Opaque (Helm)</td><td>Credenciales administrativas de Grafana (<code>admin</code> / <code>prom-operator</code>).</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- 4. SRE & OBSERVABILIDAD -->
+          <article id="pleyades-art-sre-observabilidad" class="doc-article">
+            <h1 class="doc-article__title">2. Ingeniería de Confiabilidad de Sitios (SRE) y Observabilidad</h1>
+            <p class="doc-article__lead">
+              Monitoreo determinista de Golden Signals con Prometheus/Grafana, mitigación de riesgos de exposición perimetral, suite completa de pruebas k6 y Jobs nativos in-cluster.
+            </p>
+
+            <h2>Decisiones de Arquitectura del Dominio (ADRs)</h2>
+
+            <h3>📌 ADR 11: Stack SRE y Observabilidad con kube-prometheus-stack y Server-Side Apply</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Desplegar <code>kube-prometheus-stack</code> v68.4.4 bajo el patrón <strong>Cerebro Central vs Sensores Distribuidos</strong>:
+                <ol>
+                  <li><code>node-exporter</code> como DaemonSet obligatorio en cada nuevo nodo aprovisionado (~15 MiB RAM).</li>
+                  <li>Prometheus con Service Discovery centralizado a través de Cilium eBPF, persistencia Azure Disk (5 GiB) y retención de 12 horas (~600–750 MiB RAM total).</li>
+                  <li><strong>Server-Side Apply:</strong> Habilitado en ArgoCD para eludir el límite de 262 KB de la anotación <code>last-applied-configuration</code> en los CRDs de Prometheus Operator.</li>
+                  <li><strong>Mitigación terminatingReplicas (K8s 1.31+):</strong> Se declaró <code>spec.ignoreDifferences</code> en ArgoCD para ignorar el puntero JSON de <code>terminatingReplicas</code> y evitar el error <code>ComparisonError</code>.</li>
+                </ol>
+              </li>
+            </ul>
+
+            <h3>📌 ADR 20: Observabilidad con Prometheus y Middleware Desacoplado</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Decorador HTTP transparente que intercepta códigos de estado y expone métricas en <code>GET /metrics</code> sin contaminar la capa de dominio:
+                <ul>
+                  <li><code>http_requests_in_flight</code>: Concurrencia activa (detección temprana de saturación).</li>
+                  <li><code>http_request_duration_seconds</code>: Histograma de latencias para percentiles críticos (p50, p95, p99).</li>
+                  <li><code>http_requests_total</code>: Contador por verbo, ruta y código de respuesta HTTP.</li>
+                </ul>
+              </li>
+            </ul>
+
+            <h3>📌 ADR 22: Suite Modular de Pruebas de Rendimiento k6 y Modelo de Capacidad vs. SLOs</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Cuatro escenarios de prueba desacoplados (Load, Stress, Soak, Spike) con ejecución in-cluster mediante un Kubernetes Job (<code>apps/app/k6-load-test-job.yaml</code>) contra el ClusterIP interno, aprovechando el balanceo eBPF de Cilium y eliminando el cuello de botella del túnel SPDY de <code>kubectl port-forward</code>.</li>
+              <li><strong>SLOs Certificados por Ley de Little:</strong>
+                <ul>
+                  <li><strong>1 Solo Nodo (~25 req/s):</strong> $R = \frac{50}{25} - 0.1 = \mathbf{1.90\text{ s}}$ tiempo medio $\implies$ SLO formal: $p95 &lt; 2500\text{ ms}$.</li>
+                  <li><strong>Producción Multi-Nodo (2 Nodos con <code>min_count = 2</code>, ~43 req/s):</strong> $R = \frac{50}{43} - 0.1 = \mathbf{1.06\text{ s}}$ tiempo medio $\implies$ SLO cumplido: <strong>$p95 &lt; 1500\text{ ms}$</strong> y <strong>$p99 &lt; 2000\text{ ms}$</strong>.</li>
+                  <li><strong>Endpoints I/O Puro:</strong> SLO $p95 &lt; 50\text{ ms}$.</li>
+                </ul>
+              </li>
+            </ul>
+
+            <h3>📌 ADR 35/36: Deshabilitación de Ingress HTTP y Aislamiento por Port-Forwarding</h3>
+            <ul>
+              <li><strong>Estado:</strong> ADR 35 reemplazado por ADR 36 (Aceptado e Implementado).</li>
+              <li><strong>Decisión:</strong> Por principio de Defensa en Profundidad y Secure-by-Default (CWE-319), se vaciaron declarativamente las rutas HTTP del Ingress Controller (<code>resources: []</code>). El acceso a consolas administrativas (ArgoCD en <code>localhost:8081</code>, Grafana en <code>localhost:3000</code>) y pruebas de API se restringe a túneles cifrados <code>kubectl port-forward</code>, proyectando en roadmap la terminación TLS obligatoria con <code>cert-manager</code> y Let's Encrypt.</li>
+            </ul>
+
+            <h2>Ejecución k6 In-Cluster en AKS (Paso 10 de Bootstrap)</h2>
+            <div class="terminal-box">
+              <pre><code># 1. Crear ConfigMap con scripts k6 en AKS:
+kubectl create configmap k6-test-scripts --from-file=k6/ -n pleyades-app --dry-run=client -o yaml | kubectl apply -f -
+
+# 2. Desplegar Job k6 in-cluster (tráfico balanceado por Cilium eBPF):
+kubectl apply -f apps/app/k6-load-test-job.yaml
+
+# 3. Monitorear logs y autoescalado HPA en paralelo:
+kubectl logs -f job/k6-load-test -n pleyades-app
+kubectl get hpa pleyades-app-hpa -n pleyades-app -w</code></pre>
+            </div>
+          </article>
+
+          <!-- 5. MICROSERVICIO GO 1.24 -->
+          <article id="pleyades-art-arquitectura-hexagonal-go" class="doc-article">
+            <h1 class="doc-article__title">1. Arquitectura Hexagonal y Microservicio Core en Go 1.24</h1>
+            <p class="doc-article__lead">
+              Arquitectura Limpia Hexagonal (Domain, Ports, Adapters), biblioteca estándar `net/http` de Go 1.24, pipeline de middlewares transversales, criptografía segura, mitigación de timing attacks y compuertas DevSecOps.
+            </p>
+
+            <h2>Decisiones de Arquitectura del Dominio (ADRs)</h2>
+
+            <h3>📌 ADR 01: Trunk-Based Development y Staging Granular (Anti-`git add .`)</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Ramas de corta duración integradas a <code>main</code> vía squash PRs. Formato estricto: <code>&lt;rama&gt; -&gt; &lt;accion&gt;: &lt;explicacion&gt;</code>. Prohibido el uso de <code>git add .</code>, forzando commits atómicos por componente.</li>
+            </ul>
+
+            <h3>📌 ADR 12: DevSecOps Quality & Security Gates en Microservicio Go</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> 7 compuertas en CI: detección de secretos (<code>gitleaks</code>), SAST (<code>golangci-lint</code> con <code>gosec</code>), pruebas unitarias (<code>go test</code>), SCA (<code>govulncheck</code> + <code>trivy fs</code>), seguridad de contenedores (<code>trivy image</code>), DAST dinámico (<code>OWASP ZAP API Scan</code>) y SonarCloud Quality Gate.</li>
+            </ul>
+
+            <h3>📌 ADR 13: Arquitectura Limpia Hexagonal (Ports & Adapters)</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Cero frameworks web pesados; uso exclusivo de <code>net/http</code> estándar de Go. Estructura desacoplada:
+                <ul>
+                  <li><code>internal/domain</code>: Entidad <code>User</code>, invariantes de negocio puras y errores centinela.</li>
+                  <li><code>internal/ports</code>: Contratos abstractos (<code>UserRepository</code>, <code>PasswordHasher</code>, <code>TokenService</code>).</li>
+                  <li><code>internal/usecase</code>: Orquestación pura (<code>RegisterUserUseCase</code>, <code>LoginUserUseCase</code>).</li>
+                  <li><code>internal/adapters</code>: <code>http/</code> (handlers y DTOs), <code>postgres/</code> (<code>pgx/v5</code>), <code>crypto/</code> (Bcrypt y JWT).</li>
+                  <li><code>cmd/pleyades-app/main.go</code>: Composition Root exclusivo.</li>
+                </ul>
+              </li>
+            </ul>
+
+            <h3>📌 ADR 15: Configuración Cloud-Native "Fail-Fast" (12-Factor App)</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Tolerancia dual local/cloud. En producción, las variables sensibles se inyectan vía ConfigMap/Secret de Kubernetes. Si falta cualquier variable requerida (<code>DB_PASSWORD</code>, <code>JWT_SECRET</code>), el proceso aborta inmediatamente en el arranque (*Fail-Fast*). Cero contraseñas por defecto en código fuente.</li>
+            </ul>
+
+            <h3>📌 ADR 16: Principio de Responsabilidad Única (SRP) en Handlers HTTP</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Segregación estricta de DTOs (<code>RegisterUserRequest</code>, <code>UserResponse</code>). La contraseña jamás se transmite en las respuestas. Mapeo determinista de errores centinela a códigos HTTP (201, 400, 401, 403, 409, 500).</li>
+            </ul>
+
+            <h3>📌 ADR 17: Criptografía Bcrypt y Mitigación de Timing Attacks (SOLID)</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Hashing Bcrypt con costo 10 (~70 ms de CPU por operación).
+                <ul>
+                  <li><strong>Mitigación Activa:</strong> El puerto expone <code>CompareDummy(password)</code> con secreto efímero en memoria generado vía CSPRNG (<code>crypto/rand</code>), garantizando que usuarios inexistentes consuman exactamente ~70 ms de CPU, neutralizando la inferencia estadística de usuarios válidos (OWASP A07:2021) sin secretos estáticos en código (SonarCloud <code>go:S6437</code>).</li>
+                </ul>
+              </li>
+            </ul>
+
+            <h3>📌 ADR 18: Resolución Estricta de Alertas SAST en DDL Dinámico</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Cero <code>#nosec</code>. Como PostgreSQL no admite parámetros posicionales (<code>$1</code>) para sentencias DDL (<code>CREATE DATABASE</code>, <code>REVOKE CONNECT</code>), se autoriza <code>// NOSONAR</code> para <code>go:S2077</code> sustentada en **4 controles compensatorios**:
+                <ol>
+                  <li>Validación por lista blanca regex: slug acotado estrictamente de 3 a 30 caracteres.</li>
+                  <li>Prevención de truncamiento (<code>NAMEDATALEN = 64</code>): slug de máx 30 caracteres impide alcanzar los 63 bytes del motor, eliminando colisiones.</li>
+                  <li>Delimitación con comillas dobles: <code>"CREATE DATABASE \"%s\""</code> forzando identificador literal.</li>
+                  <li>Comentario de auditoría auditable.</li>
+                </ol>
+              </li>
+            </ul>
+
+            <h3>📌 ADR 19: Graceful Shutdown en Kubernetes</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Intercepción de <code>SIGTERM</code> con ventana de gracia defensiva de 10 segundos: drena conexiones en vuelo, finaliza transacciones en PostgreSQL y apaga el proceso ordenadamente sin respuestas 502/504 (*Zero-Downtime Deployments*).</li>
+            </ul>
+
+            <h3>📌 ADR 23: Pipeline de Middlewares Transversales</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Composición modular <code>Chain(h, middlewares...)</code>: métricas Prometheus, autenticación JWT con <strong>Sliding Session Renewal</strong> (cabecera <code>X-Renewed-Token</code>), Token Bucket Rate Limiting (20 req/s, burst 50) e Idempotencia (<code>Idempotency-Key</code>).</li>
+            </ul>
+
+            <h3>📌 ADR 27: Documentación Swagger UI Embebida</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Generación declarativa con <code>swaggo/swag</code> en <code>/swagger/index.html</code> con botón interactivo **Authorize** para probar endpoints protegidos con BearerAuth JWT e Idempotencia.</li>
+            </ul>
+
+            <h3>📌 ADR 28: Contenerización Multi-Stage Distroless (10.3 MB)</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Runtime sobre <code>gcr.io/distroless/static-debian12:nonroot</code> (UID 65532). Cero shells, cero package managers, imagen final de <strong>10.3 MB</strong> en GHCR con <strong>0 vulnerabilidades High/Critical</strong> en escaneos Trivy.</li>
+            </ul>
+
+            <h2>Verificación Local de API y Pruebas Unitarias (Pasos 8 y 9)</h2>
+            <div class="terminal-box">
+              <pre><code># Iniciar microservicio local y probar endpoints REST:
+cd D:\proyectos\pleyades\pleyades-app
+go run ./cmd/pleyades-app
+
+# Ejecutar suite de pruebas unitarias puras y reporte de cobertura:
+go test -v "-coverprofile=coverage.out" ./...
+go tool cover "-func=coverage.out"</code></pre>
+            </div>
+          </article>
+
+          <!-- 6. MULTI-TENANCY & AISLAMIENTO -->
+          <article id="pleyades-art-multi-tenancy-sharding" class="doc-article">
+            <h1 class="doc-article__title">2. Multi-Tenancy Estricto (Database-per-Tenant) y Sharding Dinámico</h1>
+            <p class="doc-article__lead">
+              Aislamiento físico y lógico Database-per-Tenant, erradicación de fuga cruzada con revocación de privilegios públicos, dimensión matemática del pool de conexiones frente a HPA y rotación de credenciales Show-Once.
+            </p>
+
+            <h2>Decisiones de Arquitectura del Dominio (ADRs)</h2>
+
+            <h3>📌 ADR 10: In-Cluster PostgreSQL StatefulSet vs Retiro en AKS</h3>
+            <ul>
+              <li><strong>Estado:</strong> Retirado en AKS (reemplazado por ADR 30); mantenido solo para dev local.</li>
+              <li><strong>Decisión:</strong> StatefulSet con disco administrado <code>managed-csi</code> (5 GiB) y <code>PGDATA=/pgdata</code> para evitar fallo de <code>lost+found</code> en ext4. En producción en AKS, fue formalmente escalado a 0 réplicas tras la provisión de Azure PostgreSQL Flexible Server para prevenir split-brain.</li>
+            </ul>
+
+            <h3>📌 ADR 14: Dimensión del Pool de Conexiones frente a HPA y Cuotas de Tenants (Fuente de Verdad)</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Parametrizar en Go (<code>pgx/v5</code>):
+                <ul>
+                  <li><code>DB_MAX_OPEN_CONNS = 3</code> conexiones por pod (decisión final vigente que prevalece sobre el valor histórico de 4).</li>
+                  <li><code>DB_MAX_IDLE_CONNS = 3</code> conexiones por pod.</li>
+                  <li><code>CONNECTION LIMIT 2</code> por cada tenant en PostgreSQL (<code>ALTER ROLE "usr_&lt;slug&gt;" CONNECTION LIMIT 2;</code>).</li>
+                </ul>
+              </li>
+              <li><strong>Aritmética Defensiva del Servidor B1ms (35 conexiones utilizables):</strong>
+                <ul>
+                  <li>Tope de 7 tenants a 2 conns = <strong>14 conexiones reservadas</strong>.</li>
+                  <li>Presupuesto para la app: $35 - 14 = \mathbf{21\text{ conexiones}}$.</li>
+                  <li><strong>Nominal (3 pods):</strong> $3 \times 3 = 9$ conns ($9 + 14 = 23 \implies \mathbf{12\text{ libres / 34\% margen}}$).</li>
+                  <li><strong>Pico HPA (5 pods):</strong> $5 \times 3 = 15$ conns ($15 + 14 = 29 \implies \mathbf{6\text{ libres / 17\% margen}}$).</li>
+                  <li><strong>RollingUpdate en pico (6 pods transitorios):</strong> $6 \times 3 = 18$ conns ($18 + 14 = \mathbf{32\text{ conns}} \implies \mathbf{3\text{ libres / 8.5\% permanente}}$). Imposibilita el desbordamiento <code>too many clients already</code>.</li>
+                </ul>
+              </li>
+            </ul>
+
+            <h3>📌 ADR 25: Aislamiento Lógico (Database-per-Tenant) y Cota de Longitud de Slug</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Base de datos dedicada (<code>tenant_&lt;slug&gt;</code>) y usuario exclusivo (<code>usr_&lt;slug&gt;</code>).
+                <ul>
+                  <li><strong>Aislamiento Estricto:</strong> Ejecución obligatoria de <code>REVOKE CONNECT ON DATABASE "tenant_&lt;slug&gt;" FROM PUBLIC;</code> antes de asignar privilegios al usuario. Si un tenant intenta conectar a otro, PostgreSQL aborta con <code>FATAL: permission denied for database</code>.</li>
+                  <li><strong>Cota contra Truncamiento (NAMEDATALEN = 64):</strong> Slug acotado de 3 a 30 caracteres (regex <code>^[a-z][a-z0-9-]{1,28}[a-z0-9]$</code>), garantizando que el nombre generado (máx 37 caracteres) quede lejos del límite de 63 bytes del motor, erradicando colisiones.</li>
+                </ul>
+              </li>
+            </ul>
+
+            <h3>📌 ADR 26: Patrón Show-Once de Credenciales Efímeras y Endpoint de Rotación</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> La contraseña de la BD del tenant se genera con CSPRNG (16 bytes hex), se devuelve en el JSON HTTP <code>201 Created</code> una sola vez y nunca se persiste en la BD de metadatos (Zero Trust). Si se extravía, el propietario puede regenerarla en <code>POST /api/v1/tenants/{id}/reset-password</code> bajo autorización JWT.</li>
+            </ul>
+
+            <h3>📌 ADR 31: Sharded Database Server Pools (Bin-Packing de 5 a 7 Tenants)</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Catálogo centralizado en tabla <code>database_pools</code>. Algoritmo de bin-packing que asigna tenants al pool activo con menor carga hasta alcanzar 7 tenants, marcando el pool como <code>FULL</code> y activando la provisión de nuevas instancias.</li>
+            </ul>
+
+            <h2>Protocolo de Verificación de Aislamiento de Inquilinos</h2>
+            <div class="terminal-box">
+              <pre><code># Intentar conectar como usr_acmecloud a tenant_orioncorp en PostgreSQL:
+psql "host=localhost port=5432 user=usr_acmecloud dbname=tenant_orioncorp"
+
+# Salida esperada del motor (Rechazo determinista por REVOKE CONNECT FROM PUBLIC):
+# psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed:
+# FATAL: permission denied for database "tenant_orioncorp"
+# DETAIL: User does not have CONNECT privilege.</code></pre>
+            </div>
+          </article>
+
+          <!-- 7. WARM POOL & AUTO-ESCALADO -->
+          <article id="pleyades-art-warm-pool-autoscaling" class="doc-article">
+            <h1 class="doc-article__title">3. Aprovisionamiento Just-in-Time y Warm Pool Preventivo</h1>
+            <p class="doc-article__lead">
+              Auto-escalado horizontal de servidores relacionales gestionados, amortiguamiento preventivo de los tiempos de encendido en Azure (~6 a 14 min), determinismo en Kubernetes API y manejo idempotente de concurrencia.
+            </p>
+
+            <h2>Decisiones de Arquitectura del Dominio (ADRs)</h2>
+
+            <h3>📌 ADR 33: Warm Pool Provisioning con Kubernetes REST Trigger y RBAC Mínimo</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión:</strong> Umbral preventivo <code>PoolScaleThresholdTenants = 5</code> (de 7 slots). Al registrar el 5.º inquilino, el provisionador shardeado evalúa si existe otro pool activo; si no existe, invoca <code>K8sPoolScaleTrigger</code> con cliente HTTPS nativo en Go sobre <code>net/http</code> proyectando credenciales del ServiceAccount, comunicándose directamente con la API REST de Kubernetes sin librerías pesadas como <code>client-go</code>.</li>
+              <li><strong>Seguridad RBAC Segregada:</strong> ClusterRole exclusivo para CRDs de Crossplane (<code>flexibleservers.dbforpostgresql.azure.upbound.io</code>) y Role específico en <code>crossplane-system</code> para lectura de connection secrets, impidiendo el acceso a secretos administrativos.</li>
+              <li><strong>Tope de Costes (Cost Cap):</strong> Límite máximo de pools activos (<code>MaxAllowedPools = 3</code>) para mitigar riesgos de denegación de servicio económico (EDoS).</li>
+            </ul>
+
+            <h3>📌 ADR 34: Verificación Operacional E2E con Crossplane</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado y Verificado Operacionalmente.</li>
+              <li><strong>Decisión & Evidencia:</strong> Creación secuencial de inquilinos (<code>acmecloud</code>, <code>orioncorp</code>, <code>solaris</code>, <code>andromeda</code>, <code>nebula</code>). Al registrar el 5.º, el provisionador disparó <code>psql-pleyades-dev-02</code> vía API de Kubernetes, reconciliado por Crossplane en Azure <code>Central US</code>.</li>
+            </ul>
+
+            <h2>Mecánica del Warm Pool y Amortiguamiento</h2>
+            <div class="terminal-box">
+              <pre><code>Tenant 1..4 (Inmediato)   ──► Asignados a Pool 1 (Server 1)
+Tenant 5     (Inmediato)   ──► Asignado a Pool 1 + Dispara CRD psql-pleyades-dev-02 (Azure ~6-14 min)
+Tenant 6 & 7 (Inmediato)   ──► Absorción en los 2 slots restantes de Pool 1 (Cero espera de usuario)
+Tenant 8 (Si Server 2 OK)  ──► Asignado a Pool 2 (Server 2) de forma transparente
+Tenant 8 (Si Server 2 Pen) ──► HTTP 503 / 429 con Retry-After: 120 (Protección Fail-Safe)</code></pre>
+            </div>
+
+            <h2>Garantías de Idempotencia ante Concurrencia</h2>
+            <p>Si dos inquilinos cruzan el umbral en milisegundos, ambas peticiones intentan crear el CRD determinista (<code>psql-pleyades-dev-02</code>). La primera responde <code>201 Created</code>; la segunda recibe <code>409 Conflict</code>. El adaptador captura el 409 como un éxito idempotente, garantizando que jamás se creen servidores duplicados en Azure.</p>
+          </article>
+
+          <!-- 8. CAPACIDAD & LEY DE LITTLE -->
+          <article id="pleyades-art-capacidad-sre-little" class="doc-article">
+            <h1 class="doc-article__title">4. Modelo Físico de Capacidad y Ley de Little</h1>
+            <p class="doc-article__lead">
+              Dimensionamiento de recursos en Kubernetes (CFS Quotas), mitigación de CPU throttling, modelación matemática SRE mediante la Ley Interactiva de Little en sistemas cerrados y armonización con HPA y PDB.
+            </p>
+
+            <h2>Decisiones de Arquitectura del Dominio (ADRs)</h2>
+
+            <h3>📌 ADR 37: Declaración Formal de HPA, PDB y Estrategia RollingUpdate</h3>
+            <ul>
+              <li><strong>Estado:</strong> Aceptado e Implementado.</li>
+              <li><strong>Decisión Técnica:</strong>
+                <ol>
+                  <li><strong>HPA (3 a 5 réplicas):</strong> Métrica de utilización media al 70% sobre <code>requests.cpu: 100m</code>. Al consumir Bcrypt ~70ms continuos, una sola petición por segundo satura el umbral de 70m y activa el autoescalado.</li>
+                  <li><strong>Límites y Mitigación de CFS Throttling:</strong> Fijados en <code>limits.cpu: 800m</code> (0.8 vCPU por pod, PR #34). Con 5 pods en 2 nodos <code>Standard_D2s_v7</code> (<code>min_count = 2</code>), descontando 0.4–0.6 vCPUs de pods de plataforma y el tope CFS de 1.6 vCPUs en el nodo con 2 pods, la app aprovecha $\approx \mathbf{3.0\text{ a }3.2\text{ vCPUs útiles}}$ ($\approx \mathbf{43\text{ a }46\text{ hashes/s}}$).</li>
+                  <li><strong>PodDisruptionBudget (minAvailable: 2):</strong> Garantiza que durante drenados o actualizaciones de nodos el servicio jamás opere con menos de 2 réplicas saludables.</li>
+                  <li><strong>RollingUpdate:</strong> <code>maxSurge: 1</code> y <code>maxUnavailable: 0</code>. En escala máxima de 5 pods con surge transitorio de 6 pods ($6 \times 3 = 18$ conns) sumado a los 7 tenants ($14$ conns), el consumo total es de $\mathbf{32\text{ conns}}$ sobre 35 utilizables, garantizando **3 slots libres permanentes (8.5% de margen)** en el Flexible Server B1ms.</li>
+                </ol>
+              </li>
+            </ul>
+
+            <h2>Modelación Matemática: Ley de Little en Sistemas Cerrados</h2>
+            <p>En un sistema cerrado con $N$ Virtual Users, think-time $Z = 0.1\text{ s}$, y throughput $\lambda$, el tiempo de respuesta medio total del sistema $R$ se despeja como:</p>
+            <div class="terminal-box">
+              <pre><code>$$R = \frac{N}{\lambda} - Z$$
+
+(Nota: R ya incluye tanto la espera en cola como el tiempo de servicio de Bcrypt y BD/red)
+
+[1 NODO: Standard_D2s_v7, ~25 req/s]
+R = (50 / 25) - 0.1 = 2.0 - 0.1 = 1.90s tiempo total medio  ──► SLO: p95 &lt; 2500 ms
+
+[2 NODOS: min_count = 2, ~43 req/s útiles]
+R = (50 / 43) - 0.1 = 1.16 - 0.1 = 1.06s tiempo total medio ──► SLO: p95 &lt; 1500 ms (p99 &lt; 2000 ms)</code></pre>
+            </div>
+
+            <h2>Matriz de Conciliación de Resiliencia</h2>
+            <div style="overflow-x:auto;">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Parámetro</th>
+                    <th>Configuración</th>
+                    <th>Impacto Arquitectónico</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>HPA</strong></td><td><code>min: 3</code>, <code>max: 5</code></td><td>Elasticidad horizontal ante picos CPU-bound de Bcrypt.</td></tr>
+                  <tr><td><strong>CPU Limits</strong></td><td><code>requests: 100m</code>, <code>limits: 800m</code></td><td>Elimina CFS throttling y libera 3.0–3.2 vCPUs útiles en 2 nodos.</td></tr>
+                  <tr><td><strong>PDB</strong></td><td><code>minAvailable: 2</code></td><td>Previene caídas en drenados de nodos (kubectl drain).</td></tr>
+                  <tr><td><strong>RollingUpdate</strong></td><td><code>maxSurge: 1</code>, <code>maxUnavailable: 0</code></td><td>Garantiza 3 slots libres de conexión a PostgreSQL en pico máximo.</td></tr>
+                  <tr><td><strong>Node Pool</strong></td><td><code>min_count: 2</code></td><td>Elimina cold-start de VMs (90-120s) y evita deadlock con PDB.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- 9. 37 ADRS -->
+          <article id="pleyades-art-adrs-resumen" class="doc-article">
+            <h1 class="doc-article__title">1. Bitácora de Decisiones de Arquitectura (ADRs 01 al 37)</h1>
+            <p class="doc-article__lead">
+              Registro formal e inmutable de 37 decisiones de arquitectura. Cada ADR está desarrollado íntegramente con justificación, trade-offs y comandos dentro de su capítulo temático correspondiente.
+            </p>
+
+            <div style="overflow-x:auto;">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>ADR</th>
+                    <th>Dominio</th>
+                    <th>Decisión Principal</th>
+                    <th>Capítulo Temático Detallado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>01</strong></td><td>Git Strategy</td><td>Trunk-Based Development & Anti-<code>git add .</code></td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>02</strong></td><td>IaC (Terraform)</td><td>Arquitectura Modular y Scaffolding Inicial</td><td><a href="#doc-pleyades/arquitectura-iac" data-pleyades-target="arquitectura-iac">Arquitectura IaC</a></td></tr>
+                  <tr><td><strong>03</strong></td><td>IaC (Terraform)</td><td>Backend Remoto en Azure Blob Storage (State Locking)</td><td><a href="#doc-pleyades/arquitectura-iac" data-pleyades-target="arquitectura-iac">Arquitectura IaC</a></td></tr>
+                  <tr><td><strong>04</strong></td><td>Seguridad Cloud</td><td>Zero Static Secrets (Azure OIDC & UAMI)</td><td><a href="#doc-pleyades/arquitectura-iac" data-pleyades-target="arquitectura-iac">Arquitectura IaC</a></td></tr>
+                  <tr><td><strong>05</strong></td><td>CI/CD</td><td>Pipeline Concurrente en GitHub Actions</td><td><a href="#doc-pleyades/argocd-crossplane" data-pleyades-target="argocd-crossplane">ArgoCD & Crossplane</a></td></tr>
+                  <tr><td><strong>06</strong></td><td>Cómputo (AKS)</td><td>AKS con Cilium eBPF, Standard_D2s_v7 y CIDR Overlay</td><td><a href="#doc-pleyades/aks-cilium-ebpf" data-pleyades-target="aks-cilium-ebpf">AKS & Cilium eBPF</a></td></tr>
+                  <tr><td><strong>07</strong></td><td>GitOps</td><td>Bootstrap ArgoCD vía Helm Provider (Single-Replica)</td><td><a href="#doc-pleyades/argocd-crossplane" data-pleyades-target="argocd-crossplane">ArgoCD & Crossplane</a></td></tr>
+                  <tr><td><strong>08</strong></td><td>DevSecOps</td><td>Compuertas de Calidad GitOps (yamllint, gitleaks, trivy)</td><td><a href="#doc-pleyades/argocd-crossplane" data-pleyades-target="argocd-crossplane">ArgoCD & Crossplane</a></td></tr>
+                  <tr><td><strong>09</strong></td><td>Control Plane</td><td>Crossplane Azure Storage Provider con Workload Identity</td><td><a href="#doc-pleyades/argocd-crossplane" data-pleyades-target="argocd-crossplane">ArgoCD & Crossplane</a></td></tr>
+                  <tr><td><strong>10</strong></td><td>Bases de Datos</td><td>PostgreSQL StatefulSet in-cluster (Retirado en AKS)</td><td><a href="#doc-pleyades/multi-tenancy-sharding" data-pleyades-target="multi-tenancy-sharding">Multi-Tenancy & Sharding</a></td></tr>
+                  <tr><td><strong>11</strong></td><td>SRE & Monitoreo</td><td>kube-prometheus-stack con Server-Side Apply</td><td><a href="#doc-pleyades/sre-observabilidad" data-pleyades-target="sre-observabilidad">SRE & Observabilidad</a></td></tr>
+                  <tr><td><strong>12</strong></td><td>DevSecOps</td><td>7 Compuertas de Calidad en Microservicio Go</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>13</strong></td><td>Backend Go</td><td>Arquitectura Limpia Hexagonal (Ports & Adapters) Go 1.24</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>14</strong></td><td>Bases de Datos</td><td>Dimensionamiento Pool DB_MAX_OPEN_CONNS=3 frente a HPA</td><td><a href="#doc-pleyades/multi-tenancy-sharding" data-pleyades-target="multi-tenancy-sharding">Multi-Tenancy & Sharding</a></td></tr>
+                  <tr><td><strong>15</strong></td><td>Cloud-Native</td><td>Configuración Fail-Fast (12-Factor App)</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>16</strong></td><td>Backend Go</td><td>Principio de Responsabilidad Única (SRP) en Handlers</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>17</strong></td><td>Seguridad</td><td>Hashing Bcrypt con CompareDummy CSPRNG</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>18</strong></td><td>DevSecOps</td><td>Resolución Estricta SAST (G304 y SonarCloud S2077)</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>19</strong></td><td>Kubernetes</td><td>Graceful Shutdown Cooperativo (SIGTERM, 10s)</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>20</strong></td><td>SRE</td><td>Observabilidad Prometheus con Middleware Desacoplado</td><td><a href="#doc-pleyades/sre-observabilidad" data-pleyades-target="sre-observabilidad">SRE & Observabilidad</a></td></tr>
+                  <tr><td><strong>21</strong></td><td>Testing</td><td>Pruebas Unitarias Aisladas y Mocks Basados en Closures</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>22</strong></td><td>SRE & Testing</td><td>Suite k6 y Modelo de Capacidad vs. SLOs (Ley de Little)</td><td><a href="#doc-pleyades/sre-observabilidad" data-pleyades-target="sre-observabilidad">SRE & Observabilidad</a></td></tr>
+                  <tr><td><strong>23</strong></td><td>Backend Go</td><td>Pipeline de Middlewares (Chain, Sliding Session, Rate Limit)</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>24</strong></td><td>Seguridad</td><td>Endpoint Login, Emisión de JWT y CompareDummy</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>25</strong></td><td>Multi-Tenancy</td><td>Aislamiento Database-per-Tenant y Slug de 30 chars</td><td><a href="#doc-pleyades/multi-tenancy-sharding" data-pleyades-target="multi-tenancy-sharding">Multi-Tenancy & Sharding</a></td></tr>
+                  <tr><td><strong>26</strong></td><td>Seguridad</td><td>Patrón Show-Once de Credenciales Efímeras</td><td><a href="#doc-pleyades/multi-tenancy-sharding" data-pleyades-target="multi-tenancy-sharding">Multi-Tenancy & Sharding</a></td></tr>
+                  <tr><td><strong>27</strong></td><td>Documentación</td><td>Swagger UI y Especificación OpenAPI 2.0</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>28</strong></td><td>Contenedores</td><td>Distroless Non-Root OCI (10.3 MB, UID 65532)</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>29</strong></td><td>GitOps</td><td>Promoción Automatizada Cross-Repo (ArgoCD)</td><td><a href="#doc-pleyades/argocd-crossplane" data-pleyades-target="argocd-crossplane">ArgoCD & Crossplane</a></td></tr>
+                  <tr><td><strong>30</strong></td><td>Cloud DB</td><td>Azure PostgreSQL Flexible Server en Central US</td><td><a href="#doc-pleyades/arquitectura-iac" data-pleyades-target="arquitectura-iac">Arquitectura IaC</a></td></tr>
+                  <tr><td><strong>31</strong></td><td>Multi-Tenancy</td><td>Sharded Database Server Pools (Bin-Packing 5-7 Tenants)</td><td><a href="#doc-pleyades/multi-tenancy-sharding" data-pleyades-target="multi-tenancy-sharding">Multi-Tenancy & Sharding</a></td></tr>
+                  <tr><td><strong>32</strong></td><td>Control Plane</td><td>Crossplane Azure DB for PostgreSQL Provider</td><td><a href="#doc-pleyades/argocd-crossplane" data-pleyades-target="argocd-crossplane">ArgoCD & Crossplane</a></td></tr>
+                  <tr><td><strong>33</strong></td><td>Auto-Scaling</td><td>Warm Pool Provisioning con K8s REST Trigger</td><td><a href="#doc-pleyades/warm-pool-autoscaling" data-pleyades-target="warm-pool-autoscaling">Warm Pool & Auto-escalado</a></td></tr>
+                  <tr><td><strong>34</strong></td><td>Plataforma</td><td>Verificación E2E de Auto-Escalado con Crossplane</td><td><a href="#doc-pleyades/warm-pool-autoscaling" data-pleyades-target="warm-pool-autoscaling">Warm Pool & Auto-escalado</a></td></tr>
+                  <tr><td><strong>35</strong></td><td>SRE & Ingress</td><td>Aprovisionamiento Ingress-NGINX (Reemplazado por ADR 36)</td><td><a href="#doc-pleyades/sre-observabilidad" data-pleyades-target="sre-observabilidad">SRE & Observabilidad</a></td></tr>
+                  <tr><td><strong>36</strong></td><td>Seguridad</td><td>Deshabilitación Ingress HTTP Plano y Port-Forwarding</td><td><a href="#doc-pleyades/sre-observabilidad" data-pleyades-target="sre-observabilidad">SRE & Observabilidad</a></td></tr>
+                  <tr><td><strong>37</strong></td><td>Auto-Scaling</td><td>Declaración Formal de HPA (3-5), PDB y RollingUpdate</td><td><a href="#doc-pleyades/capacidad-sre-little" data-pleyades-target="capacidad-sre-little">Capacidad & Ley de Little</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- 10. SEGURIDAD & DEUDA TÉCNICA -->
+          <article id="pleyades-art-seguridad-deuda-tecnica" class="doc-article">
+            <h1 class="doc-article__title">2. Matriz de Seguridad y Gestión de Deuda Técnica</h1>
+            <p class="doc-article__lead">
+              Registro auditado de hallazgos DevSecOps, capas de defensa en profundidad, compensaciones de arquitectura (trade-offs) y roadmap de hardening.
+            </p>
+
+            <h2>Capas de Defensa en Profundidad</h2>
+            <div class="terminal-box" style="margin-bottom:1.5rem;">
+              <pre><code>1. CÓDIGO (Go 1.24):
+   - Validaciones regex invariantes (slug 3-30 chars)
+   - Bcrypt Cost 10 + CompareDummy (Timing Attack)
+   - Mapeo puro DTOs, cero contraseñas en memoria
+2. CONTENEDOR (OCI Distroless):
+   - Multi-stage, UID 65532 (nonroot)
+   - Cero shell, cero package manager (10.3 MB)
+   - 0 vulnerabilidades High/Critical Trivy
+3. KUBERNETES & RED (AKS + Cilium eBPF):
+   - Ingress HTTP deshabilitado (Cero texto plano)
+   - Redirección eBPF O(1) con Kube-Proxy Replacement
+   - RBAC segregado (ClusterRole para CRDs, Role para Secrets)
+4. CLOUD IAM & GITOPS (Azure + Entra ID):
+   - Zero Static Secrets (Federated OIDC UAMI)
+   - Azure Blob Leases (State locking nativo)
+   - ArgoCD App-of-Apps con reconciliación declarativa</code></pre>
+            </div>
+
+            <h2>Tabla de Riesgos, Severidad y Estado de Remediación</h2>
+            <div style="overflow-x:auto;">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Dominio</th>
+                    <th>Hallazgo / Riesgo Técnico</th>
+                    <th>Severidad</th>
+                    <th>Estado</th>
+                    <th>Estrategia de Remediación</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>SEC-01</strong></td><td>App Security</td><td>Timing Attack en Login (/auth/login)</td><td>Alta</td><td>🟢 Remediado</td><td>CompareDummy en PasswordHasher con CSPRNG en memoria (70ms constantes).</td></tr>
+                  <tr><td><strong>SEC-02</strong></td><td>Base de Datos</td><td>Aislamiento de Conexión y Presupuesto Tenants</td><td>Alta</td><td>🟢 Remediado</td><td>REVOKE CONNECT FROM PUBLIC y CONNECTION LIMIT 2 por tenant.</td></tr>
+                  <tr><td><strong>SEC-03</strong></td><td>Perímetro</td><td>Consolas de Gestión por HTTP Plano</td><td>Crítica</td><td>🟢 Remediado</td><td>Rutas Ingress vaciadas declarativamente (resources: []). Port-forward seguro.</td></tr>
+                  <tr><td><strong>SEC-04</strong></td><td>Arquitectura</td><td>Caché de Idempotencia vs. Show-Once</td><td>Alta</td><td>🟡 Regla</td><td>Exclusión estricta de credenciales en almacenes compartidos (Redis/Valkey).</td></tr>
+                  <tr><td><strong>SEC-05</strong></td><td>Cloud IAM</td><td>Credencial Federada de PRs con Rol Contributor</td><td>Alta</td><td>🟡 Dev</td><td>PoLP para prod: segregar en uami-ci-plan (Reader) y uami-ci-apply (Contributor).</td></tr>
+                  <tr><td><strong>SEC-06</strong></td><td>Criptografía</td><td>API Expuesta en HTTP Plano sin TLS</td><td>Crítica</td><td>🟢 Remediado</td><td>Ingress HTTP deshabilitado; pruebas k6 in-cluster. Roadmap: cert-manager TLS.</td></tr>
+                  <tr><td><strong>SEC-07</strong></td><td>Arquitectura</td><td>Rate limit permisivo en login criptográfico</td><td>Alta</td><td>🔵 Roadmap</td><td>Rate limit por ruta (5 req/min) y contadores distribuidos en Redis con Lua.</td></tr>
+                  <tr><td><strong>SEC-08</strong></td><td>Observabilidad</td><td>/metrics y Swagger Expuestos sin Auth</td><td>Media</td><td>🟡 Mitigado</td><td>Acceso restringido a ServiceMonitor interno y puerto de gestión segregado.</td></tr>
+                  <tr><td><strong>SEC-09</strong></td><td>CI/CD</td><td>Token PAT Estático para Promoción Cross-Repo</td><td>Media</td><td>🟡 Dev</td><td>Fine-Grained PAT con alcance mínimo. Roadmap: migrar a GitHub App dedicada.</td></tr>
+                  <tr><td><strong>SEC-10</strong></td><td>Operaciones</td><td>Inyección de Secretos en Historial Terminal</td><td>Media</td><td>🟡 Mitigado</td><td>Protocolo de limpieza (Clear-History). Roadmap: External Secrets Operator + AKV.</td></tr>
+                  <tr><td><strong>SEC-11</strong></td><td>Monitoreo</td><td>Credenciales Bootstrap por Defecto en Grafana</td><td>Baja</td><td>🟡 Dev</td><td>Aislado de Ingress público (port-forward). En prod: rotación y SSO con Entra ID.</td></tr>
+                  <tr><td><strong>NET-01</strong></td><td>Red Cloud</td><td>Regla Firewall 0.0.0.0 en Azure PostgreSQL</td><td>Media</td><td>🟡 Dev</td><td>Aceptado temporalmente por cuota regional; forzado TLS (sslmode=require).</td></tr>
+                  <tr><td><strong>IAM-01</strong></td><td>K8s RBAC</td><td>ClusterRoleBinding Amplio con Secrets</td><td>Alta</td><td>🟢 Remediado</td><td>Role acotado a connection secrets en crossplane-system.</td></tr>
+                  <tr><td><strong>FIN-01</strong></td><td>FinOps</td><td>Riesgo de Denegación Económica (EDoS)</td><td>Media</td><td>🟢 Remediado</td><td>Tope estricto en app MaxAllowedPools = 3 (máximo 21 tenants).</td></tr>
+                  <tr><td><strong>PERF-01</strong></td><td>Rendimiento</td><td>Saturación Pool Conexiones frente a HPA</td><td>Alta</td><td>🟢 Remediado</td><td>DB_MAX_OPEN_CONNS=3 y CONNECTION LIMIT 2 (3 a 12 slots libres en B1ms).</td></tr>
+                  <tr><td><strong>PERF-02</strong></td><td>Capacidad</td><td>Modelo de Capacidad vs. SLO de Latencia</td><td>Media</td><td>🟢 Remediado</td><td>limits.cpu: 800m y min_count = 2 (p95 &lt; 1500 ms @ 50 VUs, R = 1.06s).</td></tr>
+                  <tr><td><strong>OPS-01</strong></td><td>Resiliencia</td><td>Carencia de Backups en PostgreSQL In-Cluster</td><td>Baja</td><td>🟡 Dev</td><td>Delimitado a dev local. Cloud usa Azure Flexible Server con backups LRS y PITR.</td></tr>
+                  <tr><td><strong>OPS-02</strong></td><td>Red K8s</td><td>IP Pública Dinámica en Ingress Controller</td><td>Baja</td><td>🟡 Dev</td><td>En producción: IP estática reservada en Terraform (azurerm_public_ip).</td></tr>
+                  <tr><td><strong>OPS-03</strong></td><td>Contenedores</td><td>Uso de Etiquetas Mutables (:latest)</td><td>Baja</td><td>🟡 Roadmap</td><td>Fijar imágenes base y despliegues por digest criptográfico SHA256 inmutable.</td></tr>
+                  <tr><td><strong>OPS-04</strong></td><td>Automatización</td><td>Onboarding Asistido de Nuevos Pools</td><td>Media</td><td>🟡 Roadmap</td><td>Controlador en Go observando CR FlexibleServer y connection.crossplane.io secrets.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- 11. GUIA OPERATIVA & RUNBOOKS -->
+          <article id="pleyades-art-guia-bootstrap-runbook" class="doc-article">
+            <h1 class="doc-article__title">3. Guía de Bootstrap, Runbooks Operativos y FinOps</h1>
+            <p class="doc-article__lead">
+              Comandos reproducibles en PowerShell para aprovisionar, verificar y operar el clúster AKS, el backend de Terraform, la identidad OIDC, y protocolos FinOps de ahorro de costos.
+            </p>
+
+            <h2>Protocolos FinOps: Apagado y Encendido del Clúster</h2>
+            <p>Para optimizar costos durante períodos de inactividad, el clúster se apaga desasignando el cómputo (costo 0 en VMs), preservando discos y configuraciones.</p>
+
+            <h3>Procedimiento de Apagado (Stop)</h3>
+            <p><strong>Mitigación Webhook de Crossplane:</strong> Crossplane instala un webhook de validación (<code>crossplane-no-usages</code>). Azure AKS bloquea preventivamente <code>az aks stop</code> si detecta este webhook para evitar congelamiento del plano de control en el reinicio. Se debe eliminar el webhook antes de ordenar la parada:</p>
+            <div class="terminal-box">
+              <pre><code># 1. Eliminar webhook de validación de Crossplane:
+kubectl delete validatingwebhookconfiguration crossplane-no-usages
+
+# 2. Detener cómputo de AKS (las VMs se desasignan, no cobran CPU/RAM):
+az aks stop --name aks-pleyades-dev --resource-group rg-pleyades-dev</code></pre>
+            </div>
+
+            <h3>Procedimiento de Encendido (Start)</h3>
+            <div class="terminal-box">
+              <pre><code># Reanudar clúster (tarda 2-3 minutos en reactivar nodos y pods base):
+az aks start --name aks-pleyades-dev --resource-group rg-pleyades-dev</code></pre>
+            </div>
+
+            <h2>Resumen del Runbook de 10 Pasos para Bootstrap Completo</h2>
+            <div style="overflow-x:auto;">
+              <table class="doc-table">
+                <thead>
+                  <tr>
+                    <th>Paso</th>
+                    <th>Componente</th>
+                    <th>Acción Principal</th>
+                    <th>Capítulo de Ejecución</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>Paso 1</strong></td><td>Parámetros Globales</td><td>Definición de variables base de Azure y GitHub OIDC.</td><td><a href="#doc-pleyades/arquitectura-iac" data-pleyades-target="arquitectura-iac">Arquitectura IaC</a></td></tr>
+                  <tr><td><strong>Paso 2</strong></td><td>Backend Terraform</td><td>Storage Account con Blob Leases para state locking.</td><td><a href="#doc-pleyades/arquitectura-iac" data-pleyades-target="arquitectura-iac">Arquitectura IaC</a></td></tr>
+                  <tr><td><strong>Paso 3</strong></td><td>Cloud IAM</td><td>Managed Identity (UAMI) para federación OIDC.</td><td><a href="#doc-pleyades/arquitectura-iac" data-pleyades-target="arquitectura-iac">Arquitectura IaC</a></td></tr>
+                  <tr><td><strong>Paso 4</strong></td><td>GitHub OIDC</td><td>Federated Identity Credentials para PRs, Main y Prod.</td><td><a href="#doc-pleyades/arquitectura-iac" data-pleyades-target="arquitectura-iac">Arquitectura IaC</a></td></tr>
+                  <tr><td><strong>Paso 5</strong></td><td>Azure RBAC</td><td>Roles Contributor y Storage Blob Data Contributor.</td><td><a href="#doc-pleyades/arquitectura-iac" data-pleyades-target="arquitectura-iac">Arquitectura IaC</a></td></tr>
+                  <tr><td><strong>Paso 6</strong></td><td>GitHub Secrets</td><td>Configuración de OIDC Secrets y PAT de promoción.</td><td><a href="#doc-pleyades/argocd-crossplane" data-pleyades-target="argocd-crossplane">ArgoCD & Crossplane</a></td></tr>
+                  <tr><td><strong>Paso 7</strong></td><td>K8s Secrets</td><td>Inyección de credenciales en AKS (pleyades-app-secret).</td><td><a href="#doc-pleyades/argocd-crossplane" data-pleyades-target="argocd-crossplane">ArgoCD & Crossplane</a></td></tr>
+                  <tr><td><strong>Paso 8</strong></td><td>Microservicio Go</td><td>Arranque local, API REST, login JWT y creación de tenants.</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>Paso 9</strong></td><td>Pruebas Unitarias</td><td>Ejecución de go test y reporte de cobertura de código.</td><td><a href="#doc-pleyades/arquitectura-hexagonal-go" data-pleyades-target="arquitectura-hexagonal-go">Arquitectura Hexagonal Go</a></td></tr>
+                  <tr><td><strong>Paso 10</strong></td><td>Pruebas k6 SRE</td><td>Ejecución de Job k6 in-cluster en AKS y benchmarks locales.</td><td><a href="#doc-pleyades/sre-observabilidad" data-pleyades-target="sre-observabilidad">SRE & Observabilidad</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- ==================== PAGINACIÓN INFERIOR ==================== -->
+          <div class="doc-pagination">
+            <div class="doc-pagination__card prev" id="pleyades-pag-prev" style="visibility:hidden;">
+              <span class="doc-pagination__label">Anterior</span>
+              <span class="doc-pagination__title">« Anterior</span>
+            </div>
+            <div class="doc-pagination__card next" id="pleyades-pag-next">
+              <span class="doc-pagination__label">Siguiente</span>
+              <span class="doc-pagination__title">IaC, Terraform & OIDC »</span>
+            </div>
+          </div>
+
+        </main>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Botón Flotante para Subir Suavemente (Scroll to Top) -->
+  <button id="scroll-to-top-btn" class="scroll-to-top" aria-label="Volver arriba" title="Subir suavemente al inicio">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <!-- Lógica JavaScript Modular -->
+  <script src="../../app.js"></script>
+</body>
+</html>

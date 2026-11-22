@@ -1,0 +1,8 @@
+{
+  "label": "Pléyades",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "Plataforma Cloud-Native Multi-Tenant SaaS, GitOps Declarativo, Crossplane IDP y SRE en Microsoft Azure."
+  }
+}
